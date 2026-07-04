@@ -1,0 +1,14 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Get in touch with our team.",
+}
+
+export default function ContactPage() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-24 text-center">
+      <h1 className="font-display text-3xl tracking-tight text-foreground">Contact</h1>
+    </main>
+  )
+}
