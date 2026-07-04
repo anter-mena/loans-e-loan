@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LoanHero Canada — Fast Personal Loans with Transparent Rates",
+  title: "E-Loan Canada — Fast Personal Loans with Transparent Rates",
   description:
     "Get instant decisions on personal loans up to $50,000. Transparent rates, zero paperwork, and funds delivered in 24 hours.",
 };
