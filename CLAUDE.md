@@ -1,1 +1,2 @@
 @AGENTS.md
+@UI_UX_SEO_RULES.md
