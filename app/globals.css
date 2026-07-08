@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 /* LoanHero — trustworthy fintech design system */
 :root {
@@ -314,6 +315,78 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/* Blog / news article body — maps @tailwindcss/typography onto the E-Loan design
+   tokens so it adapts to light/dark automatically (tokens already flip under .dark). */
+.blog-prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-lead: hsl(var(--muted-foreground));
+  --tw-prose-links: hsl(var(--accent));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--accent) / 0.55);
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--accent));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-pre-code: hsl(var(--foreground));
+  --tw-prose-pre-bg: hsl(var(--muted));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+.blog-prose :is(h1, h2, h3, h4) {
+  font-family: 'Mona Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.blog-prose a {
+  font-weight: 600;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.blog-prose thead th {
+  font-weight: 700;
+}
+.blog-prose :is(code)::before,
+.blog-prose :is(code)::after {
+  content: "";
+}
+
+/* Rich media (WordPress-like): photos, video, YouTube/Vimeo iframes, embeds.
+   Raw HTML in .mdx is enabled via rehype-raw in the article renderer. */
+.blog-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+.blog-prose :is(iframe, video) {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 0.75rem;
+  margin: 1.75rem 0;
+}
+.blog-prose figure {
+  margin: 1.75rem 0;
+}
+.blog-prose figure img {
+  margin-inline: auto;
+}
+.blog-prose figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.85em;
+  color: hsl(var(--muted-foreground));
+}
+/* Offset heading anchors so table-of-contents jumps clear the fixed navbar. */
+.blog-prose :is(h2, h3, h4) {
+  scroll-margin-top: 6rem;
 }
 
 /* Custom Scrollbar Styles */

@@ -239,6 +239,12 @@ export default function Navbar() {
                 onToggle={() => setActiveDropdown((prev) => (prev === "resources" ? null : "resources"))}
                 onNavigate={() => setActiveDropdown(null)}
               />
+              <Link href="/blog" className="py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                Blog
+              </Link>
+              <Link href="/news" className="py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                News
+              </Link>
               <Link href="/about" className="py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
                 About Us
               </Link>
@@ -295,6 +301,24 @@ export default function Navbar() {
               onNavigate={closeMobileMenu}
             />
 
+            <div className="border-t border-border py-2">
+              <Link
+                href="/blog"
+                onClick={closeMobileMenu}
+                className="block rounded-md px-2 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+              >
+                Blog
+              </Link>
+            </div>
+            <div className="border-t border-border py-2">
+              <Link
+                href="/news"
+                onClick={closeMobileMenu}
+                className="block rounded-md px-2 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+              >
+                News
+              </Link>
+            </div>
             <div className="border-t border-border py-2">
               <Link
                 href="/about"
