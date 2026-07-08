@@ -7,6 +7,8 @@ import { loanTypes } from "@/lib/loan-types";
 import { loanAmounts } from "@/lib/loan-amounts";
 import { creditScoreRanges } from "@/lib/credit-scores";
 import { canadaLocations } from "@/lib/canada-locations";
+import { getAllPosts } from "@/lib/blog";
+import { getAllNews } from "@/lib/news";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -28,6 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/loans/by-credit-score",
     "/loans/by-type",
     "/loans/by-location",
+    "/blog",
+    "/news",
   ];
 
   const dynamicRoutes = [
@@ -40,8 +44,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...canadaLocations.map((l) => `/loans/by-location/${l.slug}`),
   ];
 
-  return [...staticRoutes, ...dynamicRoutes].map((route) => ({
+  const staticAndDynamic: MetadataRoute.Sitemap = [...staticRoutes, ...dynamicRoutes].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: now,
   }));
+
+  const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: new Date(`${post.updated}T00:00:00Z`),
+  }));
+
+  const newsRoutes: MetadataRoute.Sitemap = getAllNews().map((item) => ({
+    url: `${siteUrl}/news/${item.slug}`,
+    lastModified: new Date(`${item.updated}T00:00:00Z`),
+  }));
+
+  return [...staticAndDynamic, ...blogRoutes, ...newsRoutes];
 }
