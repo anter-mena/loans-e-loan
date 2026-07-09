@@ -406,4 +406,27 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}/* Blog/News tables — bordered, padded, zebra (desktop) + horizontal scroll (mobile) */
+.blog-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin: 1.75rem 0;
+  border: 1px solid var(--tw-prose-td-borders);
+}
+.blog-prose :is(th, td) {
+  border: 1px solid var(--tw-prose-td-borders);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.blog-prose thead th {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--tw-prose-headings) 8%, transparent);
+}
+.blog-prose tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--tw-prose-headings) 4%, transparent);
+}
+@media (max-width: 640px) {
+  .blog-prose table { display: block; overflow-x: auto; }
 }
