@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import { PostImage } from "@/components/blog/post-image";
 import rehypeRaw from "rehype-raw";
 import { ArrowRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -119,7 +120,7 @@ export default async function NewsArticlePage({ params }: { params: Params }) {
   const sources = meta.related.filter((l) => l.href.startsWith("http"));
 
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="relative overflow-x-clip bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       {faqJsonLd && (
@@ -127,7 +128,7 @@ export default async function NewsArticlePage({ params }: { params: Params }) {
       )}
 
       {/* Header */}
-      <section className="relative overflow-hidden pt-14 pb-10 md:pt-20 md:pb-14">
+      <section className="relative overflow-x-clip pt-14 pb-10 md:pt-20 md:pb-14">
         <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
         <div className="container relative mx-auto px-4">
           <nav aria-label="Breadcrumb" className="mx-auto mb-6 flex max-w-3xl justify-center">
@@ -159,7 +160,7 @@ export default async function NewsArticlePage({ params }: { params: Params }) {
           <article className="min-w-0 w-full max-w-[760px] mx-auto lg:mx-0">
             <TableOfContents items={toc} variant="mobile" />
             <div className="blog-prose prose prose-lg max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSlug]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSlug]} components={{ img: PostImage }}>
                 {content}
               </ReactMarkdown>
             </div>
