@@ -1,12 +1,11 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { siteUrl } from "@/lib/site";
+import { SITE_NAME, BASE_URL } from "@/lib/seo";
 
 const NEWS_DIR = path.join(process.cwd(), "content/news");
 
-export const SITE_NAME = "E-Loan";
-export const BASE_URL = siteUrl;
+export { SITE_NAME, BASE_URL };
 export const DEFAULT_AUTHOR = "E-Loan Newsroom";
 const WORDS_PER_MINUTE = 220;
 
