@@ -50,18 +50,18 @@ draft: true                   # optional — set to hide a post from the live si
 ---
 ```
 
-| Field | Required | Notes |
-|---|---|---|
-| `title` | ✅ | ~50–65 characters. Put the main keyword near the start. |
-| `description` | ✅ | 120–160 characters. Your search snippet — make it compelling. |
-| `date` | ✅ | `YYYY-MM-DD`. Controls ordering (newest first). |
-| `updated` | — | Freshness signal; falls back to `date`. |
-| `category` | — | One or two words, shown on the card. |
-| `image` | — | Card + social image. Omit → a themed gradient is used. |
-| `keywords` | — | 4–8 phrases. |
-| `faqs` | — | 3–5 recommended. Powers FAQ rich results. |
-| `related` | — | Internal `/…` links = **Related Reading**; `http…` links = **Sources**. |
-| `draft` | — | `true` = not published. |
+| Field           | Required | Notes                                                                                    |
+| --------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `title`       | ✅       | ~50–65 characters. Put the main keyword near the start.                                 |
+| `description` | ✅       | 120–160 characters. Your search snippet — make it compelling.                          |
+| `date`        | ✅       | `YYYY-MM-DD`. Controls ordering (newest first).                                        |
+| `updated`     | —       | Freshness signal; falls back to`date`.                                                 |
+| `category`    | —       | One or two words, shown on the card.                                                     |
+| `image`       | —       | Card + social image. Omit → a themed gradient is used.                                  |
+| `keywords`    | —       | 4–8 phrases.                                                                            |
+| `faqs`        | —       | 3–5 recommended. Powers FAQ rich results.                                               |
+| `related`     | —       | Internal`/…` links = **Related Reading**; `http…` links = **Sources**. |
+| `draft`       | —       | `true` = not published.                                                                |
 
 > **News posts** must include their real sources as external `related` links (they render
 > under a **Sources** heading) and use the site's Newsroom byline automatically.
@@ -102,11 +102,13 @@ so the TOC appears.
 This is where it matches WordPress. All of these work inside the `.mdx` body:
 
 **Photo (simple):**
+
 ```mdx
 ![Descriptive alt text for SEO and accessibility](https://…/photo.jpg)
 ```
 
 **Photo with caption:**
+
 ```html
 <figure>
   <img src="https://…/photo.jpg" alt="Descriptive alt text" />
@@ -115,16 +117,19 @@ This is where it matches WordPress. All of these work inside the `.mdx` body:
 ```
 
 **YouTube video:**
+
 ```html
 <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="What the video shows" allowfullscreen></iframe>
 ```
 
 **Vimeo video:**
+
 ```html
 <iframe src="https://player.vimeo.com/video/VIDEO_ID" title="What the video shows" allowfullscreen></iframe>
 ```
 
 **Self-hosted video:**
+
 ```html
 <video controls src="https://…/clip.mp4"></video>
 ```
@@ -132,6 +137,7 @@ This is where it matches WordPress. All of these work inside the `.mdx` body:
 **Any other embed** (maps, calculators, tweets) — paste its `<iframe>` and it renders.
 
 Notes:
+
 - Images are fluid (never overflow). Videos and iframes are automatically **16:9 and
   responsive**. To force a different shape, add `style="aspect-ratio: 4/3"` to the tag.
 - **Always** give images meaningful `alt` text — it's an SEO and accessibility signal.
@@ -143,19 +149,23 @@ Notes:
 These are the rules that make a post actually *rank*, not just publish.
 
 **Length**
+
 - **Blog / guide:** aim for **~1,500–2,500 words** (target ~2,000). Depth wins.
 - **News:** **~500–900 words** — tight, factual, timely.
 
 **Structure**
+
 - One clear topic per post. The `title` is the only H1 — never add another H1 in the body.
 - Break the body into **3+ `##` / `###` sections** (drives the TOC and readability).
 - Lead with the answer/summary in the first paragraph.
 
 **Media**
+
 - **At least one image** per post (a cover via `image:` and/or an in-body image).
 - Use video/diagrams where they genuinely help — not for decoration.
 
 **SEO**
+
 - Put the **primary keyword** in the `title`, the **first paragraph**, and **one heading**.
 - `description`: 120–160 chars, benefit-driven, includes the primary keyword.
 - **2–4 internal links** to relevant money/hub pages (e.g. `/loans/by-type/…`,
@@ -164,6 +174,7 @@ These are the rules that make a post actually *rank*, not just publish.
 - Descriptive `alt` text on every image.
 
 **Quality (E-E-A-T)**
+
 - **Original writing only.** Never paste content from another site — it's duplicate
   content and gets penalized. Across our sibling sites, write **unique** copy per brand.
 - Write from experience: specifics, numbers, trade-offs, honest caveats. No fluff.
@@ -171,6 +182,7 @@ These are the rules that make a post actually *rank*, not just publish.
 - For **news**, cover a real event in your own words and cite **Sources**. Don't copy.
 
 **Checklist before you publish**
+
 - [ ] `title`, `description`, `date` filled in
 - [ ] Slug (filename) is clean, lowercase, hyphenated
 - [ ] 3+ headings; one topic; answer up top
