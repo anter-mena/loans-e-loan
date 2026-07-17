@@ -128,7 +128,7 @@ function Field({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full bg-secondary accent-accent"
+        className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-none bg-secondary accent-accent"
         style={{
           background: `linear-gradient(to right, hsl(var(--accent)) ${pct}%, hsl(var(--secondary)) ${pct}%)`,
         }}
@@ -229,10 +229,13 @@ export function LoanCalculator({
   }, [base.schedule]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-8">
+    <div className="grid lg:grid-cols-[0.42fr_0.58fr]">
       {/* Inputs */}
-      <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
-        <h2 className="font-display text-lg font-bold tracking-tight text-foreground">Your loan</h2>
+      <div className="border-b border-border bg-background p-6 sm:p-8 lg:border-b-0 lg:border-r">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
+          Inputs
+        </p>
+        <h2 className="mt-4 font-display text-2xl font-semibold tracking-tight text-foreground">Your loan</h2>
         <div className="mt-6 space-y-7">
           <Field label="Loan amount" value={amount} display={amount.toLocaleString("en-CA")} min={1000} max={50000} step={500} onChange={setAmount} prefix="$" />
           <Field label="Interest rate (APR)" value={rate} display={rate.toFixed(1)} min={3} max={35} step={0.1} onChange={setRate} suffix="%" />
@@ -247,13 +250,12 @@ export function LoanCalculator({
       </div>
 
       {/* Results */}
-      <div className="space-y-4">
+      <div className="grid">
         {/* headline payment */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-cta p-6 text-primary-foreground shadow-card sm:p-8">
-          <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/20 blur-3xl" />
+        <div className="relative overflow-hidden border-b border-primary bg-primary p-6 text-primary-foreground sm:p-8">
           <div className="relative flex flex-wrap items-end justify-between gap-4">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/60">
+              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
                 Estimated monthly payment
               </div>
               <div className="mt-1 font-display text-4xl font-bold tracking-tight sm:text-5xl">
@@ -267,12 +269,12 @@ export function LoanCalculator({
               <Donut principal={amount} interest={base.totalInterest} />
               <dl className="space-y-2 text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent" />
+                  <span className="inline-block size-2.5 bg-accent" />
                   <dt className="text-primary-foreground/60">Principal</dt>
                   <dd className="font-semibold tabular-nums">{cad.format(amount)}</dd>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-gold" />
+                  <span className="inline-block size-2.5 bg-gold" />
                   <dt className="text-primary-foreground/60">Interest</dt>
                   <dd className="font-semibold tabular-nums">{cad.format(base.totalInterest)}</dd>
                 </div>
@@ -282,13 +284,13 @@ export function LoanCalculator({
         </div>
 
         {/* stat tiles */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+        <div className="grid grid-cols-2 border-b border-border">
+          <div className="border-r border-border bg-card p-5">
             <Coins className="h-5 w-5 text-accent" />
             <div className="mt-2 font-display text-2xl font-bold tabular-nums text-foreground">{cad.format(base.totalInterest)}</div>
             <div className="text-xs text-muted-foreground">Total interest</div>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+          <div className="bg-card p-5">
             <Wallet className="h-5 w-5 text-accent" />
             <div className="mt-2 font-display text-2xl font-bold tabular-nums text-foreground">{cad.format(base.totalCost)}</div>
             <div className="text-xs text-muted-foreground">Total cost of loan</div>
@@ -297,7 +299,7 @@ export function LoanCalculator({
 
         {/* extra payment savings */}
         {extra > 0 && monthsSaved > 0 && (
-          <div className="rounded-2xl border border-accent/20 bg-accent-soft/60 p-5">
+          <div className="border-b border-border bg-accent-soft/60 p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <TrendingDown className="h-4 w-4 text-accent" />
               Paying {cad.format(extra)} extra per month
@@ -316,16 +318,16 @@ export function LoanCalculator({
         )}
 
         {/* balance chart */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+        <div className="border-b border-border bg-card p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <CalendarClock className="h-4 w-4 text-accent" />
               Balance over time
             </div>
             <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-full bg-border" />Standard</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 bg-border" />Standard</span>
               {extra > 0 && monthsSaved > 0 && (
-                <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-full bg-accent" />With extra</span>
+                <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 bg-accent" />With extra</span>
               )}
             </div>
           </div>
@@ -335,12 +337,12 @@ export function LoanCalculator({
         </div>
 
         {/* amortization schedule */}
-        <div className="rounded-2xl border border-border bg-card shadow-soft">
+        <div className="border-b border-border bg-card">
           <button
             type="button"
             onClick={() => setShowSchedule((s) => !s)}
             aria-expanded={showSchedule}
-            className="flex w-full items-center justify-between p-5 text-sm font-semibold text-foreground"
+            className="flex w-full items-center justify-between p-5 text-sm font-semibold text-foreground transition-colors hover:bg-accent-soft"
           >
             Yearly amortization schedule
             <ArrowRight className={`h-4 w-4 text-accent transition-transform ${showSchedule ? "rotate-90" : ""}`} />
@@ -371,8 +373,8 @@ export function LoanCalculator({
           )}
         </div>
 
-        <Button variant="hero" size="lg" className="w-full" asChild>
-          <Link href="/#apply">
+        <Button variant="hero" size="lg" className="h-12 w-full rounded-none hover:translate-y-0 active:translate-y-0" asChild>
+          <Link href="/apply">
             Get your real rate
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

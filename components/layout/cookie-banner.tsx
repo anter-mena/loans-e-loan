@@ -1,7 +1,8 @@
 "use client"
 
-import { useSyncExternalStore } from "react"
+import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
+import { PixelTransition } from "@/components/ui/pixel-transition"
 
 const STORAGE_KEY = "e-loan-cookie-consent"
 const EVENT_NAME = "cookie-consent-change"
@@ -19,6 +20,57 @@ function getServerSnapshot() {
   return null
 }
 
+function CookiePixelButton({
+  children,
+  onClick,
+  variant = "primary",
+}: {
+  children: string
+  onClick: () => void
+  variant?: "primary" | "secondary"
+}) {
+  const [active, setActive] = useState(false)
+  const isPrimary = variant === "primary"
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className={`relative h-9 overflow-hidden border px-4 text-xs font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+        isPrimary
+          ? "border-primary text-primary-foreground"
+          : "border-border text-foreground"
+      }`}
+    >
+      <PixelTransition
+        active={active}
+        columns={8}
+        rows={3}
+        animationStepDuration={0.3}
+        exitAnimationStepDuration={0.3}
+        pixelColor="hsl(var(--accent))"
+        exitPixelColor={isPrimary ? "hsl(var(--primary))" : "hsl(var(--background))"}
+        className="absolute inset-0"
+        firstContent={
+          <span className={`block size-full ${isPrimary ? "bg-primary" : "bg-background"}`} />
+        }
+        secondContent={<span className="block size-full bg-accent" />}
+      />
+      <span
+        className={`relative z-20 transition-colors duration-200 ${
+          active ? "text-accent-foreground" : isPrimary ? "text-primary-foreground" : "text-foreground"
+        }`}
+      >
+        {children}
+      </span>
+    </button>
+  )
+}
+
 export function CookieBanner() {
   const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
@@ -31,43 +83,30 @@ export function CookieBanner() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom border-t border-border bg-background p-3 shadow-lg duration-500 sm:p-4"
+      className="fixed bottom-4 left-4 z-[10000] w-[calc(100%-2rem)] max-w-[620px] animate-in slide-in-from-bottom border border-border bg-background shadow-[0_18px_48px_-24px_hsl(var(--foreground)/0.38)] duration-500 sm:bottom-6 sm:left-6"
       role="region"
       aria-label="Cookie consent"
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-start justify-between gap-3 lg:flex-row lg:items-center lg:gap-4">
-          <div className="flex-1 pr-4">
-            <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              We use cookies and similar technologies to improve your experience, analyze site
-              traffic, and for marketing purposes.{" "}
-              <Link
-                href="/privacy-policy"
-                className="font-medium text-primary hover:underline"
-                title="Read our Privacy Policy"
-              >
-                Learn more
-                <span className="sr-only"> about our Privacy Policy</span>
-              </Link>
-            </p>
-          </div>
+      <div className="flex flex-col gap-4 p-4 sm:p-5">
+        <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+          We use cookies to improve your experience, analyze traffic, and support marketing.{" "}
+          <Link
+            href="/privacy-policy"
+            className="font-bold text-foreground underline-offset-4 hover:bg-accent hover:text-accent-foreground hover:underline"
+            title="Read our Privacy Policy"
+          >
+            Learn more
+            <span className="sr-only"> about our Privacy Policy</span>
+          </Link>
+        </p>
 
-          <div className="flex w-full items-center justify-end gap-2 lg:w-auto sm:gap-3">
-            <button
-              type="button"
-              onClick={() => decide("declined")}
-              className="whitespace-nowrap rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-muted sm:px-4 sm:text-sm"
-            >
-              Decline
-            </button>
-            <button
-              type="button"
-              onClick={() => decide("accepted")}
-              className="whitespace-nowrap rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 sm:px-4 sm:text-sm"
-            >
-              Accept All
-            </button>
-          </div>
+        <div className="flex items-center justify-end gap-2">
+          <CookiePixelButton variant="secondary" onClick={() => decide("declined")}>
+            Decline
+          </CookiePixelButton>
+          <CookiePixelButton onClick={() => decide("accepted")}>
+            Accept All
+          </CookiePixelButton>
         </div>
       </div>
     </div>

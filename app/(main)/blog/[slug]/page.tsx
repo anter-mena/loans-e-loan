@@ -214,7 +214,7 @@ export default async function BlogPost({ params }: { params: Params }) {
                 Check your rate in about two minutes. It&apos;s a soft credit check — no impact on your score.
               </p>
               <Button variant="hero" size="lg" asChild className="mt-5">
-                <Link href="/#apply">
+                <Link href="/apply">
                   Check your rate
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>

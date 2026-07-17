@@ -35,8 +35,11 @@ function AccordionItem({
 function AccordionTrigger({
   className,
   children,
+  iconVariant = "caret",
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
+  iconVariant?: "caret" | "plus"
+}) {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
@@ -48,8 +51,20 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <CaretDown data-slot="accordion-trigger-icon" className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
-        <CaretUp data-slot="accordion-trigger-icon" className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />
+        {iconVariant === "plus" ? (
+          <span
+            data-slot="accordion-trigger-icon"
+            className="pointer-events-none relative shrink-0 text-muted-foreground transition-transform duration-300 ease-out group-aria-expanded/accordion-trigger:rotate-180"
+          >
+            <span className="absolute left-1/2 top-1/2 h-px w-3 -translate-x-1/2 -translate-y-1/2 bg-current" />
+            <span className="absolute left-1/2 top-1/2 h-3 w-px -translate-x-1/2 -translate-y-1/2 bg-current transition-transform duration-300 ease-out group-aria-expanded/accordion-trigger:rotate-90" />
+          </span>
+        ) : (
+          <>
+            <CaretDown data-slot="accordion-trigger-icon" className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
+            <CaretUp data-slot="accordion-trigger-icon" className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />
+          </>
+        )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

@@ -1,44 +1,42 @@
-import { ChartLineDown, Clock, Smiley, Users, CurrencyDollar, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, Clock, CurrencyDollar, Users } from "@phosphor-icons/react/dist/ssr";
+import SectionTitleBand from "./SectionTitleBand";
 
 const stats = [
-  { icon: ChartLineDown, value: "$3,847", label: "Avg. annual savings", trend: "+12% YoY" },
-  { icon: Clock, value: "37s", label: "Median decision time", trend: "Industry: 3 days" },
-  { icon: Smiley, value: "94%", label: "Would recommend us", trend: "12.4k surveys" },
-  { icon: Users, value: "240k+", label: "Borrowers funded", trend: "Across 12 provinces" },
-  { icon: CurrencyDollar, value: "$1.8B", label: "Originated to date", trend: "Since 2021" },
-  { icon: ShieldCheck, value: "0", label: "Hidden fees, ever", trend: "Audited yearly" },
+  { icon: Users, value: "240k+", label: "Borrowers funded" },
+  { icon: CurrencyDollar, value: "$1.8B", label: "Lent to date" },
+  { icon: Clock, value: "37s", label: "Average decision" },
 ];
 
 export default function Impact() {
   return (
-    <section className="bg-secondary/40 py-16 lg:py-20">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-            · Live numbers
-          </p>
-          <h2 className="mt-3 font-display text-2xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-3xl lg:text-4xl">
-            Proof that <span className="text-accent">scales.</span>
-          </h2>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Independently audited. Updated monthly. No marketing math.
-          </p>
-        </div>
+    <section id="statistics" className="border-x bg-primary text-primary-foreground [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))]">
+      <SectionTitleBand label="Statistics" tone="dark" className="border-y border-border-dark" />
 
-        <div className="mx-auto mt-10 grid max-w-7xl gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {stats.map(({ icon: Icon, value, label, trend }) => (
-            <div key={label} className="flex flex-col gap-3 bg-card p-7 transition-colors hover:bg-secondary/20">
-              <Icon size={20} weight="bold" className="text-accent" />
-              <div className="font-display text-3xl font-bold tracking-tight text-foreground">
-                {value}
-              </div>
-              <div className="text-xs text-foreground">{label}</div>
-              <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                {trend}
-              </div>
+      <div className="grid lg:grid-cols-3">
+        {stats.map(({ icon: Icon, value, label }, index) => (
+          <div
+            key={label}
+            className={`group relative grid min-h-[190px] place-items-center overflow-hidden border-b border-border-dark px-8 py-8 text-center transition-colors hover:bg-primary-foreground/[0.045] ${
+              index < stats.length - 1 ? "lg:border-r" : ""
+            }`}
+          >
+            <ArrowUpRight
+              aria-hidden
+              weight="thin"
+              className="absolute right-4 top-4 size-7 translate-x-6 -translate-y-6 text-primary-foreground opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+            />
+            <div
+              aria-hidden
+              className="absolute left-1/2 top-7 -translate-x-1/2 bg-gradient-to-b from-primary-foreground/24 via-primary-foreground/10 to-primary-foreground/3 bg-clip-text font-display text-[86px] font-black leading-none tracking-tight text-transparent [-webkit-text-stroke:0.5px_hsl(var(--primary-foreground)/0.035)] [text-shadow:0_-1px_0_hsl(var(--primary-foreground)/0.1)] sm:text-[98px]"
+            >
+              {value}
             </div>
-          ))}
-        </div>
+            <div className="relative mt-14 inline-flex items-center gap-2 text-sm font-semibold text-primary-foreground/70">
+              <Icon size={22} weight="bold" className="text-accent" />
+              {label}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

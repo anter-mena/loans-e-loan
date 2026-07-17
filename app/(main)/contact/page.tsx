@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Clock, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { Clock, MapPin, ShieldCheck } from "lucide-react";
 
+import { ContactCards } from "@/components/contact/contact-cards";
 import { ContactForm } from "@/components/contact/contact-form";
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact E-Loan — We're here to help",
+  title: "Contact E-Loan - We're here to help",
   description:
     "Questions about your application, rates, or repayment? Reach the E-Loan team by phone, email, or message. We reply within one business day.",
   alternates: { canonical: `${siteUrl}/contact` },
   openGraph: {
-    title: "Contact E-Loan — We're here to help",
+    title: "Contact E-Loan - We're here to help",
     description:
       "Reach the E-Loan team by phone, email, or message. We reply within one business day.",
     url: `${siteUrl}/contact`,
@@ -19,133 +21,78 @@ export const metadata: Metadata = {
   },
 };
 
-const channels = [
-  {
-    icon: Phone,
-    label: "Call us",
-    value: "1-888-ELOANCA",
-    detail: "Mon–Fri, 8am–8pm ET",
-    href: "tel:1888356226",
-  },
-  {
-    icon: Mail,
-    label: "Email us",
-    value: "support@eloan.ca",
-    detail: "We reply within one business day",
-    href: "mailto:support@eloan.ca",
-  },
-  {
-    icon: MessageCircle,
-    label: "Live chat",
-    value: "Chat with an advisor",
-    detail: "Look for the chat bubble, bottom-right",
-    href: null,
-  },
-];
-
 export default function ContactPage() {
   return (
-    <main className="relative overflow-hidden bg-background">
-      {/* ambient blobs */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 right-1/4 h-[420px] w-[420px] rounded-full bg-accent/10 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute top-1/3 -left-32 h-[320px] w-[320px] rounded-full bg-gold/10 blur-3xl" />
+    <main className="bg-background">
+      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <SectionTitleBand label="Contact" className="border-b border-border" />
 
-      <section className="relative pt-16 pb-16 md:pt-20 lg:pb-24">
-        <div className="container mx-auto px-4">
-          {/* header */}
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+        <div className="grid border-b border-border lg:grid-cols-[0.42fr_0.58fr]">
+          <div className="border-b border-border p-6 md:p-8 lg:border-b-0 lg:border-r">
+            <p className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              <span aria-hidden className="h-3 w-px bg-accent" />
               Contact us
             </p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
+            <h1 className="mt-6 max-w-md font-display text-5xl leading-[1.02] tracking-tight text-balance text-foreground md:text-[3.5rem]">
               Let&apos;s talk it through.
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground text-balance">
-              Whether you&apos;re mid-application or just weighing your options, a real
-              person is here to help — no scripts, no runaround.
-            </p>
           </div>
 
-          {/* body */}
-          <div className="mx-auto mt-12 grid max-w-6xl gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-            {/* form */}
-            <ContactForm />
+          <div className="flex items-end p-6 md:p-8">
+            <p className="max-w-md text-sm leading-6 text-muted-foreground">
+              Whether you&apos;re mid-application or just weighing your options, a real
+              person is here to help. No scripts, no runaround.
+            </p>
+          </div>
+        </div>
 
-            {/* info column */}
-            <div className="flex flex-col gap-4">
-              {channels.map(({ icon: Icon, label, value, detail, href }) => {
-                const inner = (
-                  <>
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <span className="flex flex-col">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {label}
-                      </span>
-                      <span className="mt-0.5 font-display text-base font-semibold text-foreground">
-                        {value}
-                      </span>
-                      <span className="mt-0.5 text-xs text-muted-foreground">{detail}</span>
-                    </span>
-                  </>
-                );
+        <ContactCards />
 
-                const cardClass =
-                  "flex items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft transition-all";
+        <div className="grid gap-6 border-b border-border p-4 md:p-6 lg:grid-cols-[0.58fr_0.42fr]">
+          <ContactForm />
 
-                return href ? (
-                  <a
-                    key={label}
-                    href={href}
-                    className={`${cardClass} hover:-translate-y-0.5 hover:shadow-card`}
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <div key={label} className={cardClass}>
-                    {inner}
-                  </div>
-                );
-              })}
-
-              {/* hours + trust */}
-              <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-                <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Clock className="h-4 w-4 text-accent" />
-                  Support hours
+          <div className="grid gap-2.5">
+            <div className="border border-border bg-secondary/40 p-3.5">
+              <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground">
+                <span className="grid size-7 place-items-center rounded-md bg-accent text-accent-foreground">
+                  <Clock className="h-3.5 w-3.5" />
+                </span>
+                Support hours
+              </div>
+              <dl className="mt-2.5 space-y-0.5 text-xs text-muted-foreground">
+                <div className="flex justify-between gap-4">
+                  <dt>Monday - Friday</dt>
+                  <dd className="font-medium text-foreground">8am - 8pm ET</dd>
                 </div>
-                <dl className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-                  <div className="flex justify-between">
-                    <dt>Monday – Friday</dt>
-                    <dd className="font-medium text-foreground">8am – 8pm ET</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt>Saturday</dt>
-                    <dd className="font-medium text-foreground">9am – 5pm ET</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt>Sunday</dt>
-                    <dd className="font-medium text-foreground">Closed</dd>
-                  </div>
-                </dl>
-              </div>
+                <div className="flex justify-between gap-4">
+                  <dt>Saturday</dt>
+                  <dd className="font-medium text-foreground">9am - 5pm ET</dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt>Sunday</dt>
+                  <dd className="font-medium text-foreground">Closed</dd>
+                </div>
+              </dl>
+            </div>
 
-              <div className="flex items-start gap-3 rounded-2xl border border-accent/20 bg-accent-soft/60 p-5">
-                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-                <p className="text-xs leading-relaxed text-foreground">
-                  Your details are encrypted in transit and never sold. We&apos;ll only use
-                  them to answer your enquiry.
-                </p>
-              </div>
+            <div className="flex items-start gap-2.5 border border-accent/30 bg-accent-soft/60 p-3.5">
+              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-accent">
+                <ShieldCheck className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-[11px] leading-5 text-foreground">
+                Your details are encrypted in transit and never sold. We&apos;ll only use
+                them to answer your enquiry.
+              </p>
+            </div>
 
-              <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  E-Loan Canada — proudly serving borrowers coast to coast, licensed in
-                  every province we operate in.
-                </p>
-              </div>
+            <div className="flex items-start gap-2.5 border border-border bg-background p-3.5">
+              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-accent text-accent-foreground">
+                <MapPin className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-[11px] leading-5 text-muted-foreground">
+                E-Loan Canada - proudly serving borrowers coast to coast, licensed in
+                every province we operate in.
+              </p>
             </div>
           </div>
         </div>

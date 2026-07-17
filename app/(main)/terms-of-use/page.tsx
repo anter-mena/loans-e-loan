@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Mail, Scale } from "lucide-react";
+import { ArrowUpRight, FileCheck, Mail, Scale, ShieldCheck } from "lucide-react";
 
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { LegalSection, type LegalBlock } from "@/components/legal/legal";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — E-Loan",
+  title: "Terms of Use - E-Loan",
   description:
     "The terms and conditions governing your use of E-Loan's website and services. Please read these terms carefully before using our services.",
   alternates: { canonical: `${siteUrl}/terms-of-use` },
   openGraph: {
-    title: "Terms of Use — E-Loan",
+    title: "Terms of Use - E-Loan",
     description:
       "The terms and conditions governing your use of E-Loan's website and services.",
     url: `${siteUrl}/terms-of-use`,
@@ -52,7 +54,7 @@ const sections: { n: string; title: string; blocks: LegalBlock[] }[] = [
     title: "Your Agreement to These Terms",
     blocks: [
       {
-        p: "By authorizing automatic withdrawals from your designated bank account for loan repayment, you acknowledge acceptance of these Terms. These Terms have been made accessible to you through multiple channels—including our physical location, our website at e-loan.ca, and through direct communication with our representatives—before you finalize your transaction.",
+        p: "By authorizing automatic withdrawals from your designated bank account for loan repayment, you acknowledge acceptance of these Terms. These Terms have been made accessible to you through multiple channels - including our physical location, our website at e-loan.ca, and through direct communication with our representatives - before you finalize your transaction.",
       },
     ],
   },
@@ -100,79 +102,128 @@ const sections: { n: string; title: string; blocks: LegalBlock[] }[] = [
   },
 ];
 
+const summary = [
+  { icon: Scale, label: "Governing law", value: "Ontario and federal Canadian law" },
+  { icon: FileCheck, label: "Agreement type", value: "Electronic acceptance and records" },
+  { icon: ShieldCheck, label: "Disputes", value: "Individual resolution framework" },
+];
+
 export default function TermsOfUsePage() {
   return (
-    <main className="relative overflow-hidden bg-background">
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-16 pb-12 md:pt-20">
-        <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+    <main className="bg-background">
+      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <SectionTitleBand label="Legal Document" className="border-b border-border" />
 
-        <div className="container relative mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-              Legal Document
-            </p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
+        <section className="grid border-b border-border lg:grid-cols-[0.58fr_0.42fr]">
+          <div className="px-6 py-14 md:px-10 lg:py-16">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
               Terms of Use
+            </p>
+            <h1 className="mt-5 max-w-xl font-display text-5xl font-semibold leading-[0.98] tracking-tight text-foreground md:text-7xl">
+              Rules for using E-Loan services.
             </h1>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground text-balance">
-              Please read these terms carefully before using our services.
+            <p className="mt-6 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              Please read these terms carefully before using our website, application flow, or
+              services. They explain how the platform works, how acceptance is recorded, and
+              what obligations apply.
             </p>
           </div>
-        </div>
-      </section>
 
-      {/* Body */}
-      <section className="pb-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl space-y-8">
-            {sections.map((s) => (
-              <LegalSection key={s.n} n={s.n} title={s.title} blocks={s.blocks} />
-            ))}
-
-            {/* Important notice callout */}
-            <div className="rounded-3xl border border-accent/20 bg-accent-soft/50 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                Important Notice
-              </h2>
-              <div className="mt-3 space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                <p>
-                  By using E-Loan&apos;s services, you acknowledge that you have read, understood, and
-                  agreed to be bound by these Terms of Use. These terms constitute a legally binding
-                  agreement between you and E-Loan. If you do not agree to these terms, please do not
-                  use our services.
+          <aside className="relative overflow-hidden border-t border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-l lg:border-t-0">
+            <FlickeringGrid
+              aria-hidden
+              className="absolute inset-0"
+              squareSize={3}
+              gridGap={2}
+              color="hsl(var(--primary-foreground))"
+              maxOpacity={0.18}
+              flickerChance={0.08}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/88 to-primary" />
+            <div className="relative flex h-full flex-col justify-between gap-10">
+              <div>
+                <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                  Document snapshot
                 </p>
-                <p>
-                  By continuing to use E-Loan&apos;s services, you confirm your acceptance of these Terms
-                  of Use and any future amendments. We recommend reviewing these terms periodically for
-                  any updates.
-                </p>
+                <div className="mt-6 grid border border-border-dark bg-primary">
+                  {summary.map(({ icon: Icon, label, value }) => (
+                    <div key={label} className="flex gap-4 border-b border-border-dark p-4 last:border-b-0">
+                      <span className="grid size-9 shrink-0 place-items-center bg-accent text-accent-foreground">
+                        <Icon className="size-4" />
+                      </span>
+                      <div>
+                        <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-accent-foreground">
+                          {label}
+                        </p>
+                        <p className="mt-1 text-sm font-semibold leading-5">{value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Contact */}
-            <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
-              <div className="flex items-center gap-2">
-                <Scale className="h-5 w-5 text-accent" />
-                <h2 className="font-display text-lg font-bold tracking-tight text-foreground">
-                  Questions About Our Terms?
-                </h2>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Our legal team is here to help clarify any questions you may have.
+              <p className="border-t border-border-dark pt-5 text-xs leading-5 text-primary-foreground/62">
+                Last updated January 16, 2026. Continued use of E-Loan services confirms
+                acceptance of these terms and future amendments.
               </p>
-              <a
-                href="mailto:legal@e-loan.ca"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-accent underline-offset-4 hover:underline"
-              >
-                <Mail className="h-4 w-4" />
-                legal@e-loan.ca
-              </a>
             </div>
+          </aside>
+        </section>
 
-            <p className="text-xs text-muted-foreground">Last Updated: January 16, 2026</p>
+        <section className="grid border-b border-border lg:grid-cols-[280px_1fr]">
+          <aside className="border-b border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-b-0 lg:border-r">
+            <div className="lg:sticky lg:top-24">
+              <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                Read first
+              </p>
+              <h2 className="mt-4 text-2xl font-semibold leading-tight text-primary-foreground">
+                These terms form a binding agreement.
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-primary-foreground/68">
+                By using E-Loan&apos;s services, you acknowledge that you have read, understood,
+                and agreed to be bound by these Terms of Use.
+              </p>
+            </div>
+          </aside>
+          <div>
+            {sections.map((section) => (
+              <LegalSection key={section.n} n={section.n} title={section.title} blocks={section.blocks} />
+            ))}
           </div>
-        </div>
+        </section>
+
+        <section className="grid border-b border-border md:grid-cols-[1fr_0.42fr]">
+          <div className="border-b border-border p-6 md:border-b-0 md:border-r md:p-8">
+            <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+              Important notice
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold leading-tight text-foreground">
+              Do not use the services if you do not agree.
+            </h2>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              These terms constitute a legally binding agreement between you and E-Loan. We
+              recommend reviewing this document periodically for updates.
+            </p>
+          </div>
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center bg-accent text-accent-foreground">
+                <Mail className="size-4" />
+              </span>
+              <h2 className="text-lg font-semibold text-foreground">Questions about terms?</h2>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              Our team can help clarify questions about this document.
+            </p>
+            <a
+              href="mailto:legal@e-loan.ca"
+              className="group mt-5 inline-flex items-center gap-2 bg-accent px-2 py-1 text-sm font-bold text-accent-foreground underline-offset-4 hover:underline"
+            >
+              legal@e-loan.ca
+              <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </div>
+        </section>
       </section>
     </main>
   );
