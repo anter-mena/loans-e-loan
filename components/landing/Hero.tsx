@@ -1,201 +1,336 @@
-import { ArrowRight, Check, Lock, ShieldCheck, Sparkles, Star, Wallet } from "lucide-react";
-import { Button } from "@/components/ui/button";
+"use client";
+
+import { useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { HyperText } from "@/components/ui/hyper-text";
+import { PixelTransition } from "@/components/ui/pixel-transition";
+import Image from "next/image";
 import Link from "next/link";
 
-export default function Hero() {
+const partnerLogos = [
+  { name: "TD Bank", src: "/partners/TD_BANK.svg", scale: 1 },
+  { name: "RBC", src: "/partners/RBC.svg", scale: 1.72 },
+  { name: "Scotiabank", src: "/partners/Scotiabank.svg", scale: 1 },
+  { name: "BMO", src: "/partners/BMO.svg", scale: 1 },
+  { name: "CIBC", src: "/partners/CIBC.svg", scale: 1.42 },
+  { name: "National Bank", src: "/partners/National_Bank.svg", scale: 1 },
+];
+
+const logoSeparators = [1, 2, 3, 4, 5];
+
+const heroStats = [
+  ["240k+", "Borrowers funded"],
+  ["$1.8B", "Lent to date"],
+  ["37s", "Average decision"],
+];
+
+const heroPatternTiles = [
+  ["3%", "10%", 44, "outline", 0.42],
+  ["10%", "7%", 46, "dots", 0.45],
+  ["18%", "2%", 46, "accent", 0.72],
+  ["23%", "2%", 46, "shade", 0.32],
+  ["34%", "8%", 46, "outline", 0.28],
+  ["42%", "5%", 46, "dots", 0.34],
+  ["53%", "3%", 46, "shade", 0.24],
+  ["68%", "7%", 46, "dots", 0.42],
+  ["78%", "6%", 46, "outline", 0.36],
+  ["86%", "5%", 46, "dots", 0.32],
+  ["93%", "9%", 46, "accent", 0.34],
+  ["1%", "26%", 44, "dots", 0.42],
+  ["8%", "26%", 46, "shade", 0.36],
+  ["16%", "31%", 46, "outline", 0.32],
+  ["26%", "30%", 46, "dots", 0.22],
+  ["72%", "27%", 46, "outline", 0.28],
+  ["83%", "25%", 46, "dots", 0.38],
+  ["91%", "31%", 46, "shade", 0.25],
+  ["4%", "48%", 46, "outline", 0.26],
+  ["13%", "50%", 46, "dots", 0.26],
+  ["23%", "56%", 46, "accent", 0.2],
+  ["69%", "54%", 46, "dots", 0.22],
+  ["80%", "49%", 46, "accent", 0.26],
+  ["91%", "52%", 46, "outline", 0.28],
+  ["8%", "74%", 46, "dots", 0.42],
+  ["17%", "82%", 46, "outline", 0.28],
+  ["30%", "78%", 46, "dots", 0.28],
+  ["40%", "86%", 46, "accent", 0.32],
+  ["54%", "80%", 46, "outline", 0.24],
+  ["66%", "74%", 46, "shade", 0.24],
+  ["76%", "82%", 46, "dots", 0.34],
+  ["88%", "77%", 46, "accent", 0.34],
+  ["95%", "71%", 46, "dots", 0.42],
+] as const;
+
+function HeroMosaicPattern() {
   return (
-    <section id="hero" className="relative overflow-hidden bg-gradient-hero pt-16 pb-14 lg:pt-24 lg:pb-20">
-      {/* ambient blobs */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[460px] w-[460px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-32 h-[360px] w-[360px] rounded-full bg-gold/15 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-32 right-[-80px] h-[300px] w-[300px] rounded-full bg-accent/10 blur-3xl" />
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{
+        maskImage:
+          "radial-gradient(circle at center, transparent 0%, transparent 28%, black 48%, black 100%)",
+      }}
+    >
+      {heroPatternTiles.map(([left, top, size, variant, opacity], index) => {
+        const isDots = variant === "dots";
+        const isAccent = variant === "accent";
+        const isShade = variant === "shade";
 
-      {/* subtle grid */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent)",
-        }}
+        return (
+          <span
+            key={`${left}-${top}-${index}`}
+            data-left={left}
+            data-top={top}
+            data-size={size}
+            className={`hero-pattern-tile absolute border transition-transform duration-500 ease-out ${
+              isAccent
+                ? "border-accent/30 bg-accent"
+                : isShade
+                  ? "border-border bg-border"
+                  : "border-border bg-background/40"
+            }`}
+            style={{
+              left,
+              top,
+              width: size,
+              height: size,
+              "--hero-tile-opacity": opacity,
+              animation: `hero-mosaic-flicker ${5200 + (index % 5) * 700}ms steps(1, end) infinite`,
+              animationDelay: `${index * 180}ms`,
+              backgroundImage: isDots
+                ? "radial-gradient(hsl(var(--border) / 0.9) 1px, transparent 1px)"
+                : isShade
+                  ? "linear-gradient(135deg, hsl(var(--border) / 0.2), hsl(var(--border) / 0.78))"
+                  : undefined,
+              backgroundSize: isDots ? "7px 7px" : undefined,
+            } as React.CSSProperties}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function HeroPixelButton() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <Link
+      href="/apply"
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className="relative inline-flex h-11 items-center gap-2 overflow-hidden px-6 text-base font-bold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+    >
+      <PixelTransition
+        active={active}
+        columns={8}
+        rows={3}
+        animationStepDuration={0.32}
+        exitAnimationStepDuration={0.32}
+        pixelColor="hsl(var(--accent))"
+        exitPixelColor="hsl(var(--primary))"
+        className="absolute inset-0"
+        firstContent={<span className="block size-full bg-primary" />}
+        secondContent={<span className="block size-full bg-accent" />}
       />
+      <span className={`relative z-30 transition-colors duration-200 ${active ? "text-accent-foreground" : "text-primary-foreground"}`}>
+        Apply now
+      </span>
+      <ArrowRight
+        className={`relative z-30 size-4 transition-colors duration-200 ${active ? "text-accent-foreground" : "text-primary-foreground"}`}
+      />
+    </Link>
+  );
+}
 
-      <div className="container relative mx-auto px-4">
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-12">
-          {/* Left column: copy + CTAs */}
-          <div className="max-w-2xl text-center lg:text-left">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-soft backdrop-blur lg:mx-0">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+function HeroSecondaryLink() {
+  const [triggerKey, setTriggerKey] = useState(0);
+  const trigger = () => setTriggerKey((key) => key + 1);
+
+  return (
+    <Link
+      href="#how"
+      onMouseEnter={trigger}
+      onMouseLeave={trigger}
+      onFocus={trigger}
+      onBlur={trigger}
+      className="inline-flex h-11 items-center gap-3 border border-border px-4 text-base font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+    >
+      <ArrowRight className="size-4" />
+      <HyperText
+        as="span"
+        duration={520}
+        animateOnHover={false}
+        triggerKey={triggerKey}
+        className="pointer-events-none py-0 font-sans text-base font-bold leading-none tracking-normal"
+        characterSet={"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
+      >
+        See how it works
+      </HyperText>
+    </Link>
+  );
+}
+
+export default function Hero() {
+  const patternFrameRef = useRef<number | null>(null);
+
+  const handlePatternPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const target = event.currentTarget;
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+
+    if (patternFrameRef.current) {
+      window.cancelAnimationFrame(patternFrameRef.current);
+    }
+
+    patternFrameRef.current = window.requestAnimationFrame(() => {
+      const bounds = target.getBoundingClientRect();
+      const x = clientX - bounds.left;
+      const y = clientY - bounds.top;
+      const tiles = target.querySelectorAll<HTMLElement>(".hero-pattern-tile");
+
+      tiles.forEach((tile) => {
+        const left = Number.parseFloat(tile.dataset.left ?? "0");
+        const top = Number.parseFloat(tile.dataset.top ?? "0");
+        const size = Number.parseFloat(tile.dataset.size ?? "0");
+        const centerX = (left / 100) * bounds.width + size / 2;
+        const centerY = (top / 100) * bounds.height + size / 2;
+        const deltaX = centerX - x;
+        const deltaY = centerY - y;
+        const distance = Math.hypot(deltaX, deltaY);
+        const radius = 190;
+
+        if (distance >= radius || distance === 0) {
+          tile.style.transform = "translate3d(0, 0, 0)";
+          return;
+        }
+
+        const strength = Math.pow(1 - distance / radius, 1.35) * 42;
+        const rawMoveX = (deltaX / distance) * strength;
+        const rawMoveY = (deltaY / distance) * strength;
+        const gridStep = 12;
+        const snapToGrid = (value: number) => {
+          const snapped = Math.round(value / gridStep) * gridStep;
+
+          if (snapped === 0 && Math.abs(value) > 4) {
+            return Math.sign(value) * gridStep;
+          }
+
+          return snapped;
+        };
+        const moveX = snapToGrid(rawMoveX);
+        const moveY = snapToGrid(rawMoveY);
+
+        tile.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+      });
+    });
+  };
+
+  const handlePatternPointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (patternFrameRef.current) {
+      window.cancelAnimationFrame(patternFrameRef.current);
+      patternFrameRef.current = null;
+    }
+
+    event.currentTarget
+      .querySelectorAll<HTMLElement>(".hero-pattern-tile")
+      .forEach((tile) => {
+        tile.style.transform = "translate3d(0, 0, 0)";
+      });
+  };
+
+  return (
+    <section id="hero" className="relative overflow-hidden bg-background">
+      <div className="relative mx-auto w-full max-w-[1000px] border-x border-border">
+        <div
+          className="relative flex min-h-[540px] items-center justify-center overflow-hidden px-6 py-16 text-center md:px-12 lg:px-16 lg:py-20"
+          onPointerMove={handlePatternPointerMove}
+          onPointerLeave={handlePatternPointerLeave}
+        >
+          <HeroMosaicPattern />
+          <div aria-hidden className="absolute left-8 top-8 h-16 w-16 border-l border-t border-primary" />
+          <div aria-hidden className="absolute right-8 top-8 h-16 w-16 border-r border-t border-primary" />
+          <div aria-hidden className="absolute bottom-8 left-8 h-16 w-16 border-b border-l border-primary" />
+          <div aria-hidden className="absolute bottom-8 right-8 h-16 w-16 border-b border-r border-primary" />
+          <div aria-hidden className="absolute left-1/2 top-0 h-8 w-px bg-border" />
+          <div aria-hidden className="absolute bottom-0 left-1/2 h-8 w-px bg-border" />
+
+          <div className="relative z-10 mx-auto max-w-3xl">
+            <div className="mx-auto inline-flex items-center gap-2 border border-border bg-card/90 px-2 py-1 text-xs font-semibold text-muted-foreground shadow-soft backdrop-blur">
+              <span className="bg-primary px-2 py-0.5 text-[10px] font-black uppercase tracking-normal text-primary-foreground">
+                New
               </span>
-              <Sparkles className="h-3.5 w-3.5 text-gold" />
-              E-Loan approvals now live across Canada
+              <span className="pr-2">E-Loan approvals now live across Canada</span>
             </div>
 
-            <h1 className="mt-6 font-display text-4xl leading-[1] tracking-tight text-balance text-foreground sm:text-5xl lg:text-[72px]">
+            <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl leading-[1] tracking-tight text-balance text-foreground sm:text-6xl lg:text-7xl">
               Loans, made
               <br />
               <span className="relative inline-block">
-                <span className="relative z-10 text-accent">refreshingly</span>
-                <span aria-hidden className="absolute inset-x-0 bottom-2 z-0 h-3 bg-gold/40" />
+                <span className="relative z-10 inline-block px-4 py-1 text-foreground">refreshingly</span>
+                <span aria-hidden className="absolute -inset-x-2 inset-y-1 z-0 bg-accent" />
               </span>{" "}
               simple.
             </h1>
 
-            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-muted-foreground text-balance sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground text-balance">
               Up to <span className="font-semibold text-foreground">$50,000</span> with rates you can
               read in one breath, decisions in seconds, and zero paperwork.
             </p>
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
-              <Button variant="hero" size="lg" asChild>
-                <Link href="#apply">
-                  Apply now
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="soft" size="lg" asChild>
-                <Link href="#how">See how it works</Link>
-              </Button>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <HeroPixelButton />
+              <HeroSecondaryLink />
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground lg:justify-start">
-              <span className="inline-flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-accent" />
-                Soft credit check
-              </span>
-              <span aria-hidden className="hidden h-3 w-px bg-border sm:inline-block" />
-              <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-                No impact on your score
-              </span>
-              <span aria-hidden className="hidden h-3 w-px bg-border sm:inline-block" />
-              <span className="inline-flex items-center gap-1.5">
-                <Check className="h-3.5 w-3.5 text-accent" />
-                Decision in 37 seconds
-              </span>
-            </div>
-          </div>
-
-          {/* Right column: animated pre-approval visual (decorative) */}
-          <div aria-hidden className="relative mx-auto w-full max-w-md lg:max-w-lg lg:justify-self-end">
-            {/* rotating ambient rings */}
-            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-accent/15 hero-spin-slow" />
-            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/10" />
-
-            {/* Offer card */}
-            <div className="hero-float hero-rise relative rounded-[1.75rem] border border-border bg-card/90 p-6 shadow-card backdrop-blur-sm">
-              {/* card header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-cta">
-                    <Sparkles className="h-4 w-4 text-accent" />
-                  </span>
-                  <div className="leading-tight">
-                    <div className="font-display text-sm font-bold text-foreground">Your pre-approval</div>
-                    <div className="text-[10px] text-muted-foreground">E-Loan · updated live</div>
+            <div className="mx-auto mt-12 grid w-full border-y border-border text-left sm:grid-cols-6">
+              {heroStats.map(([value, label], index) => (
+                <div
+                  key={label}
+                  className={`relative min-h-[104px] px-6 py-6 sm:col-span-2 ${
+                    index < heroStats.length - 1 ? "border-b border-border sm:border-r sm:border-b-0" : ""
+                  }`}
+                >
+                  <div className="font-display text-3xl font-medium leading-none tracking-tight text-foreground md:text-4xl">
+                    {value}
                   </div>
+                  <div className="mt-3 text-sm font-medium text-muted-foreground">{label}</div>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-1 text-[10px] font-semibold text-accent">
-                  <Lock className="h-3 w-3" />
-                  Encrypted
-                </span>
-              </div>
-
-              {/* loan amount + slider */}
-              <div className="mt-6">
-                <div className="text-xs font-medium text-muted-foreground">Loan amount</div>
-                <div className="mt-1 font-display text-4xl font-bold tracking-tight text-foreground">$25,000</div>
-                <div className="relative mt-3 h-2 rounded-full bg-secondary">
-                  <div className="hero-grow h-full w-[68%] rounded-full bg-gradient-emerald" />
-                  <span className="absolute top-1/2 left-[68%] h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent bg-card shadow-soft" />
-                </div>
-                <div className="mt-2 flex justify-between text-[10px] text-muted-foreground">
-                  <span>$1,000</span>
-                  <span>$50,000</span>
-                </div>
-              </div>
-
-              {/* rate + term tiles */}
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-border bg-background/60 p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">APR from</div>
-                  <div className="mt-0.5 font-display text-lg font-bold text-foreground">6.99%</div>
-                </div>
-                <div className="rounded-2xl border border-border bg-background/60 p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Term</div>
-                  <div className="mt-0.5 font-display text-lg font-bold text-foreground">48 mo</div>
-                </div>
-              </div>
-
-              {/* monthly estimate */}
-              <div className="mt-4 flex items-center justify-between rounded-2xl bg-secondary/60 px-4 py-3">
-                <span className="text-xs font-medium text-muted-foreground">Est. monthly</span>
-                <span className="font-display text-lg font-bold text-foreground">
-                  $599<span className="text-xs font-medium text-muted-foreground">/mo</span>
-                </span>
-              </div>
-
-              {/* approved bar with shimmer sweep */}
-              <div className="relative mt-5 overflow-hidden rounded-xl bg-gradient-emerald px-4 py-3 text-center">
-                <span className="relative z-10 inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground">
-                  <span className="hero-pop grid h-5 w-5 place-items-center rounded-full bg-white/25">
-                    <Check className="h-3.5 w-3.5" strokeWidth={3} />
-                  </span>
-                  Approved in 37 seconds
-                </span>
-                <span className="hero-shimmer pointer-events-none absolute inset-y-0 left-0 z-0 w-1/3 bg-white/25 blur-md" />
-              </div>
-            </div>
-
-            {/* floating chips */}
-            <div className="hero-float-slow absolute -left-3 top-10 rounded-2xl border border-border bg-card px-3 py-2 shadow-card sm:-left-5">
-              <div className="flex items-center gap-1.5">
-                <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-                <span className="text-xs font-bold text-foreground">4.9</span>
-                <span className="text-[10px] text-muted-foreground">Trustpilot</span>
-              </div>
-            </div>
-
-            <div
-              className="hero-float absolute -right-3 top-1/3 rounded-2xl border border-border bg-card px-3 py-2 shadow-card sm:-right-6"
-              style={{ animationDelay: "0.8s" }}
-            >
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-                <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-                No credit impact
-              </div>
-            </div>
-
-            <div
-              className="hero-float-slow absolute -bottom-4 left-10 rounded-2xl border border-border bg-card px-3 py-2 shadow-card"
-              style={{ animationDelay: "1.2s" }}
-            >
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-                <Wallet className="h-3.5 w-3.5 text-accent" />
-                Funds in 24h
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Stat ticker — full width below the split */}
-        <dl className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-y-8 border-t border-border pt-10 sm:grid-cols-4">
-          {[
-            { v: "240k+", l: "Borrowers funded" },
-            { v: "$1.8B", l: "Lent to date" },
-            { v: "37s", l: "Avg. decision" },
-            { v: "4.9★", l: "Trustpilot rating" },
-          ].map((s) => (
-            <div key={s.l} className="text-center">
-              <dt className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{s.v}</dt>
-              <dd className="mt-1 text-xs text-muted-foreground">{s.l}</dd>
+        <div className="relative grid border-y border-border sm:grid-cols-3 lg:grid-cols-6">
+          {logoSeparators.map((separator) => (
+            <span
+              key={separator}
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 hidden w-px bg-border lg:block"
+              style={{ left: `${(separator / partnerLogos.length) * 100}%` }}
+            />
+          ))}
+          {partnerLogos.map((partner, index) => (
+            <div
+              key={partner.name}
+              className={`grid h-[72px] place-items-center px-5 ${
+                index < partnerLogos.length - 1 ? "border-b border-border sm:border-r lg:border-b-0 lg:border-r-0" : ""
+              }`}
+            >
+              <span className="relative block h-9 w-28">
+                <Image
+                  src={partner.src}
+                  alt={partner.name}
+                  fill
+                  sizes="112px"
+                  className="object-contain opacity-45 grayscale transition-all duration-200 hover:opacity-95 hover:contrast-125"
+                  style={{ transform: `scale(${partner.scale})` }}
+                />
+              </span>
             </div>
           ))}
-        </dl>
+        </div>
       </div>
     </section>
   );

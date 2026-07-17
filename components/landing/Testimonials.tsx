@@ -1,113 +1,138 @@
-import { Star, Quotes } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
+import { Marquee } from "@/components/ui/marquee";
+import { cn } from "@/lib/utils";
+import SectionTitleBand from "./SectionTitleBand";
 
-const featured = {
-  quote:
-    "I was dreading the loan process. e-loan made it feel like ordering takeout — clear, fast, and honest about the cost.",
-  name: "Maya Chen",
-  role: "Designer, Brooklyn",
-  avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop",
-  amount: "$12,400",
-  apr: "6.9%",
-};
-
-const others = [
+const testimonials = [
   {
-    quote:
-      "Consolidated debt twice with e-loan. Both times the rate was lower than my bank quoted.",
-    name: "Marcus Reid",
-    role: "Small business owner",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&auto=format&fit=crop",
+    name: "Alice Johnson",
+    role: "Toronto",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "E-Loan gave me a clear offer in minutes. The cost was simple to understand and there were no surprises.",
   },
   {
-    quote:
-      "I knew the exact total I'd pay before I signed anything. Zero surprises.",
-    name: "Aisha Okafor",
-    role: "Nurse practitioner",
+    name: "Diana Evans",
+    role: "Vancouver",
     avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "The fixed payment helped me roll my cards into one plan I could actually budget around.",
+  },
+  {
+    name: "George Harris",
+    role: "Calgary",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "I compared the total before signing and knew exactly what I would pay every month.",
+  },
+  {
+    name: "Bob Brown",
+    role: "Ottawa",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "The soft check made it easy to look without worrying about my credit score taking a hit.",
+  },
+  {
+    name: "Ethan Ford",
+    role: "Montreal",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "I needed money for a repair quickly. The process stayed calm, fast, and very direct.",
+  },
+  {
+    name: "Hannah Irving",
+    role: "Halifax",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "The monthly estimate matched the final offer, which made the decision feel much easier.",
+  },
+  {
+    name: "Charlie Davis",
+    role: "Winnipeg",
+    avatar: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "I used E-Loan to cover medical bills and kept everything on one manageable schedule.",
+  },
+  {
+    name: "Fiona Grant",
+    role: "Edmonton",
+    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "No paperwork maze. I saw my rate, term, and payment clearly before I accepted.",
+  },
+  {
+    name: "Ian Johnson",
+    role: "Mississauga",
+    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=150&h=150&auto=format&fit=crop",
+    quote: "The money arrived quickly and the repayment plan was straightforward from day one.",
   },
 ];
 
+const testimonialColumns = [
+  [testimonials[0], testimonials[3], testimonials[6], testimonials[1], testimonials[4]],
+  [testimonials[4], testimonials[7], testimonials[1], testimonials[5], testimonials[8]],
+  [testimonials[2], testimonials[5], testimonials[8], testimonials[0], testimonials[3]],
+];
+
+function TestimonialCard({
+  testimonial,
+  columnIndex,
+}: {
+  testimonial: (typeof testimonials)[number];
+  columnIndex: number;
+}) {
+  return (
+    <figure
+      className={cn(
+        "min-h-[148px] border-b border-border bg-background p-5 md:border-x",
+        columnIndex === 0 && "md:border-l-0",
+        columnIndex === testimonialColumns.length - 1 && "md:border-r-0"
+      )}
+    >
+      <figcaption className="flex items-center gap-3">
+        <Image
+          src={testimonial.avatar}
+          alt={testimonial.name}
+          width={40}
+          height={40}
+          className="size-10 shrink-0 rounded-full object-cover"
+        />
+        <div>
+          <div className="font-display text-base font-bold leading-tight text-foreground">
+            {testimonial.name}
+          </div>
+          <span className="mt-1 inline-flex bg-accent px-1.5 py-0.5 font-mono text-[10px] leading-none text-accent-foreground">
+            @{testimonial.role}
+          </span>
+        </div>
+      </figcaption>
+      <blockquote className="mt-4 text-sm font-semibold leading-6 text-foreground">
+        {testimonial.quote}
+      </blockquote>
+    </figure>
+  );
+}
+
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="bg-secondary/40 py-16 lg:py-20">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Real borrowers</p>
-          <h2 className="mt-3 font-display text-2xl leading-tight text-balance text-foreground sm:text-3xl lg:text-4xl">
-            Trusted by 240,000+ people who&apos;ve stopped fearing the word &ldquo;loan.&rdquo;
-          </h2>
-        </div>
+    <section id="testimonials" className="bg-background">
+      <div className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <SectionTitleBand label="Testimonials" className="border-b border-border" />
 
-        <div className="mx-auto mt-10 grid max-w-7xl gap-5 lg:grid-cols-[1.4fr_1fr]">
-          {/* Featured */}
-          <figure className="relative overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground shadow-card sm:p-7">
-            <Quotes weight="fill" aria-hidden className="absolute right-6 top-6 h-16 w-16 text-accent/15" />
-            <div className="flex gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} weight="fill" className="h-4 w-4 text-gold" />
-              ))}
-            </div>
-            <blockquote className="mt-4 font-display text-lg leading-snug tracking-tight text-balance sm:text-xl">
-              &ldquo;{featured.quote}&rdquo;
-            </blockquote>
-            <figcaption className="mt-6 flex items-center justify-between gap-4 border-t border-primary-foreground/10 pt-5">
-              <div className="flex items-center gap-3">
-                <Image
-                  src={featured.avatar}
-                  alt={featured.name}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full object-cover ring-2 ring-accent/40"
-                />
-                <div>
-                  <div className="text-sm font-semibold">{featured.name}</div>
-                  <div className="text-xs text-primary-foreground/60">{featured.role}</div>
-                </div>
-              </div>
-              <div className="flex gap-4 text-right">
-                <div>
-                  <div className="font-display text-sm font-bold">{featured.amount}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-primary-foreground/50">Borrowed</div>
-                </div>
-                <div>
-                  <div className="font-display text-sm font-bold text-accent">{featured.apr}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-primary-foreground/50">APR</div>
-                </div>
-              </div>
-            </figcaption>
-          </figure>
-
-          {/* Compact stack */}
-          <div className="grid gap-5">
-            {others.map((t) => (
-              <figure
-                key={t.name}
-                className="flex gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+        <div className="grid md:grid-cols-3">
+          {testimonialColumns.map((column, index) => (
+            <div
+              key={index}
+              className="relative h-[440px] overflow-hidden bg-background md:-ml-px md:h-[520px] first:md:ml-0"
+            >
+              <Marquee
+                vertical
+                reverse={index !== 1}
+                repeat={4}
+                className="h-full [--duration:34s] [--gap:0px] p-0"
               >
-                <Image
-                  src={t.avatar}
-                  alt={t.name}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 shrink-0 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} weight="fill" className="h-3 w-3 text-gold" />
-                    ))}
-                  </div>
-                  <blockquote className="mt-2 text-xs leading-relaxed text-foreground">
-                    &ldquo;{t.quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="mt-2 text-xs text-muted-foreground">
-                    <span className="font-semibold text-foreground">{t.name}</span> · {t.role}
-                  </figcaption>
-                </div>
-              </figure>
-            ))}
-          </div>
+                {column.map((testimonial) => (
+                  <TestimonialCard
+                    key={`${testimonial.name}-${testimonial.role}`}
+                    testimonial={testimonial}
+                    columnIndex={index}
+                  />
+                ))}
+              </Marquee>
+            </div>
+          ))}
         </div>
       </div>
     </section>

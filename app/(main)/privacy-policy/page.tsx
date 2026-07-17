@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Ban, Lock, Mail, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { LegalSection, type LegalBlock } from "@/components/legal/legal";
+import { PrivacySignalsPanel } from "@/components/privacy/privacy-signals-panel";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — E-Loan",
+  title: "Privacy Policy - E-Loan",
   description:
     "How E-Loan collects, uses, and protects your personal information. Read our approach to data protection, disclosure, and your privacy rights.",
   alternates: { canonical: `${siteUrl}/privacy-policy` },
   openGraph: {
-    title: "Privacy Policy — E-Loan",
+    title: "Privacy Policy - E-Loan",
     description:
       "How E-Loan collects, uses, and protects your personal information.",
     url: `${siteUrl}/privacy-policy`,
@@ -18,12 +20,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-const badges = [
-  { icon: Lock, label: "256-bit Encryption" },
-  { icon: ShieldCheck, label: "PIPEDA Compliant" },
-  { icon: Ban, label: "No Data Selling" },
-];
 
 const sections: { n: string; title: string; blocks: LegalBlock[] }[] = [
   {
@@ -150,78 +146,96 @@ const sections: { n: string; title: string; blocks: LegalBlock[] }[] = [
   },
 ];
 
+const commitments = [
+  { label: "Collection", value: "Only for application, account, support, and service purposes." },
+  { label: "Access", value: "Limited to authorized personnel and approved service partners." },
+  { label: "Control", value: "You may request review, correction, or deletion of your data." },
+];
+
 export default function PrivacyPolicyPage() {
   return (
-    <main className="relative overflow-hidden bg-background">
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-16 pb-12 md:pt-20">
-        <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+    <main className="bg-background">
+      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <SectionTitleBand label="Privacy Policy" className="border-b border-border" />
 
-        <div className="container relative mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Legal</p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
-              Your Privacy Matters
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground text-balance">
-              We recognize the importance of protecting your personal data and appreciate the trust
-              you place in us. This policy explains our approach to collecting, using, and protecting
-              the information you provide when using our services. Your use of our platform
-              constitutes acceptance of the privacy practices described below.
+        <section className="grid border-b border-border lg:grid-cols-[0.56fr_0.44fr]">
+          <div className="px-6 py-14 md:px-10 lg:py-16">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
+              Data protection
             </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              {badges.map(({ icon: Icon, label }) => (
-                <span
-                  key={label}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground shadow-soft"
-                >
-                  <Icon className="h-4 w-4 text-accent" />
-                  {label}
-                </span>
-              ))}
-            </div>
+            <h1 className="mt-5 max-w-xl font-display text-5xl font-semibold leading-[0.98] tracking-tight text-foreground md:text-7xl">
+              Your privacy should be easy to understand.
+            </h1>
+            <p className="mt-6 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              This policy explains how E-Loan collects, uses, shares, protects, and retains
+              information when you use our website, application flow, and services.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Body */}
-      <section className="pb-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl space-y-8">
-            {sections.map((s) => (
-              <LegalSection key={s.n} n={s.n} title={s.title} blocks={s.blocks} />
-            ))}
+          <PrivacySignalsPanel />
+        </section>
 
-            {/* Privacy rights callout */}
-            <div className="rounded-3xl border border-accent/20 bg-accent-soft/50 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                Your Privacy Rights
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                You retain the right to review, correct, or request deletion of personal information
-                we hold about you. To exercise these rights or if you have questions regarding your
-                data, please contact us using the information below.
+        <section className="grid border-b border-border lg:grid-cols-[280px_1fr]">
+          <aside className="border-b border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-b-0 lg:border-r">
+            <div className="lg:sticky lg:top-24">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
+                Commitments
               </p>
+              <div className="mt-6 grid gap-px border border-primary bg-primary">
+                {commitments.map((item) => (
+                  <div key={item.label} className="bg-primary p-4">
+                    <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-accent-foreground">
+                      {item.label}
+                    </p>
+                    <p className="mt-2 text-sm leading-5 text-primary-foreground/72">
+                      {item.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            {/* Contact */}
-            <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
-              <h2 className="font-display text-lg font-bold tracking-tight text-foreground">
-                Contact Us
-              </h2>
-              <a
-                href="mailto:privacy@e-loan.ca"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-accent underline-offset-4 hover:underline"
-              >
-                <Mail className="h-4 w-4" />
-                privacy@e-loan.ca
-              </a>
-            </div>
-
-            <p className="text-xs text-muted-foreground">Last Updated: February 2026</p>
+          </aside>
+          <div>
+            {sections.map((section) => (
+              <LegalSection key={section.n} n={section.n} title={section.title} blocks={section.blocks} />
+            ))}
           </div>
-        </div>
+        </section>
+
+        <section className="grid border-b border-border md:grid-cols-[1fr_0.42fr]">
+          <div className="border-b border-border p-6 md:border-b-0 md:border-r md:p-8">
+            <p className="inline-block bg-accent px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+              Your privacy rights
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold leading-tight text-foreground">
+              You can ask to review, correct, or delete your information.
+            </h2>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              To exercise these rights or ask questions regarding your data, contact us using
+              the privacy email below. We will handle the request according to applicable law
+              and regulatory requirements.
+            </p>
+          </div>
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center bg-accent text-accent-foreground">
+                <Mail className="size-4" />
+              </span>
+              <h2 className="text-lg font-semibold text-foreground">Contact privacy</h2>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              Last updated February 2026.
+            </p>
+            <a
+              href="mailto:privacy@e-loan.ca"
+              className="group mt-5 inline-flex items-center gap-2 bg-accent px-2 py-1 text-sm font-bold text-accent-foreground underline-offset-4 hover:underline"
+            >
+              privacy@e-loan.ca
+              <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </div>
+        </section>
       </section>
     </main>
   );

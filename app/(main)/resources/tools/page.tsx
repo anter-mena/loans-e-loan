@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { Calculator, ChevronRight, HelpCircle } from "lucide-react";
 
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { LoanCalculator } from "@/components/resources/loan-calculator";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Loan Calculator — Estimate Payments, Interest & Payoff | E-Loan",
+  title: "Loan Calculator - Estimate Payments, Interest & Payoff | E-Loan",
   description:
-    "Free advanced loan calculator for Canadians. Estimate your monthly payment, total interest, and payoff time — and see how extra payments save you money.",
+    "Free advanced loan calculator for Canadians. Estimate your monthly payment, total interest, and payoff time - and see how extra payments save you money.",
   alternates: { canonical: `${siteUrl}/resources/tools` },
   openGraph: {
-    title: "Loan Calculator — Estimate Payments, Interest & Payoff | E-Loan",
+    title: "Loan Calculator - Estimate Payments, Interest & Payoff | E-Loan",
     description:
       "Estimate your monthly payment, total interest, and payoff time, and see how extra payments save you money.",
     url: `${siteUrl}/resources/tools`,
@@ -23,19 +24,19 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "How is my monthly loan payment calculated?",
-    a: "We use the standard amortization formula: your payment is based on the loan amount, the monthly interest rate (APR ÷ 12), and the number of months in your term. Each payment covers that month's interest first, and the rest reduces your principal.",
+    a: "We use the standard amortization formula: your payment is based on the loan amount, the monthly interest rate (APR divided by 12), and the number of months in your term. Each payment covers that month's interest first, and the rest reduces your principal.",
   },
   {
     q: "How does an extra monthly payment help?",
-    a: "Any amount above your scheduled payment goes straight to principal, so you owe less interest every month afterward. Even a small extra payment can shorten your term and cut total interest — the calculator shows exactly how much you'd save.",
+    a: "Any amount above your scheduled payment goes straight to principal, so you owe less interest every month afterward. Even a small extra payment can shorten your term and cut total interest.",
   },
   {
     q: "Is the calculator's result my guaranteed rate?",
-    a: "No. It's an estimate for planning. Your actual APR, payment, and any origination fee depend on your credit profile, income, and the offer you're approved for. Checking your real rate with E-Loan is a soft credit check with no impact on your score.",
+    a: "No. It is an estimate for planning. Your actual APR, payment, and any origination fee depend on your credit profile, income, and the offer you are approved for.",
   },
   {
-    q: "What's a good loan term to choose?",
-    a: "A shorter term means a higher monthly payment but less total interest; a longer term lowers the payment but costs more overall. Try a few terms side by side and pick the shortest one whose monthly payment fits comfortably in your budget.",
+    q: "What is a good loan term to choose?",
+    a: "A shorter term means a higher monthly payment but less total interest; a longer term lowers the payment but costs more overall.",
   },
 ];
 
@@ -71,56 +72,72 @@ const jsonLd = {
 
 export default function ToolsPage() {
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="relative overflow-hidden pt-14 pb-16 md:pt-16 lg:pb-24">
-        <div aria-hidden className="pointer-events-none absolute -top-40 right-1/4 h-[420px] w-[420px] rounded-full bg-accent/10 blur-3xl" />
+      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <SectionTitleBand label="Calculator" className="border-b border-border" />
 
-        <div className="container relative mx-auto px-4">
-          {/* breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mx-auto max-w-6xl">
-            <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-              <li><Link href="/" className="hover:text-foreground">Home</Link></li>
-              <li aria-hidden><ChevronRight className="h-3 w-3" /></li>
-              <li><Link href="/resources" className="hover:text-foreground">Resources</Link></li>
-              <li aria-hidden><ChevronRight className="h-3 w-3" /></li>
-              <li className="font-medium text-foreground">Loan Calculator</li>
-            </ol>
-          </nav>
+        <nav aria-label="Breadcrumb" className="border-b border-border px-5 py-3 md:px-8">
+          <ol className="flex flex-wrap items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <li><Link href="/" className="transition-colors hover:text-accent">Home</Link></li>
+            <li aria-hidden><ChevronRight className="size-3" /></li>
+            <li><Link href="/resources" className="transition-colors hover:text-accent">Resources</Link></li>
+            <li aria-hidden><ChevronRight className="size-3" /></li>
+            <li className="font-medium text-foreground">Loan Calculator</li>
+          </ol>
+        </nav>
 
-          {/* header */}
-          <div className="mx-auto mt-6 max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Tools</p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
-              Loan calculator
+        <section className="grid border-b border-border lg:grid-cols-[0.55fr_0.45fr]">
+          <div className="px-6 py-12 md:px-10 md:py-14">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
+              Payment tool
+            </p>
+            <h1 className="mt-5 max-w-xl font-display text-5xl font-semibold leading-[0.96] tracking-tight text-foreground md:text-7xl">
+              Estimate the monthly number before you apply.
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground text-balance">
-              Estimate your monthly payment, see the true cost of interest, and find out how much an
-              extra payment each month could save you.
+            <p className="mt-6 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              Adjust amount, APR, term, and extra payments to see how the loan behaves over time.
             </p>
           </div>
+          <aside className="border-t border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-l lg:border-t-0">
+            <span className="grid size-11 place-items-center bg-accent text-accent-foreground">
+              <Calculator className="size-5" />
+            </span>
+            <p className="mt-6 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
+              Estimate only
+            </p>
+            <p className="mt-4 text-2xl font-semibold leading-tight">
+              Your real rate depends on your application and approved offer.
+            </p>
+          </aside>
+        </section>
 
-          {/* calculator */}
-          <div className="mx-auto mt-10 max-w-6xl">
-            <LoanCalculator />
-          </div>
+        <section className="border-b border-border">
+          <LoanCalculator />
+        </section>
 
-          {/* FAQ */}
-          <div className="mx-auto mt-16 max-w-3xl">
-            <h2 className="text-center font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Calculator FAQ
-            </h2>
-            <dl className="mt-8 space-y-6">
-              {faqs.map((f) => (
-                <div key={f.q} className="border-t border-border pt-6">
-                  <dt className="font-display text-base font-semibold text-foreground">{f.q}</dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
+        <section className="grid border-b border-border lg:grid-cols-[280px_1fr]">
+          <aside className="border-b border-border p-6 md:p-8 lg:border-b-0 lg:border-r">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center bg-accent text-accent-foreground">
+                <HelpCircle className="size-4" />
+              </span>
+              <h2 className="text-xl font-semibold text-foreground">Calculator FAQ</h2>
+            </div>
+          </aside>
+          <dl>
+            {faqs.map((f) => (
+              <div key={f.q} className="grid border-b border-border last:border-b-0 md:grid-cols-[0.42fr_0.58fr]">
+                <dt className="border-b border-border p-5 text-sm font-bold text-foreground md:border-b-0 md:border-r md:p-6">
+                  {f.q}
+                </dt>
+                <dd className="p-5 text-sm leading-6 text-muted-foreground md:p-6">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </section>
     </main>
   );

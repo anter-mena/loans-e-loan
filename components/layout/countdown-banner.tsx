@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useSyncExternalStore } from "react"
-import { Clock, X, Zap } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight, Clock, X, Zap } from "lucide-react"
 
 type Countdown = {
   isFriday: boolean
@@ -66,42 +67,52 @@ export function CountdownBanner() {
   if (!isFriday || dismissed) return null
 
   return (
-    <div className="relative bg-primary px-3 py-2 text-primary-foreground sm:px-4 sm:py-2.5">
-      <div className="flex flex-col items-center justify-center gap-2 text-xs sm:flex-row sm:gap-4 sm:text-sm">
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-          <span className="font-medium">Apply now for Friday deposit!</span>
-        </div>
+    <div className="border-y border-primary bg-primary px-3 py-2 text-primary-foreground sm:px-4">
+      <div className="relative mx-auto flex max-w-[1000px] flex-col items-center justify-center gap-2 pr-10 text-xs sm:flex-row sm:gap-5 sm:text-sm">
+        <Link
+          href="/apply"
+          className="group inline-flex items-center gap-2 font-bold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <span className="inline-flex h-5 items-center bg-accent px-2 font-mono text-[10px] font-black uppercase tracking-normal text-accent-foreground">
+            Friday
+          </span>
+          <Zap className="h-3.5 w-3.5 text-accent" />
+          <span>Apply now for Friday deposit</span>
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </Link>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-          <span className="hidden sm:inline">Time left:</span>
-          <span className="sm:hidden">Time:</span>
+        <div className="hidden h-4 w-px bg-primary-foreground/20 sm:block" />
 
-          <div className="flex items-center gap-0.5 font-mono font-bold sm:gap-1">
-            <span className="rounded bg-primary-foreground/20 px-1 py-0.5 text-xs sm:px-1.5 sm:text-sm">
+        <div className="flex items-center gap-2">
+          <Clock className="h-3.5 w-3.5 text-accent" />
+          <span className="font-medium text-primary-foreground/70">
+            <span className="hidden sm:inline">Time left</span>
+            <span className="sm:hidden">Time</span>
+          </span>
+
+          <div className="flex items-center gap-1 font-mono font-black">
+            <span className="bg-accent px-1.5 py-0.5 text-xs text-accent-foreground sm:text-sm">
               {formatNumber(hours)}
             </span>
-            <span className="text-xs sm:text-sm">:</span>
-            <span className="rounded bg-primary-foreground/20 px-1 py-0.5 text-xs sm:px-1.5 sm:text-sm">
+            <span className="text-xs text-primary-foreground/55 sm:text-sm">:</span>
+            <span className="bg-accent px-1.5 py-0.5 text-xs text-accent-foreground sm:text-sm">
               {formatNumber(minutes)}
             </span>
-            <span className="text-xs sm:text-sm">:</span>
-            <span className="rounded bg-primary-foreground/20 px-1 py-0.5 text-xs sm:px-1.5 sm:text-sm">
+            <span className="text-xs text-primary-foreground/55 sm:text-sm">:</span>
+            <span className="bg-accent px-1.5 py-0.5 text-xs text-accent-foreground sm:text-sm">
               {formatNumber(seconds)}
             </span>
           </div>
         </div>
+        <button
+          type="button"
+          aria-label="Dismiss announcement"
+          onClick={() => setDismissed(true)}
+          className="absolute right-0 top-1/2 grid size-7 -translate-y-1/2 place-items-center border border-primary-foreground/15 text-primary-foreground/70 transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
       </div>
-
-      <button
-        type="button"
-        aria-label="Dismiss announcement"
-        onClick={() => setDismissed(true)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-primary-foreground/10 sm:right-4"
-      >
-        <X className="h-3 w-3 sm:h-4 sm:w-4" />
-      </button>
     </div>
   )
 }

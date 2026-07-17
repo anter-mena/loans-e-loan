@@ -241,7 +241,7 @@ export default async function ComparisonArticlePage({
             Check your personalized rate in about two minutes — a soft credit check with no impact on your score.
           </p>
           <Button variant="hero" size="lg" asChild className="mt-5">
-            <Link href="/#apply">
+            <Link href="/apply">
               Check your rate
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>

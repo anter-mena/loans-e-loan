@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
+import { PixelTransition } from "@/components/ui/pixel-transition";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +27,58 @@ const topics = [
 
 type Status = "idle" | "submitting" | "success";
 
+function PixelSubmitButton({ submitting }: { submitting: boolean }) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <button
+      type="submit"
+      disabled={submitting}
+      onMouseEnter={() => !submitting && setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => !submitting && setActive(true)}
+      onBlur={() => setActive(false)}
+      className="relative inline-flex h-12 w-full items-center justify-center gap-2 overflow-hidden border border-primary bg-primary px-6 text-base font-bold text-primary-foreground transition-opacity disabled:pointer-events-none disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+    >
+      <PixelTransition
+        active={active}
+        columns={12}
+        rows={4}
+        animationStepDuration={0.32}
+        exitAnimationStepDuration={0.32}
+        pixelColor="hsl(var(--accent))"
+        exitPixelColor="hsl(var(--primary))"
+        squarePixels
+        pixelSize={12}
+        className="pointer-events-none absolute inset-0"
+        firstContent={<span className="block size-full bg-primary" />}
+        secondContent={<span className="block size-full bg-accent" />}
+      />
+      {submitting ? (
+        <>
+          <Loader2 className="relative z-20 h-4 w-4 animate-spin text-primary-foreground" />
+          <span className="relative z-20 text-primary-foreground">Sending...</span>
+        </>
+      ) : (
+        <>
+          <span
+            className={`relative z-20 transition-colors duration-200 ${
+              active ? "text-accent-foreground" : "text-primary-foreground"
+            }`}
+          >
+            Send message
+          </span>
+          <ArrowRight
+            className={`relative z-20 h-4 w-4 transition-colors duration-200 ${
+              active ? "text-accent-foreground" : "text-primary-foreground"
+            }`}
+          />
+        </>
+      )}
+    </button>
+  );
+}
+
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [topic, setTopic] = useState("");
@@ -41,8 +94,8 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-card p-8 text-center shadow-soft sm:p-10">
-        <div className="grid h-14 w-14 place-items-center rounded-2xl bg-accent-soft text-accent">
+      <div className="flex h-full flex-col items-center justify-center gap-4 border border-border bg-background p-8 text-center sm:p-10">
+        <div className="grid h-14 w-14 place-items-center rounded-md bg-accent-soft text-accent">
           <CheckCircle2 className="h-7 w-7" />
         </div>
         <h2 className="font-display text-xl font-bold tracking-tight text-foreground">
@@ -55,6 +108,7 @@ export function ContactForm() {
         <Button
           variant="soft"
           size="lg"
+          className="rounded-none"
           onClick={() => {
             setTopic("");
             setStatus("idle");
@@ -71,36 +125,36 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8"
+      className="border border-border bg-background p-6 sm:p-8"
     >
       <div className="grid gap-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="firstName">First name</Label>
-            <Input id="firstName" name="firstName" autoComplete="given-name" className="h-11" required />
+            <Input id="firstName" name="firstName" autoComplete="given-name" className="h-10 rounded-none" required />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="lastName">Last name</Label>
-            <Input id="lastName" name="lastName" autoComplete="family-name" className="h-11" required />
+            <Input id="lastName" name="lastName" autoComplete="family-name" className="h-10 rounded-none" required />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" className="h-11" required />
+          <Input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" className="h-10 rounded-none" required />
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="phone">
             Phone <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
-          <Input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="(555) 000-0000" className="h-11" />
+          <Input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="(555) 000-0000" className="h-10 rounded-none" />
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="topic">How can we help?</Label>
           <Select value={topic} onValueChange={setTopic}>
-            <SelectTrigger id="topic" className="h-11 w-full">
+            <SelectTrigger id="topic" className="h-10 w-full rounded-none">
               <SelectValue placeholder="Choose a topic" />
             </SelectTrigger>
             <SelectContent position="popper">
@@ -119,7 +173,7 @@ export function ContactForm() {
             id="message"
             name="message"
             placeholder="Tell us a little about what you need…"
-            className="min-h-32"
+            className="min-h-32 rounded-none"
             required
           />
         </div>
@@ -132,20 +186,7 @@ export function ContactForm() {
           </a>
           .
         </p>
-
-        <Button type="submit" variant="hero" size="lg" className="w-full" disabled={submitting}>
-          {submitting ? (
-            <>
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-              Sending…
-            </>
-          ) : (
-            <>
-              Send message
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </>
-          )}
-        </Button>
+        <PixelSubmitButton submitting={submitting} />
       </div>
     </form>
   );

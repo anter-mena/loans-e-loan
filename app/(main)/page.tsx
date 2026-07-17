@@ -3,21 +3,25 @@ import Benefits from "@/components/landing/Benefits"
 import HowItWorks from "@/components/landing/HowItWorks"
 import UseCases from "@/components/landing/UseCases"
 import Impact from "@/components/landing/Impact"
-import Trust from "@/components/landing/Trust"
 import Testimonials from "@/components/landing/Testimonials"
+import BlogCards from "@/components/landing/BlogCards"
 import FAQ from "@/components/landing/FAQ"
 
 export default function Home() {
   return (
     <main className="bg-background">
       <Hero />
-      <Benefits />
-      <HowItWorks />
       <UseCases />
-      <Impact />
-      <Trust />
+      <div className="mx-auto w-full max-w-[1000px]">
+        <Benefits />
+        <HowItWorks />
+        <Impact />
+      </div>
       <Testimonials />
-      <FAQ />
+      <BlogCards />
+      <div className="mx-auto w-full max-w-[1000px] border-x border-border">
+        <FAQ />
+      </div>
     </main>
   )
 }

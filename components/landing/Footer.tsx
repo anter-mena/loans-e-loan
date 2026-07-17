@@ -1,141 +1,328 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { useState, type ComponentType } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { FacebookLogo, InstagramLogo, LinkedinLogo, TiktokLogo } from "@phosphor-icons/react";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { HyperText } from "@/components/ui/hyper-text";
+import { PixelTransition } from "@/components/ui/pixel-transition";
 
-const Footer = () => {
+type SocialIcon = ComponentType<{
+  size?: number;
+  weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
+  className?: string;
+  "aria-hidden"?: boolean;
+}>;
+
+const footerColumns = [
+  {
+    title: "Quick Links",
+    links: [
+      ["Apply Now", "/apply"],
+      ["About", "/about"],
+      ["FAQ", "/resources/faq"],
+    ],
+  },
+  {
+    title: "Product",
+    links: [
+      ["Personal Loans", "/loans"],
+      ["By Amount", "/loans/by-amount"],
+      ["By Purpose", "/loans/by-purpose"],
+      ["Loan Calculator", "/resources/tools"],
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      ["Blog", "/blog"],
+      ["News", "/news"],
+      ["Guides", "/resources/guides"],
+    ],
+  },
+  {
+    title: "Contact",
+    links: [
+      ["support@eloan.ca", "mailto:support@eloan.ca"],
+      ["1-888-ELOANCA", "tel:18883562622"],
+      ["Support", "/contact"],
+    ],
+  },
+];
+
+const socials = [
+  { label: "Instagram", href: "https://www.instagram.com", icon: InstagramLogo },
+  { label: "Facebook", href: "https://www.facebook.com", icon: FacebookLogo },
+  { label: "LinkedIn", href: "https://www.linkedin.com", icon: LinkedinLogo },
+  { label: "TikTok", href: "https://www.tiktok.com", icon: TiktokLogo },
+];
+
+function FooterLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="group -ml-1 inline-flex items-center gap-1 px-1 font-sans text-xs font-medium leading-5 text-foreground underline-offset-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:underline"
+    >
+      <span>{label}</span>
+      <ArrowUpRight
+        aria-hidden
+        className="size-3 translate-x-[-2px] translate-y-0.5 opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+      />
+    </Link>
+  );
+}
+
+function CtaPixelButton() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <Link
+      href="/apply"
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className="relative inline-flex h-10 items-center overflow-hidden px-5 text-sm font-bold text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+    >
+      <PixelTransition
+        active={active}
+        columns={16}
+        rows={4}
+        animationStepDuration={0.38}
+        exitAnimationStepDuration={0.38}
+        pixelColor="hsl(var(--primary-foreground))"
+        exitPixelColor="hsl(var(--accent))"
+        className="absolute inset-0"
+        firstContent={<span className="block size-full bg-accent" />}
+        secondContent={<span className="block size-full bg-primary-foreground" />}
+      />
+      <span className="relative z-20">Get started for free</span>
+    </Link>
+  );
+}
+
+function CtaDemoLink() {
+  const [triggerKey, setTriggerKey] = useState(0);
+  const trigger = () => setTriggerKey((key) => key + 1);
+
+  return (
+    <Link
+      href="/contact"
+      onMouseEnter={trigger}
+      onMouseLeave={trigger}
+      onFocus={trigger}
+      onBlur={trigger}
+      className="inline-flex h-10 items-center gap-3 border border-primary-foreground/30 px-3 text-sm font-bold text-primary-foreground transition-[color,border-color] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+    >
+      <ArrowRight className="size-3.5" />
+      <HyperText
+        as="span"
+        duration={520}
+        animateOnHover={false}
+        triggerKey={triggerKey}
+        className="pointer-events-none py-0 font-sans text-sm font-bold leading-none tracking-normal"
+        characterSet={"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
+      >
+        Request a demo
+      </HyperText>
+    </Link>
+  );
+}
+
+function NewsletterPixelButton() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <button
+      type="submit"
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className="relative grid size-8 shrink-0 place-items-center overflow-hidden border border-primary text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      aria-label="Subscribe to newsletter"
+    >
+      <PixelTransition
+        active={active}
+        gridSize={4}
+        animationStepDuration={0.32}
+        exitAnimationStepDuration={0.32}
+        pixelColor="hsl(var(--accent))"
+        exitPixelColor="hsl(var(--primary))"
+        className="absolute inset-0"
+        firstContent={<span className="block size-full bg-primary" />}
+        secondContent={<span className="block size-full bg-accent" />}
+      />
+      <ArrowRight
+        className={`relative z-20 size-4 transition-colors duration-200 ${
+          active ? "text-accent-foreground" : "text-primary-foreground"
+        }`}
+      />
+    </button>
+  );
+}
+
+function SocialPixelLink({
+  label,
+  href,
+  icon: Icon,
+}: {
+  label: string;
+  href: string;
+  icon: SocialIcon;
+}) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <Link
+      href={href}
+      aria-label={`E-Loan on ${label}`}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className="relative grid size-7 place-items-center overflow-hidden border border-primary text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <PixelTransition
+        active={active}
+        gridSize={4}
+        animationStepDuration={0.3}
+        exitAnimationStepDuration={0.3}
+        pixelColor="hsl(var(--accent))"
+        exitPixelColor="hsl(var(--primary))"
+        className="absolute inset-0"
+        firstContent={<span className="block size-full bg-primary" />}
+        secondContent={<span className="block size-full bg-accent" />}
+      />
+      <Icon
+        size={16}
+        weight="fill"
+        aria-hidden
+        className={`relative z-20 transition-colors duration-200 ${
+          active ? "text-accent-foreground" : "text-primary-foreground"
+        }`}
+      />
+    </Link>
+  );
+}
+
+export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="bg-background pt-4 pb-2">
-      <div className="mx-auto w-[98%]">
-      <div className="relative mt-32">
-        {/* Final CTA */}
-        <section id="apply" className="absolute inset-x-0 top-0 z-10 mx-auto max-w-7xl -translate-y-1/2 overflow-hidden rounded-3xl bg-primary py-8 lg:py-10">
-        <div aria-hidden className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-accent/20 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-20 -bottom-20 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
+    <footer className="bg-background text-foreground">
+      <section id="apply" className="relative overflow-hidden border-y border-primary bg-primary text-primary-foreground">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.08] blur-sm"
-          style={{
-            backgroundImage: "url('/favicon.svg')",
-            backgroundSize: "420px 420px",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
+          className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary"
         />
+        <FlickeringGrid
+          aria-hidden
+          className="absolute inset-0"
+          squareSize={2}
+          gridGap={2}
+          flickerChance={0.08}
+          maxOpacity={0.18}
+          color="hsl(var(--primary-foreground))"
+        />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/10 to-primary/50" />
 
-        <div className="container mx-auto px-4 md:px-8 relative z-10 text-center">
-          <div className="mx-auto flex max-w-2xl flex-col items-center">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-accent">
-              <Image src="/logo-icon-white.svg" alt="" width={18} height={18} className="h-4.5 w-4.5" />
-            </div>
-
-            <div className="mt-2 flex flex-col items-center gap-1">
-              <h2 className="font-display text-2xl leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
-                Ready to experience
-              </h2>
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <h2 className="font-display text-2xl leading-none tracking-tight text-white sm:text-3xl lg:text-4xl">
-                  <span className="text-accent">better</span> rates
-                </h2>
-                <Link
-                  href="#apply"
-                  className="inline-flex translate-y-1.5 items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-primary"
-                >
-                  Apply now
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {["No hidden fees", "Soft credit check"].map((text) => (
-                <div key={text} className="flex items-center gap-2 text-xs font-medium text-slate-400">
-                  <ShieldCheck className="h-3.5 w-3.5 text-white" />
-                  {text}
-                </div>
-              ))}
+        <div className="relative mx-auto grid min-h-[340px] max-w-[1000px] place-items-center px-6 py-20 text-center">
+          <div>
+            <h2 className="mx-auto max-w-2xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-primary-foreground sm:text-5xl">
+              Starting with E-Loan is
+              <br />
+              simple, fast, and free.
+            </h2>
+            <div className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <CtaPixelButton />
+              <CtaDemoLink />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative flex min-h-160 flex-col rounded-3xl bg-[#0b0f1a] pt-16 pb-8 text-white">
-        <div className="container mx-auto flex flex-1 flex-col px-4 md:px-8">
-          <div className="flex flex-1 flex-col justify-center">
-          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
-            {/* Brand Column */}
-            <div className="flex max-w-xs flex-col gap-6">
-              <Link suppressHydrationWarning href="/" className="inline-flex items-center gap-2">
-                <Image src="/logo-icon-white.svg" alt="" width={28} height={28} className="h-7 w-7" />
-                <span className="font-display text-lg font-bold text-white">E-Loan</span>
-              </Link>
-              <p className="max-w-60 text-sm leading-relaxed text-slate-400 font-medium">
-                Fast, transparent, and responsible lending services for Canadians, licensed in
-                every province we serve.
+      <div className="mx-auto max-w-[1000px] border-x border-border">
+        <div className="flex min-h-[360px] flex-col justify-between gap-12 border-b border-border px-6 pb-6 pt-12 font-sans md:px-8 lg:flex-row">
+          <div className="max-w-[300px]">
+            <Link href="/" className="inline-flex items-center">
+              <Image src="/logo.svg" alt="E-Loan" width={142} height={48} className="h-8 w-auto" />
+            </Link>
+            <div className="mt-8">
+              <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
+                Subscribe
+              </h3>
+              <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                Get loan tips, rate updates, and borrower guides in your inbox.
               </p>
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Phone number</div>
-                  <div className="mt-2 text-sm font-medium text-slate-300">1-888-ELOANCA</div>
-                </div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Email</div>
-                  <div className="mt-2 text-sm font-medium text-slate-300">support@eloan.ca</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Link Columns */}
-            <div className="flex flex-col gap-12 sm:flex-row sm:gap-16 lg:gap-24">
-              <div className="flex flex-col">
-                <h4 className="mb-6 text-xs font-semibold uppercase tracking-wider text-slate-500">Quick links</h4>
-                <ul className="flex flex-col gap-3 text-sm text-slate-400 font-medium">
-                  <li><Link suppressHydrationWarning href="/about" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">About Us <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/blog" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Blog <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/news" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">News <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/#how" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">How It Works <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/#faq" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">FAQ <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/contact" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Contact Us <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="#apply" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Apply Now <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                </ul>
-              </div>
-
-              <div className="flex flex-col">
-                <h4 className="mb-6 text-xs font-semibold uppercase tracking-wider text-slate-500">Social</h4>
-                <ul className="flex flex-col gap-3 text-sm text-slate-400 font-medium">
-                  <li><Link suppressHydrationWarning href="#" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Facebook <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="#" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Instagram <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="#" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">LinkedIn <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="#" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">TikTok <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                </ul>
-              </div>
-
-              <div className="flex flex-col">
-                <h4 className="mb-6 text-xs font-semibold uppercase tracking-wider text-slate-500">Legal</h4>
-                <ul className="flex flex-col gap-3 text-sm text-slate-400 font-medium">
-                  <li><Link suppressHydrationWarning href="/terms-of-use" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Terms of Service <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                  <li><Link suppressHydrationWarning href="/privacy-policy" className="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-white hover:underline">Privacy Policy <ArrowRight className="h-3 w-3 -translate-x-2.5 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" /></Link></li>
-                </ul>
-              </div>
+              <form className="mt-5 flex max-w-[250px] bg-background">
+                <label htmlFor="footer-newsletter" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="footer-newsletter"
+                  type="email"
+                  placeholder="Email address"
+                  className="min-w-0 flex-1 border border-r-0 border-border bg-transparent px-3 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <NewsletterPixelButton />
+              </form>
             </div>
           </div>
-          </div>
 
-          {/* Bottom Bar */}
-          <div className="text-center text-[12px] text-slate-500">
-            <p>© {currentYear} E-Loan Canada. All rights reserved.</p>
+          <div className="flex flex-col justify-between gap-12 lg:min-w-[620px]">
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:justify-end lg:gap-12">
+              {footerColumns.map((column) => (
+                <div key={column.title}>
+                  <h3 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.22em] text-primary">
+                    {column.title}
+                  </h3>
+                  <ul className="mt-5 grid gap-3">
+                    {column.links.map(([label, href]) => (
+                      <li key={`${column.title}-${label}`}>
+                        <FooterLink href={href} label={label} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2 lg:justify-end">
+              {socials.map(({ label, href, icon }) => (
+                <SocialPixelLink
+                  key={label}
+                  label={label}
+                  href={href}
+                  icon={icon}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </footer>
-      </div>
-      </div>
-    </div>
-  );
-};
 
-export default Footer;
+        <div className="flex flex-col gap-4 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground md:flex-row md:items-center md:justify-between md:px-8">
+          <p>&copy; {currentYear} E-Loan</p>
+          <div className="flex flex-wrap items-center gap-x-9 gap-y-3 md:justify-end">
+            <Link href="/terms-of-use" className="group -mx-1 inline-flex items-center gap-1 px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
+              <span>Terms of Use</span>
+              <ArrowUpRight
+                aria-hidden
+                className="size-3 translate-x-[-2px] translate-y-0.5 opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+              />
+            </Link>
+            <Link href="/privacy-policy" className="group -mx-1 inline-flex items-center gap-1 px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
+              <span>Privacy Policy</span>
+              <ArrowUpRight
+                aria-hidden
+                className="size-3 translate-x-[-2px] translate-y-0.5 opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
