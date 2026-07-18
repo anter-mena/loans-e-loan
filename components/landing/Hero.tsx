@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { HyperText } from "@/components/ui/hyper-text";
+import { Marquee } from "@/components/ui/marquee";
 import { PixelTransition } from "@/components/ui/pixel-transition";
 import Image from "next/image";
 import Link from "next/link";
@@ -174,6 +175,11 @@ function HeroSecondaryLink() {
 
 export default function Hero() {
   const patternFrameRef = useRef<number | null>(null);
+  const logoDragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    scrollLeft: number;
+  } | null>(null);
 
   const handlePatternPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
@@ -240,6 +246,35 @@ export default function Hero() {
       });
   };
 
+  const handleLogoPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "touch" || event.button !== 0) return;
+
+    logoDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      scrollLeft: event.currentTarget.scrollLeft,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleLogoPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = logoDragRef.current;
+
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+    event.currentTarget.scrollLeft = drag.scrollLeft - (event.clientX - drag.startX);
+  };
+
+  const handleLogoPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (logoDragRef.current?.pointerId !== event.pointerId) return;
+
+    logoDragRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
   return (
     <section id="hero" className="relative overflow-hidden bg-background">
       <div className="relative mx-auto w-full max-w-[1000px] border-x border-border">
@@ -284,25 +319,60 @@ export default function Hero() {
               <HeroSecondaryLink />
             </div>
 
-            <div className="mx-auto mt-12 grid w-full border-y border-border text-left sm:grid-cols-6">
+            <div className="mx-auto mt-12 grid w-full grid-cols-3 border-y border-border text-left sm:grid-cols-6">
               {heroStats.map(([value, label], index) => (
                 <div
                   key={label}
-                  className={`relative min-h-[104px] px-6 py-6 sm:col-span-2 ${
-                    index < heroStats.length - 1 ? "border-b border-border sm:border-r sm:border-b-0" : ""
+                  className={`relative min-h-[66px] px-2 py-3 sm:col-span-2 sm:min-h-[104px] sm:px-6 sm:py-6 ${
+                    index < heroStats.length - 1 ? "border-r border-border" : ""
                   }`}
                 >
-                  <div className="font-display text-3xl font-medium leading-none tracking-tight text-foreground md:text-4xl">
+                  <div className="font-display text-lg font-medium leading-none tracking-tight text-foreground sm:text-3xl md:text-4xl">
                     {value}
                   </div>
-                  <div className="mt-3 text-sm font-medium text-muted-foreground">{label}</div>
+                  <div className="mt-1.5 text-[9px] font-medium leading-tight text-muted-foreground sm:mt-3 sm:text-sm">
+                    {label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="relative grid border-y border-border sm:grid-cols-3 lg:grid-cols-6">
+        <Marquee
+          aria-label="Partner lenders. Swipe or drag to see all logos."
+          className="cursor-grab touch-pan-x select-none overflow-x-auto border-y border-border p-0 [--duration:24s] [--gap:0px] active:cursor-grabbing sm:hidden [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+          onPointerDown={handleLogoPointerDown}
+          onPointerMove={handleLogoPointerMove}
+          onPointerUp={handleLogoPointerEnd}
+          onPointerCancel={handleLogoPointerEnd}
+          onDragStart={(event) => event.preventDefault()}
+          pauseOnHover
+          repeat={4}
+          role="region"
+          tabIndex={0}
+        >
+          {partnerLogos.map((partner) => (
+            <div
+              key={partner.name}
+              className="grid h-[76px] w-[116px] shrink-0 place-items-center border-r border-border px-4"
+            >
+              <span className="relative block h-10 w-24">
+                <Image
+                  src={partner.src}
+                  alt={partner.name}
+                  fill
+                  sizes="96px"
+                  draggable={false}
+                  className="pointer-events-none object-contain opacity-55 grayscale [transform:scale(var(--partner-scale))]"
+                  style={{ "--partner-scale": partner.scale } as React.CSSProperties}
+                />
+              </span>
+            </div>
+          ))}
+        </Marquee>
+
+        <div className="relative hidden border-y border-border sm:grid sm:grid-cols-3 lg:grid-cols-6">
           {logoSeparators.map((separator) => (
             <span
               key={separator}
@@ -324,8 +394,8 @@ export default function Hero() {
                   alt={partner.name}
                   fill
                   sizes="112px"
-                  className="object-contain opacity-45 grayscale transition-all duration-200 hover:opacity-95 hover:contrast-125"
-                  style={{ transform: `scale(${partner.scale})` }}
+                  className="object-contain opacity-45 grayscale transition-all duration-200 [transform:scale(var(--partner-scale))] hover:opacity-95 hover:contrast-125"
+                  style={{ "--partner-scale": partner.scale } as React.CSSProperties}
                 />
               </span>
             </div>
