@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, ChevronRight, Newspaper } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
+
+import { BlogNewsHub } from "@/components/blog/blog-news-hub";
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { getAllNews } from "@/lib/news";
 import { siteUrl } from "@/lib/site";
 
-const title = "News — Loan & Rate Updates for Canadian Borrowers | E-Loan";
+const title = "News - Loan & Rate Updates for Canadian Borrowers | E-Loan";
 const description =
-  "Bank of Canada decisions, lending data, and rule changes that affect what you pay to borrow in Canada — reported in plain English.";
+  "Bank of Canada decisions, lending data, and rule changes that affect what you pay to borrow in Canada - reported in plain English.";
 
 export const metadata: Metadata = {
   title,
@@ -25,13 +28,14 @@ export const metadata: Metadata = {
   },
 };
 
-function formatDate(iso: string) {
+function formatDate(iso?: string) {
+  if (!iso) return "Soon";
   const d = new Date(iso);
   return isNaN(d.getTime())
     ? iso
     : d.toLocaleDateString("en-CA", {
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
         timeZone: "UTC",
       });
@@ -39,6 +43,8 @@ function formatDate(iso: string) {
 
 export default function NewsIndex() {
   const items = getAllNews();
+  const categories = new Set(items.map((item) => item.category)).size;
+  const latest = items[0]?.date;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -52,125 +58,98 @@ export default function NewsIndex() {
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: items.map((p, i) => ({
+    itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
-      position: i + 1,
-      name: p.title,
-      url: `${siteUrl}/news/${p.slug}`,
+      position: index + 1,
+      name: item.title,
+      url: `${siteUrl}/news/${item.slug}`,
     })),
   };
 
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
 
-      {/* Header */}
-      <section className="relative overflow-hidden pt-14 pb-12 md:pt-20 md:pb-16">
-        <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[440px] w-[440px] -translate-x-1/2 rounded-full bg-accent/12 blur-3xl" />
-        <div className="container relative mx-auto px-4">
-          <nav aria-label="Breadcrumb" className="mx-auto mb-6 flex max-w-2xl justify-center">
-            <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-              <li><Link href="/" className="hover:text-foreground">Home</Link></li>
-              <li className="flex items-center gap-1"><ChevronRight aria-hidden className="h-3 w-3" /><span className="font-medium text-foreground">News</span></li>
-            </ol>
-          </nav>
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">News</p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
-              Loan &amp; Rate News
+      <section className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label="News" className="border-x border-b border-border" />
+
+        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-6 py-4 md:px-8">
+          <ol className="flex flex-wrap items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <li>
+              <Link href="/" className="px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
+                Home
+              </Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <ChevronRight aria-hidden className="size-3" />
+              <span className="text-foreground">News</span>
+            </li>
+          </ol>
+        </nav>
+
+        <section className="grid border-x border-b border-border lg:grid-cols-[0.54fr_0.46fr]">
+          <div className="px-6 py-14 md:px-10 lg:py-16">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
+              Market updates
+            </p>
+            <h1 className="mt-5 max-w-xl font-display text-5xl font-semibold leading-[0.96] tracking-tight text-foreground md:text-7xl">
+              Loan news without the noise.
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground text-balance">
-              Bank of Canada decisions, lending data, and rule changes that affect what you pay to
-              borrow — reported in plain English.
+            <p className="mt-6 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              Bank of Canada decisions, lending data, household credit signals, and rule
+              changes that can affect what Canadian borrowers pay.
             </p>
           </div>
-        </div>
-      </section>
 
-      {/* Items */}
-      <section className="pb-20">
-        <div className="container mx-auto px-4">
-          {items.length === 0 ? (
-            <div className="mx-auto flex max-w-lg flex-col items-center py-8 text-center md:py-12">
-              <div className="grid h-16 w-16 place-items-center rounded-2xl bg-accent/10 text-accent">
-                <Newspaper className="h-7 w-7" strokeWidth={1.75} />
+          <aside className="grid border-t border-border lg:border-l lg:border-t-0">
+            <div className="relative min-h-[310px] overflow-hidden border-b border-primary bg-primary p-6 text-primary-foreground md:p-8">
+              <FlickeringGrid
+                aria-hidden
+                className="absolute inset-0"
+                squareSize={3}
+                gridGap={2}
+                flickerChance={0.08}
+                maxOpacity={0.2}
+                color="hsl(var(--primary-foreground))"
+              />
+              <div className="relative max-w-sm">
+                <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                  Watch list
+                </p>
+                <h2 className="mt-5 text-3xl font-semibold leading-tight text-primary-foreground">
+                  Follow the signals that move borrowing costs.
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-primary-foreground/65">
+                  Quick context for rate changes, credit trends, policy updates, and lender
+                  movement.
+                </p>
               </div>
-              <h2 className="mt-6 font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                News coming soon
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-                We&apos;re tracking Bank of Canada decisions, lending data, and rule changes that
-                affect Canadian borrowers. Check back shortly — the latest updates will land here.
-              </p>
-              <Link
-                href="/blog"
-                className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-accent underline-offset-4 hover:underline"
-              >
-                In the meantime, read the blog
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
             </div>
-          ) : (
-            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/news/${post.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                    {post.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-accent/5 to-transparent" />
-                    )}
-                    <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-accent backdrop-blur-sm">
-                      {post.category}
-                    </span>
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h2 className="font-display text-lg font-bold leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent">
-                      {post.title}
-                    </h2>
-                    <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                      {post.description}
-                    </p>
-                    <div className="mt-5 flex items-center gap-2 text-[0.72rem] uppercase tracking-wide text-muted-foreground">
-                      <time dateTime={post.date}>{formatDate(post.date)}</time>
-                      <span>·</span>
-                      <span>{post.readingTime} min read</span>
-                      <ArrowUpRight className="ml-auto h-3.5 w-3.5 -translate-x-1 text-accent opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-3">
+              <div className="border-r border-border p-5">
+                <p className="font-display text-4xl font-semibold text-foreground">{items.length}</p>
+                <p className="mt-1 text-xs text-muted-foreground">Updates</p>
+              </div>
+              <div className="border-r border-border p-5">
+                <p className="font-display text-4xl font-semibold text-foreground">{categories}</p>
+                <p className="mt-1 text-xs text-muted-foreground">Topics</p>
+              </div>
+              <div className="p-5">
+                <p className="font-display text-2xl font-semibold text-foreground">{formatDate(latest)}</p>
+                <p className="mt-1 text-xs text-muted-foreground">Latest</p>
+              </div>
             </div>
-          )}
-        </div>
-      </section>
+          </aside>
+        </section>
 
-      {/* CTA */}
-      <section className="pb-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-accent/20 bg-accent-soft/50 p-8 text-center">
-            <h2 className="font-display text-lg font-bold tracking-tight text-foreground">Ready to check your rate?</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-              It takes about two minutes and it&apos;s a soft credit check — no impact on your score.
-            </p>
-            <Button variant="hero" size="lg" asChild className="mt-5">
-              <Link href="/apply">
-                Check your rate
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
+        <BlogNewsHub
+          items={items}
+          basePath="/news"
+          emptyHref="/blog"
+          emptyLinkLabel="Read the blog"
+        />
       </section>
     </main>
   );

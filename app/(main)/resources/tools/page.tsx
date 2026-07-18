@@ -4,6 +4,13 @@ import { Calculator, ChevronRight, HelpCircle } from "lucide-react";
 
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { LoanCalculator } from "@/components/resources/loan-calculator";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -80,9 +87,9 @@ export default function ToolsPage() {
 
         <nav aria-label="Breadcrumb" className="border-b border-border px-5 py-3 md:px-8">
           <ol className="flex flex-wrap items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            <li><Link href="/" className="transition-colors hover:text-accent">Home</Link></li>
+            <li><Link href="/" className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground">Home</Link></li>
             <li aria-hidden><ChevronRight className="size-3" /></li>
-            <li><Link href="/resources" className="transition-colors hover:text-accent">Resources</Link></li>
+            <li><Link href="/resources" className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground">Resources</Link></li>
             <li aria-hidden><ChevronRight className="size-3" /></li>
             <li className="font-medium text-foreground">Loan Calculator</li>
           </ol>
@@ -101,16 +108,27 @@ export default function ToolsPage() {
               Adjust amount, APR, term, and extra payments to see how the loan behaves over time.
             </p>
           </div>
-          <aside className="border-t border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-l lg:border-t-0">
-            <span className="grid size-11 place-items-center bg-accent text-accent-foreground">
-              <Calculator className="size-5" />
-            </span>
-            <p className="mt-6 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
-              Estimate only
-            </p>
-            <p className="mt-4 text-2xl font-semibold leading-tight">
-              Your real rate depends on your application and approved offer.
-            </p>
+          <aside className="relative overflow-hidden border-t border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-l lg:border-t-0">
+            <FlickeringGrid
+              aria-hidden
+              className="absolute inset-0"
+              squareSize={3}
+              gridGap={2}
+              flickerChance={0.08}
+              maxOpacity={0.2}
+              color="hsl(var(--primary-foreground))"
+            />
+            <div className="relative">
+              <span className="grid size-11 place-items-center bg-accent text-accent-foreground">
+                <Calculator className="size-5" />
+              </span>
+              <p className="mt-6 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
+                Estimate only
+              </p>
+              <p className="mt-4 text-2xl font-semibold leading-tight">
+                Your real rate depends on your application and approved offer.
+              </p>
+            </div>
           </aside>
         </section>
 
@@ -127,16 +145,21 @@ export default function ToolsPage() {
               <h2 className="text-xl font-semibold text-foreground">Calculator FAQ</h2>
             </div>
           </aside>
-          <dl>
+          <Accordion type="single" collapsible>
             {faqs.map((f) => (
-              <div key={f.q} className="grid border-b border-border last:border-b-0 md:grid-cols-[0.42fr_0.58fr]">
-                <dt className="border-b border-border p-5 text-sm font-bold text-foreground md:border-b-0 md:border-r md:p-6">
+              <AccordionItem key={f.q} value={f.q} className="border-b border-border last:border-b-0">
+                <AccordionTrigger
+                  iconVariant="plus"
+                  className="rounded-none !border-0 px-5 py-5 text-sm font-bold text-foreground no-underline hover:no-underline md:px-6 **:data-[slot=accordion-trigger-icon]:text-primary"
+                >
                   {f.q}
-                </dt>
-                <dd className="p-5 text-sm leading-6 text-muted-foreground md:p-6">{f.a}</dd>
-              </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-5 pb-5 text-sm leading-6 text-muted-foreground md:px-6">
+                  {f.a}
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </dl>
+          </Accordion>
         </section>
       </section>
     </main>

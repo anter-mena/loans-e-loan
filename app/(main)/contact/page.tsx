@@ -24,10 +24,10 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="bg-background">
-      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
-        <SectionTitleBand label="Contact" className="border-b border-border" />
+      <section className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label="Contact" className="border-x border-b border-border" />
 
-        <div className="grid border-b border-border lg:grid-cols-[0.42fr_0.58fr]">
+        <div className="grid border-x border-b border-border lg:grid-cols-[0.42fr_0.58fr]">
           <div className="border-b border-border p-6 md:p-8 lg:border-b-0 lg:border-r">
             <p className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
               <span aria-hidden className="h-3 w-px bg-accent" />
@@ -48,7 +48,7 @@ export default function ContactPage() {
 
         <ContactCards />
 
-        <div className="grid gap-6 border-b border-border p-4 md:p-6 lg:grid-cols-[0.58fr_0.42fr]">
+        <div className="grid gap-6 border-x border-b border-border p-4 md:p-6 lg:grid-cols-[0.58fr_0.42fr]">
           <ContactForm />
 
           <div className="grid gap-2.5">

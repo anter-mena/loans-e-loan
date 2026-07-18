@@ -1,10 +1,9 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import Link from "next/link";
 import { ArrowRight, TrendingDown, Wallet, Coins, CalendarClock } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { AboutPixelApply } from "@/components/about/about-pixel-apply";
 
 const cad = new Intl.NumberFormat("en-CA", {
   style: "currency",
@@ -128,9 +127,9 @@ function Field({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-none bg-secondary accent-accent"
+        className="loan-calculator-range mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-none bg-secondary accent-accent"
         style={{
-          background: `linear-gradient(to right, hsl(var(--accent)) ${pct}%, hsl(var(--secondary)) ${pct}%)`,
+          background: `linear-gradient(to right, hsl(var(--accent)) ${pct}%, hsl(var(--border)) ${pct}%)`,
         }}
       />
       <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
@@ -154,7 +153,7 @@ function Donut({ principal, interest }: { principal: number; interest: number })
         cy="50"
         r={r}
         fill="none"
-        stroke="hsl(var(--gold))"
+        stroke="hsl(var(--primary-foreground) / 0.58)"
         strokeWidth="12"
         strokeDasharray={`${interestLen} ${c - interestLen}`}
         strokeLinecap="butt"
@@ -232,7 +231,7 @@ export function LoanCalculator({
     <div className="grid lg:grid-cols-[0.42fr_0.58fr]">
       {/* Inputs */}
       <div className="border-b border-border bg-background p-6 sm:p-8 lg:border-b-0 lg:border-r">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
+        <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
           Inputs
         </p>
         <h2 className="mt-4 font-display text-2xl font-semibold tracking-tight text-foreground">Your loan</h2>
@@ -250,33 +249,33 @@ export function LoanCalculator({
       </div>
 
       {/* Results */}
-      <div className="grid">
+      <div className="grid min-w-0 border-l border-border">
         {/* headline payment */}
-        <div className="relative overflow-hidden border-b border-primary bg-primary p-6 text-primary-foreground sm:p-8">
+        <div className="relative overflow-hidden bg-primary p-6 text-primary-foreground sm:p-8">
           <div className="relative flex flex-wrap items-end justify-between gap-4">
             <div>
-              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
+              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/72">
                 Estimated monthly payment
               </div>
               <div className="mt-1 font-display text-4xl font-bold tracking-tight sm:text-5xl">
                 {cad2.format(base.monthlyPayment)}
               </div>
-              <div className="mt-1 text-xs text-primary-foreground/60">
+              <div className="mt-1 text-xs text-primary-foreground/76">
                 over {termLabel(months)} at {rate.toFixed(1)}% APR
               </div>
             </div>
             <div className="flex items-center gap-4">
               <Donut principal={amount} interest={base.totalInterest} />
-              <dl className="space-y-2 text-xs">
-                <div className="flex items-center gap-2">
+              <dl className="grid min-w-[130px] gap-3 text-xs">
+                <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
                   <span className="inline-block size-2.5 bg-accent" />
-                  <dt className="text-primary-foreground/60">Principal</dt>
-                  <dd className="font-semibold tabular-nums">{cad.format(amount)}</dd>
+                  <dt className="text-primary-foreground/76">Principal</dt>
+                  <dd className="col-start-2 font-semibold tabular-nums text-primary-foreground">{cad.format(amount)}</dd>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-block size-2.5 bg-gold" />
-                  <dt className="text-primary-foreground/60">Interest</dt>
-                  <dd className="font-semibold tabular-nums">{cad.format(base.totalInterest)}</dd>
+                <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
+                  <span className="inline-block size-2.5 bg-primary-foreground/60" />
+                  <dt className="text-primary-foreground/76">Interest</dt>
+                  <dd className="col-start-2 font-semibold tabular-nums text-primary-foreground">{cad.format(base.totalInterest)}</dd>
                 </div>
               </dl>
             </div>
@@ -284,34 +283,38 @@ export function LoanCalculator({
         </div>
 
         {/* stat tiles */}
-        <div className="grid grid-cols-2 border-b border-border">
-          <div className="border-r border-border bg-card p-5">
-            <Coins className="h-5 w-5 text-accent" />
-            <div className="mt-2 font-display text-2xl font-bold tabular-nums text-foreground">{cad.format(base.totalInterest)}</div>
-            <div className="text-xs text-muted-foreground">Total interest</div>
+        <div className="grid grid-cols-2 bg-primary">
+          <div className="border-r border-border-dark bg-primary p-5 text-primary-foreground">
+            <span className="grid size-8 place-items-center bg-accent text-accent-foreground">
+              <Coins className="h-4 w-4" />
+            </span>
+            <div className="mt-3 font-display text-2xl font-bold tabular-nums text-primary-foreground">{cad.format(base.totalInterest)}</div>
+            <div className="text-xs text-primary-foreground/76">Total interest</div>
           </div>
-          <div className="bg-card p-5">
-            <Wallet className="h-5 w-5 text-accent" />
-            <div className="mt-2 font-display text-2xl font-bold tabular-nums text-foreground">{cad.format(base.totalCost)}</div>
-            <div className="text-xs text-muted-foreground">Total cost of loan</div>
+          <div className="bg-primary p-5 text-primary-foreground">
+            <span className="grid size-8 place-items-center bg-accent text-accent-foreground">
+              <Wallet className="h-4 w-4" />
+            </span>
+            <div className="mt-3 font-display text-2xl font-bold tabular-nums text-primary-foreground">{cad.format(base.totalCost)}</div>
+            <div className="text-xs text-primary-foreground/76">Total cost of loan</div>
           </div>
         </div>
 
         {/* extra payment savings */}
         {extra > 0 && monthsSaved > 0 && (
-          <div className="border-b border-border bg-accent-soft/60 p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <TrendingDown className="h-4 w-4 text-accent" />
+          <div className="border-b border-accent bg-accent p-5 text-accent-foreground">
+            <div className="flex items-center gap-2 text-sm font-semibold text-accent-foreground">
+              <TrendingDown className="h-4 w-4 text-accent-foreground" />
               Paying {cad.format(extra)} extra per month
             </div>
             <div className="mt-3 grid grid-cols-2 gap-4">
               <div>
-                <div className="font-display text-xl font-bold tabular-nums text-accent">{cad.format(interestSaved)}</div>
-                <div className="text-xs text-muted-foreground">Interest saved</div>
+                <div className="font-display text-xl font-bold tabular-nums text-accent-foreground">{cad.format(interestSaved)}</div>
+                <div className="text-xs text-accent-foreground/70">Interest saved</div>
               </div>
               <div>
-                <div className="font-display text-xl font-bold tabular-nums text-accent">{termLabel(monthsSaved)}</div>
-                <div className="text-xs text-muted-foreground">Paid off sooner</div>
+                <div className="font-display text-xl font-bold tabular-nums text-accent-foreground">{termLabel(monthsSaved)}</div>
+                <div className="text-xs text-accent-foreground/70">Paid off sooner</div>
               </div>
             </div>
           </div>
@@ -373,12 +376,9 @@ export function LoanCalculator({
           )}
         </div>
 
-        <Button variant="hero" size="lg" className="h-12 w-full rounded-none hover:translate-y-0 active:translate-y-0" asChild>
-          <Link href="/apply">
-            Get your real rate
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="bg-primary p-5">
+          <AboutPixelApply label="Get your real rate" className="h-12 w-full justify-center" />
+        </div>
       </div>
     </div>
   );
