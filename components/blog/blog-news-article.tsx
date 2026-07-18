@@ -168,7 +168,31 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, rehypeSlug]}
-                components={{ img: PostImage }}
+                components={{
+                  img: PostImage,
+                  ol: ({ children }) => <ol className="article-numbered-list">{children}</ol>,
+                  table: ({ children }) => (
+                    <div className="not-prose my-7 overflow-x-auto border border-border">
+                      <table className="w-full min-w-[520px] border-collapse text-sm">{children}</table>
+                    </div>
+                  ),
+                  thead: ({ children }) => (
+                    <thead className="bg-primary text-primary-foreground">{children}</thead>
+                  ),
+                  tbody: ({ children }) => (
+                    <tbody className="[&>tr]:border-t [&>tr]:border-border">{children}</tbody>
+                  ),
+                  th: ({ children }) => (
+                    <th className="px-4 py-3 text-left font-semibold text-primary-foreground">
+                      {children}
+                    </th>
+                  ),
+                  td: ({ children }) => (
+                    <td className="px-4 py-3 align-top text-muted-foreground first:font-medium first:text-foreground">
+                      {children}
+                    </td>
+                  ),
+                }}
               >
                 {content}
               </ReactMarkdown>

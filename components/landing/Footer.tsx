@@ -98,18 +98,18 @@ function CtaPixelButton() {
         firstContent={<span className="block size-full bg-accent" />}
         secondContent={<span className="block size-full bg-primary-foreground" />}
       />
-      <span className="relative z-20">Get started for free</span>
+      <span className="relative z-20">Check my rate</span>
     </Link>
   );
 }
 
-function CtaDemoLink() {
+function CtaLoansLink() {
   const [triggerKey, setTriggerKey] = useState(0);
   const trigger = () => setTriggerKey((key) => key + 1);
 
   return (
     <Link
-      href="/contact"
+      href="/loans"
       onMouseEnter={trigger}
       onMouseLeave={trigger}
       onFocus={trigger}
@@ -125,7 +125,7 @@ function CtaDemoLink() {
         className="pointer-events-none py-0 font-sans text-sm font-bold leading-none tracking-normal"
         characterSet={"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
       >
-        Request a demo
+        Explore loan options
       </HyperText>
     </Link>
   );
@@ -238,15 +238,15 @@ export default function Footer() {
             </h2>
             <div className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <CtaPixelButton />
-              <CtaDemoLink />
+              <CtaLoansLink />
             </div>
           </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-[1000px] border-x border-border">
-        <div className="flex min-h-[360px] flex-col justify-between gap-12 border-b border-border px-6 pb-6 pt-12 font-sans md:px-8 lg:flex-row">
-          <div className="max-w-[300px]">
+        <div className="flex min-h-[360px] flex-col items-center justify-between gap-12 border-b border-border px-6 pb-6 pt-12 text-center font-sans md:px-8 lg:flex-row lg:items-stretch lg:text-left">
+          <div className="flex max-w-[300px] flex-col items-center lg:items-start">
             <Link href="/" className="inline-flex items-center">
               <Image src="/logo.svg" alt="E-Loan" width={142} height={48} className="h-8 w-auto" />
             </Link>
@@ -257,7 +257,7 @@ export default function Footer() {
               <p className="mt-3 text-xs leading-5 text-muted-foreground">
                 Get loan tips, rate updates, and borrower guides in your inbox.
               </p>
-              <form className="mt-5 flex max-w-[250px] bg-background">
+              <form className="mx-auto mt-5 flex max-w-[250px] bg-background lg:mx-0">
                 <label htmlFor="footer-newsletter" className="sr-only">
                   Email address
                 </label>
@@ -272,14 +272,14 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between gap-12 lg:min-w-[620px]">
-            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:justify-end lg:gap-12">
+          <div className="flex w-full flex-col items-center justify-between gap-12 lg:min-w-[620px] lg:items-stretch">
+            <div className="grid w-full grid-cols-2 justify-items-center gap-x-4 gap-y-10 lg:grid-cols-4 lg:justify-end lg:justify-items-stretch lg:gap-12">
               {footerColumns.map((column) => (
                 <div key={column.title}>
                   <h3 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.22em] text-primary">
                     {column.title}
                   </h3>
-                  <ul className="mt-5 grid gap-3">
+                  <ul className="mt-5 grid justify-items-center gap-3 lg:justify-items-start">
                     {column.links.map(([label, href]) => (
                       <li key={`${column.title}-${label}`}>
                         <FooterLink href={href} label={label} />
@@ -290,7 +290,7 @@ export default function Footer() {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 lg:justify-end">
+            <div className="flex items-center justify-center gap-2 lg:justify-end">
               {socials.map(({ label, href, icon }) => (
                 <SocialPixelLink
                   key={label}
@@ -303,9 +303,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="flex flex-col items-center gap-4 px-6 py-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground md:flex-row md:justify-between md:px-8 md:text-left">
           <p>&copy; {currentYear} E-Loan</p>
-          <div className="flex flex-wrap items-center gap-x-9 gap-y-3 md:justify-end">
+          <div className="flex flex-wrap items-center justify-center gap-x-9 gap-y-3 md:justify-end">
             <Link href="/terms-of-use" className="group -mx-1 inline-flex items-center gap-1 px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
               <span>Terms of Use</span>
               <ArrowUpRight

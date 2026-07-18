@@ -69,36 +69,56 @@ const testimonialColumns = [
 function TestimonialCard({
   testimonial,
   columnIndex,
+  mobile = false,
 }: {
   testimonial: (typeof testimonials)[number];
   columnIndex: number;
+  mobile?: boolean;
 }) {
   return (
     <figure
       className={cn(
-        "min-h-[148px] border-b border-border bg-background p-5 md:border-x",
-        columnIndex === 0 && "md:border-l-0",
-        columnIndex === testimonialColumns.length - 1 && "md:border-r-0"
+        "bg-background",
+        mobile
+          ? "h-[132px] w-60 shrink-0 border-r border-border p-3"
+          : "min-h-[148px] border-b border-border p-5 md:border-x",
+        !mobile && columnIndex === 0 && "md:border-l-0",
+        !mobile && columnIndex === testimonialColumns.length - 1 && "md:border-r-0"
       )}
     >
-      <figcaption className="flex items-center gap-3">
+      <figcaption className={cn("flex items-center", mobile ? "gap-2" : "gap-3")}>
         <Image
           src={testimonial.avatar}
           alt={testimonial.name}
           width={40}
           height={40}
-          className="size-10 shrink-0 rounded-full object-cover"
+          className={cn("shrink-0 rounded-full object-cover", mobile ? "size-8" : "size-10")}
         />
         <div>
-          <div className="font-display text-base font-bold leading-tight text-foreground">
+          <div
+            className={cn(
+              "font-display font-bold leading-tight text-foreground",
+              mobile ? "text-sm" : "text-base"
+            )}
+          >
             {testimonial.name}
           </div>
-          <span className="mt-1 inline-flex bg-accent px-1.5 py-0.5 font-mono text-[10px] leading-none text-accent-foreground">
+          <span
+            className={cn(
+              "mt-1 inline-flex bg-accent px-1.5 py-0.5 font-mono leading-none text-accent-foreground",
+              mobile ? "text-[9px]" : "text-[10px]"
+            )}
+          >
             @{testimonial.role}
           </span>
         </div>
       </figcaption>
-      <blockquote className="mt-4 text-sm font-semibold leading-6 text-foreground">
+      <blockquote
+        className={cn(
+          "font-semibold text-foreground",
+          mobile ? "mt-2.5 text-xs leading-4" : "mt-4 text-sm leading-6"
+        )}
+      >
         {testimonial.quote}
       </blockquote>
     </figure>
@@ -111,7 +131,27 @@ export default function Testimonials() {
       <div className="mx-auto w-full max-w-[1000px] border-x border-border">
         <SectionTitleBand label="Testimonials" className="border-b border-border" />
 
-        <div className="grid md:grid-cols-3">
+        <div className="overflow-hidden md:hidden">
+          {testimonialColumns.map((row, index) => (
+            <Marquee
+              key={index}
+              reverse={index !== 1}
+              repeat={4}
+              className="w-full border-b border-border [--duration:34s] [--gap:0px] p-0 last:border-b-0"
+            >
+              {row.map((testimonial) => (
+                <TestimonialCard
+                  key={`${testimonial.name}-${testimonial.role}`}
+                  testimonial={testimonial}
+                  columnIndex={index}
+                  mobile
+                />
+              ))}
+            </Marquee>
+          ))}
+        </div>
+
+        <div className="hidden md:grid md:grid-cols-3">
           {testimonialColumns.map((column, index) => (
             <div
               key={index}

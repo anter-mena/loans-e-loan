@@ -496,29 +496,50 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
-}/* Blog/News tables — bordered, padded, zebra (desktop) + horizontal scroll (mobile) */
-.blog-prose table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9em;
-  margin: 1.75rem 0;
-  border: 1px solid var(--tw-prose-td-borders);
 }
-.blog-prose :is(th, td) {
-  border: 1px solid var(--tw-prose-td-borders);
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  vertical-align: top;
+
+/* Blog/news ordered lists mirror the numbered badges used by comparison content. */
+.article-numbered-list {
+  counter-reset: article-step;
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 0;
 }
-.blog-prose thead th {
+
+.article-numbered-list > li {
+  counter-increment: article-step;
+  position: relative;
+  min-height: 1.5rem;
+  margin-top: 0.75rem;
+  padding-left: 2.25rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.625;
+}
+
+.article-numbered-list > li::before {
+  content: counter(article-step);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 0.75rem;
   font-weight: 700;
-  background: color-mix(in srgb, var(--tw-prose-headings) 8%, transparent);
+  line-height: 1;
 }
-.blog-prose tbody tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--tw-prose-headings) 4%, transparent);
+
+.article-numbered-list > li > :first-child {
+  margin-top: 0;
 }
-@media (max-width: 640px) {
-  .blog-prose table { display: block; overflow-x: auto; }
+
+.article-numbered-list > li > :last-child {
+  margin-bottom: 0;
 }
 
 /* LeadScout embed theme overrides. Keep this scoped to the application form so
