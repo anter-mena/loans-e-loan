@@ -1,8 +1,12 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { AboutPixelApply } from "@/components/about/about-pixel-apply";
+import { ArticleRelatedLink } from "@/components/loans/article-related-link";
+import { ArticleToc, type ArticleTocItem } from "@/components/loans/article-toc";
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { siteUrl } from "@/lib/site";
 
 export type Crumb = { label: string; href?: string };
@@ -18,9 +22,12 @@ export function ArticleShell({
   categoryLabel,
   breadcrumb,
   faqItems,
+  tocItems,
   related,
   relatedHeading = "Keep exploring",
   maxWidth = "max-w-3xl",
+  sideLabel = "Loan guide",
+  sideDescription = "Clear costs, eligibility, timing, and next steps before you commit.",
   children,
 }: {
   title: string;
@@ -31,9 +38,12 @@ export function ArticleShell({
   categoryLabel: string;
   breadcrumb: Crumb[];
   faqItems?: FaqItem[];
+  tocItems?: ArticleTocItem[];
   related?: RelatedLink[];
   relatedHeading?: string;
   maxWidth?: string;
+  sideLabel?: string;
+  sideDescription?: string;
   children: ReactNode;
 }) {
   const jsonLd = {
@@ -72,19 +82,24 @@ export function ArticleShell({
   };
 
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent/8 blur-3xl" />
 
-      <article className={`relative mx-auto ${maxWidth} px-4 pt-14 pb-20 sm:px-6 md:pt-16`}>
-        {/* breadcrumb */}
-        <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+      <article className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label={categoryLabel} className="border-x border-b border-border" />
+
+        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-5 py-3 md:px-8">
+          <ol className="flex flex-wrap items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
             {breadcrumb.map((c, i) => (
               <li key={c.label} className="flex items-center gap-1">
-                {i > 0 && <ChevronRight aria-hidden className="h-3 w-3" />}
+                {i > 0 && <ChevronRight aria-hidden className="size-3" />}
                 {c.href ? (
-                  <Link href={c.href} className="hover:text-foreground">{c.label}</Link>
+                  <Link
+                    href={c.href}
+                    className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground"
+                  >
+                    {c.label}
+                  </Link>
                 ) : (
                   <span className="font-medium text-foreground">{c.label}</span>
                 )}
@@ -93,54 +108,92 @@ export function ArticleShell({
           </ol>
         </nav>
 
-        {/* header */}
-        <header className="mt-8 text-center">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-accent/10 text-accent">
-            <Icon className="h-7 w-7" />
+        <header className="grid border-b border-border lg:grid-cols-[0.62fr_0.38fr]">
+          <div className="border-l border-border px-6 py-12 md:px-10 md:py-14">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
+              {categoryLabel}
+            </p>
+            <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-[0.98] tracking-tight text-foreground md:text-6xl">
+              {title}
+            </h1>
+            <p className="mt-5 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              {subtitle}
+            </p>
           </div>
-          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">{categoryLabel}</p>
-          <h1 className="mt-2 font-display text-3xl font-bold leading-tight tracking-tight text-balance text-foreground sm:text-4xl">
-            {title}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground text-balance">
-            {subtitle}
-          </p>
+
+          <aside className="relative overflow-hidden border-x border-t border-b border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-t-0">
+            <FlickeringGrid
+              aria-hidden
+              className="absolute inset-0"
+              squareSize={3}
+              gridGap={2}
+              flickerChance={0.08}
+              maxOpacity={0.2}
+              color="hsl(var(--primary-foreground))"
+            />
+            <div className="relative flex h-full flex-col justify-between gap-10">
+              <div>
+                <span className="grid size-12 place-items-center bg-accent text-accent-foreground">
+                  <Icon className="size-6" />
+                </span>
+                <p className="mt-6 inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                  {sideLabel}
+                </p>
+                <p className="mt-4 text-sm leading-6 text-primary-foreground/65">
+                  {sideDescription}
+                </p>
+              </div>
+              <AboutPixelApply variant="light" className="ml-auto w-fit px-4 text-xs" />
+            </div>
+          </aside>
         </header>
 
-        {/* body */}
-        <div className="mt-10">{children}</div>
+        {tocItems && tocItems.length > 0 ? (
+          <section className="grid border-x border-b border-border lg:grid-cols-[0.36fr_0.64fr]">
+            <div className="border-b border-border p-6 md:p-8 lg:border-b-0 lg:border-r">
+              <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                Contents
+              </p>
+            </div>
+            <ArticleToc items={tocItems} />
+          </section>
+        ) : null}
 
-        {/* CTA */}
-        <div className="mt-16 rounded-3xl border border-accent/20 bg-accent-soft/50 p-8 text-center">
-          <h2 className="font-display text-lg font-bold tracking-tight text-foreground">Ready to apply?</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            Check your rate in about two minutes. It&apos;s a soft credit check — no impact on your score.
-          </p>
-          <Button variant="hero" size="lg" asChild className="mt-5">
-            <Link href="/apply">
-              Check your rate
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
+        <section className="border-x border-b border-border">
+          <div className={`mx-auto ${maxWidth} px-6 py-10 md:px-8 md:py-12`}>
+            <div className="loan-article-content">{children}</div>
+          </div>
+        </section>
 
-        {/* related */}
-        {related && related.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-center font-display text-lg font-bold tracking-tight text-foreground">{relatedHeading}</h2>
-            <div className="mt-5 flex flex-wrap justify-center gap-3">
+        <section className="border-x border-b border-primary bg-primary text-primary-foreground">
+          <div className="mx-auto grid max-w-3xl gap-5 px-6 py-8 md:grid-cols-[1fr_auto] md:items-center md:px-8">
+            <div>
+              <h2 className="font-display text-2xl font-semibold tracking-tight">Ready to apply?</h2>
+              <p className="mt-2 text-sm leading-6 text-primary-foreground/65">
+                Check your rate in about two minutes. It is a soft credit check with no impact on your score.
+              </p>
+            </div>
+            <AboutPixelApply variant="light" />
+          </div>
+        </section>
+
+        {related && related.length > 0 ? (
+          <section className="border-x border-b border-border px-6 py-8 md:px-8">
+            <h2 className="text-center font-display text-lg font-bold tracking-tight text-foreground">
+              {relatedHeading}
+            </h2>
+            <div className="mx-auto mt-5 flex max-w-3xl flex-wrap justify-center">
               {related.map((r) => (
-                <Link
+                <ArticleRelatedLink
                   key={r.href + r.label}
                   href={r.href}
-                  className="rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:text-accent hover:shadow-card"
-                >
-                  {r.label}
-                </Link>
+                  label={r.label}
+                />
               ))}
             </div>
-          </div>
-        )}
+          </section>
+        ) : null}
       </article>
     </main>
   );

@@ -79,11 +79,11 @@ const differences = [
 export default function AboutPage() {
   return (
     <main className="bg-background">
-      <section className="mx-auto w-full max-w-[1000px] border-x border-border">
-        <SectionTitleBand label="About E-Loan" className="border-b border-border" />
+      <section className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label="About E-Loan" className="border-x border-b border-border" />
 
         <section className="grid min-h-[640px] border-b border-border lg:grid-cols-[0.58fr_0.42fr]">
-          <div className="flex flex-col justify-between px-6 py-14 md:px-10 lg:py-16">
+          <div className="flex flex-col justify-between border-l border-border px-6 py-14 md:px-10 lg:py-16">
             <div>
               <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 <span className="h-4 w-px bg-accent" />
@@ -124,7 +124,7 @@ export default function AboutPage() {
           <AboutOfferPreview />
         </section>
 
-        <section className="grid border-b border-border lg:grid-cols-[0.43fr_0.57fr]">
+        <section className="grid border-x border-b border-border lg:grid-cols-[0.43fr_0.57fr]">
           <div className="border-b border-border p-6 md:p-10 lg:border-b-0 lg:border-r">
             <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <span className="h-4 w-px bg-accent" />
@@ -159,7 +159,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-b border-primary bg-primary text-primary-foreground">
+        <section className="border-x border-b border-primary bg-primary text-primary-foreground">
           <SectionTitleBand label="Operating Principles" tone="dark" className="border-b border-primary" />
           <div className="grid md:grid-cols-4">
             {principles.map(({ icon: Icon, title, desc }, index) => (
@@ -182,7 +182,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-b border-border">
+        <section className="border-x border-b border-border">
           <SectionTitleBand label="How We Got Here" className="border-b border-border" />
           <div className="relative grid md:grid-cols-3">
             <div aria-hidden className="absolute left-0 right-0 top-[70px] hidden h-px bg-accent/35 md:block" />
@@ -206,7 +206,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="grid border-b border-border lg:grid-cols-[0.52fr_0.48fr]">
+        <section className="grid border-x border-b border-border lg:grid-cols-[0.52fr_0.48fr]">
           <div className="relative overflow-hidden border-b border-border bg-accent-soft p-6 md:p-10 lg:border-b-0 lg:border-r">
             <FlickeringGrid
               aria-hidden

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Target } from "lucide-react";
 
-import ContentBlocks, { findFaqBlock } from "@/components/resources/content-blocks";
+import ContentBlocks, { findFaqBlock, getContentTocItems } from "@/components/resources/content-blocks";
 import { ArticleShell } from "@/components/loans/article-shell";
 import { loanPurposes, getLoanPurposeBySlug, getOtherLoanPurposes } from "@/lib/loan-purposes";
 import type { GuideContent } from "@/lib/guides";
@@ -57,6 +57,7 @@ export default async function PurposeArticlePage({ params }: { params: Promise<{
         { label: "By Purpose", href: "/loans/by-purpose" },
         { label: entry.name },
       ]}
+      tocItems={getContentTocItems(content.blocks)}
       faqItems={findFaqBlock(content.blocks)?.items}
       related={related.map((p) => ({ label: p.name, href: `/loans/by-purpose/${p.slug}` }))}
       relatedHeading="Other loan purposes"

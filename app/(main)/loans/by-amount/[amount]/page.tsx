@@ -4,6 +4,12 @@ import { Check, DollarSign, Plus } from "lucide-react";
 
 import { ArticleShell } from "@/components/loans/article-shell";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   loanAmounts,
   getLoanAmountBySlug,
   getOtherLoanAmounts,
@@ -109,6 +115,14 @@ export default async function AmountArticlePage({ params }: { params: Promise<{ 
         { label: `$${amount}` },
       ]}
       faqItems={faqItems}
+      tocItems={[
+        { label: "What it costs", href: "#costs" },
+        { label: "Common uses", href: "#common-uses" },
+        { label: "Who qualifies", href: "#eligibility" },
+        { label: "Funding speed", href: "#funding-speed" },
+        { label: "Before you apply", href: "#before-applying" },
+        { label: "FAQ", href: "#faq" },
+      ]}
       related={others.map((o) => ({ label: `$${o.amount}`, href: `/loans/by-amount/${o.slug}` }))}
       relatedHeading="Other loan amounts"
     >
@@ -118,18 +132,18 @@ export default async function AmountArticlePage({ params }: { params: Promise<{ 
         compare offers with no impact to your credit score.
       </p>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">What a ${amount} loan costs</h2>
+      <h2 id="costs" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">What a ${amount} loan costs</h2>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
         Under federal law, the Criminal Rate of Interest caps personal loan APRs at {CRIMINAL_RATE_APR}%.
         Legitimate Canadian lenders cannot charge more, regardless of your credit profile.
       </p>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
+      <div className="mt-6 overflow-x-auto border border-border">
         <table className="w-full min-w-[420px] text-sm">
-          <thead className="bg-secondary/50">
+          <thead className="bg-primary text-primary-foreground">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-foreground">Credit profile</th>
-              <th className="px-4 py-3 text-left font-semibold text-foreground">Typical APR</th>
-              <th className="px-4 py-3 text-left font-semibold text-foreground">Payment on ${amount} (12 mo)</th>
+              <th className="px-4 py-3 text-left font-semibold">Credit profile</th>
+              <th className="px-4 py-3 text-left font-semibold">Typical APR</th>
+              <th className="px-4 py-3 text-left font-semibold">Payment on ${amount} (12 mo)</th>
             </tr>
           </thead>
           <tbody>
@@ -145,45 +159,51 @@ export default async function AmountArticlePage({ params }: { params: Promise<{ 
           </tbody>
         </table>
       </div>
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-accent/20 bg-accent-soft/50 p-4">
-        <Plus className="mt-0.5 h-5 w-5 shrink-0 rotate-45 text-accent" />
-        <p className="text-sm leading-relaxed text-foreground">
+      <div className="mt-6 flex items-start gap-3 border border-primary bg-primary p-4 text-primary-foreground">
+        <span className="grid size-7 shrink-0 place-items-center bg-accent text-accent-foreground">
+          <Plus className="h-4 w-4 rotate-45" />
+        </span>
+        <p className="text-sm leading-6 text-primary-foreground/72">
           Avoid payday loans for ${amount}: a typical payday loan costs $15–$21 per $100 for a two-week
           term — roughly 390%–546% APR annualized. A personal loan at even the {CRIMINAL_RATE_APR}% legal
           maximum is dramatically cheaper.
         </p>
       </div>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Why ${amount} is a common amount</h2>
+      <h2 id="common-uses" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Why ${amount} is a common amount</h2>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
         ${amount} lines up closely with everyday short-term needs like:
       </p>
       <ul className="mt-4 space-y-2.5">
         {commonReasons.map((r) => (
           <li key={r} className="flex items-start gap-2.5 text-sm text-muted-foreground sm:text-base">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <span className="mt-0.5 grid size-5 shrink-0 place-items-center bg-accent text-accent-foreground">
+              <Check className="h-3.5 w-3.5" />
+            </span>
             {r}
           </li>
         ))}
       </ul>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Who qualifies</h2>
+      <h2 id="eligibility" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Who qualifies</h2>
       <ul className="mt-4 space-y-2.5">
         {eligibility.map((r) => (
           <li key={r} className="flex items-start gap-2.5 text-sm text-muted-foreground sm:text-base">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <span className="mt-0.5 grid size-5 shrink-0 place-items-center bg-accent text-accent-foreground">
+              <Check className="h-3.5 w-3.5" />
+            </span>
             {r}
           </li>
         ))}
       </ul>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">How fast can you get ${amount}?</h2>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
+      <h2 id="funding-speed" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">How fast can you get ${amount}?</h2>
+      <div className="mt-6 overflow-x-auto border border-border">
         <table className="w-full min-w-[420px] text-sm">
-          <thead className="bg-secondary/50">
+          <thead className="bg-primary text-primary-foreground">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-foreground">When you apply</th>
-              <th className="px-4 py-3 text-left font-semibold text-foreground">When funds land</th>
+              <th className="px-4 py-3 text-left font-semibold">When you apply</th>
+              <th className="px-4 py-3 text-left font-semibold">When funds land</th>
             </tr>
           </thead>
           <tbody>
@@ -197,28 +217,34 @@ export default async function AmountArticlePage({ params }: { params: Promise<{ 
         </table>
       </div>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Before you apply</h2>
+      <h2 id="before-applying" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Before you apply</h2>
       <ul className="mt-4 space-y-2.5">
         {checklist.map((r) => (
           <li key={r} className="flex items-start gap-2.5 text-sm text-muted-foreground sm:text-base">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <span className="mt-0.5 grid size-5 shrink-0 place-items-center bg-accent text-accent-foreground">
+              <Check className="h-3.5 w-3.5" />
+            </span>
             {r}
           </li>
         ))}
       </ul>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">${amount} loan FAQ</h2>
-      <div className="mt-6 space-y-3">
+      <h2 id="faq" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">${amount} loan FAQ</h2>
+      <Accordion type="single" collapsible className="mt-6 border border-border">
         {faqItems.map((f) => (
-          <details key={f.question} className="group rounded-2xl border border-border bg-card p-1 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-foreground">
+          <AccordionItem key={f.question} value={f.question} className="border-b border-border last:border-b-0">
+            <AccordionTrigger
+              iconVariant="plus"
+              className="rounded-none border-0 px-4 py-4 text-sm font-semibold text-foreground no-underline hover:no-underline **:data-[slot=accordion-trigger-icon]:text-primary"
+            >
               {f.question}
-              <Plus className="h-4 w-4 shrink-0 text-accent transition-transform group-open:rotate-45" />
-            </summary>
-            <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">{f.answer}</p>
-          </details>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
+              {f.answer}
+            </AccordionContent>
+          </AccordionItem>
         ))}
-      </div>
+      </Accordion>
     </ArticleShell>
   );
 }

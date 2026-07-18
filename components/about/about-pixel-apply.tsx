@@ -9,10 +9,13 @@ import { cn } from "@/lib/utils";
 
 type AboutPixelApplyProps = {
   className?: string;
+  variant?: "dark" | "light";
+  label?: string;
 };
 
-export function AboutPixelApply({ className }: AboutPixelApplyProps) {
+export function AboutPixelApply({ className, variant = "dark", label = "Apply now" }: AboutPixelApplyProps) {
   const [active, setActive] = useState(false);
+  const isLight = variant === "light";
 
   return (
     <Link
@@ -22,7 +25,10 @@ export function AboutPixelApply({ className }: AboutPixelApplyProps) {
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
       className={cn(
-        "relative inline-flex h-11 items-center overflow-hidden border border-primary px-5 text-sm font-bold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+        "relative inline-flex items-center overflow-hidden border px-5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+        isLight
+          ? "h-9 border-primary-foreground bg-primary-foreground text-primary"
+          : "h-11 border-primary text-primary-foreground",
         className
       )}
     >
@@ -32,24 +38,24 @@ export function AboutPixelApply({ className }: AboutPixelApplyProps) {
         rows={3}
         animationStepDuration={0.32}
         exitAnimationStepDuration={0.32}
-        pixelColor="hsl(var(--accent))"
-        exitPixelColor="hsl(var(--primary))"
+        pixelColor={isLight ? "hsl(var(--accent))" : "hsl(var(--accent))"}
+        exitPixelColor={isLight ? "hsl(var(--primary-foreground))" : "hsl(var(--primary))"}
         className="absolute inset-0"
-        firstContent={<span className="block size-full bg-primary" />}
+        firstContent={<span className={cn("block size-full", isLight ? "bg-primary-foreground" : "bg-primary")} />}
         secondContent={<span className="block size-full bg-accent" />}
       />
       <span
         className={cn(
           "relative z-20 transition-colors duration-200",
-          active ? "text-accent-foreground" : "text-primary-foreground"
+          active ? "text-accent-foreground" : isLight ? "text-primary" : "text-primary-foreground"
         )}
       >
-        Apply now
+        {label}
       </span>
       <ArrowUpRight
         className={cn(
           "relative z-20 ml-2 size-4 transition-colors duration-200",
-          active ? "text-accent-foreground" : "text-primary-foreground"
+          active ? "text-accent-foreground" : isLight ? "text-primary" : "text-primary-foreground"
         )}
       />
     </Link>

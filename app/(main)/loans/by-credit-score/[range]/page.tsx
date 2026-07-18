@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import { Check, CreditCard } from "lucide-react";
 
 import { ArticleShell } from "@/components/loans/article-shell";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { creditScoreRanges, getCreditScoreBySlug, getOtherCreditScores } from "@/lib/credit-scores";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
@@ -33,7 +39,9 @@ function List({ items }: { items: string[] }) {
     <ul className="mt-4 space-y-2.5">
       {items.map((item) => (
         <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground sm:text-base">
-          <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+          <span className="mt-0.5 grid size-5 shrink-0 place-items-center bg-accent text-accent-foreground">
+            <Check className="h-3.5 w-3.5" />
+          </span>
           {item}
         </li>
       ))}
@@ -71,39 +79,68 @@ export default async function CreditScoreArticlePage({ params }: { params: Promi
         { label: "By Credit Score", href: "/loans/by-credit-score" },
         { label: `${entry.label} (${entry.tier})` },
       ]}
+      tocItems={[
+        { href: "#score-meaning", label: "Score meaning" },
+        { href: "#loan-options", label: "Loan options" },
+        { href: "#rates", label: "Rates" },
+        { href: "#approval-tips", label: "Approval tips" },
+        { href: "#credit-improvement", label: "Credit improvement" },
+        { href: "#faq", label: "FAQ" },
+      ]}
       faqItems={faqItems}
       related={others.map((o) => ({ label: `${o.label} (${o.tier})`, href: `/loans/by-credit-score/${o.slug}` }))}
       relatedHeading="Other credit ranges"
     >
-      <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">What a {entry.label} score means</h2>
+      <h2 id="score-meaning" className="scroll-mt-24 font-display text-2xl font-bold tracking-tight text-foreground">What a {entry.label} score means</h2>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">{entry.whatItMeans}</p>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Your loan options</h2>
+      <h2 id="loan-options" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Your loan options</h2>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {entry.loanOptions.map((option) => (
-          <div key={option.name} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-            <h3 className="font-display text-base font-semibold tracking-tight text-foreground">{option.name}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{option.description}</p>
+          <div key={option.name} className="border border-primary bg-primary p-5 text-primary-foreground">
+            <h3 className="font-display text-base font-semibold tracking-tight text-primary-foreground">{option.name}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-primary-foreground/72">{option.description}</p>
           </div>
         ))}
       </div>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">What rates to expect</h2>
+      <h2 id="rates" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">What rates to expect</h2>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">{entry.rateInfo}</p>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Tips to get approved</h2>
+      <h2 id="approval-tips" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Tips to get approved</h2>
       <List items={entry.approvalTips} />
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Improving your credit</h2>
+      <h2 id="credit-improvement" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Improving your credit</h2>
       <List items={entry.creditTips} />
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Alternatives to consider</h2>
+      <h2 id="alternatives" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">Alternatives to consider</h2>
       <List items={entry.alternatives} />
 
-      <div className="mt-8 flex items-start gap-3 rounded-2xl border border-accent/20 bg-accent-soft/50 p-4">
-        <Check className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-        <p className="text-sm leading-relaxed text-foreground">{entry.closing}</p>
+      <div className="mt-8 flex items-start gap-3 border border-primary bg-primary p-4 text-primary-foreground">
+        <span className="grid size-7 shrink-0 place-items-center bg-accent text-accent-foreground">
+          <Check className="h-4 w-4" />
+        </span>
+        <p className="text-sm leading-relaxed text-primary-foreground/72">{entry.closing}</p>
       </div>
+
+      <h2 id="faq" className="scroll-mt-24 mt-10 font-display text-2xl font-bold tracking-tight text-foreground">
+        {entry.label} credit score FAQ
+      </h2>
+      <Accordion type="single" collapsible className="mt-6 border border-border">
+        {faqItems.map((f) => (
+          <AccordionItem key={f.question} value={f.question} className="border-b border-border last:border-b-0">
+            <AccordionTrigger
+              iconVariant="plus"
+              className="rounded-none border-0 px-4 py-4 text-sm font-semibold text-foreground no-underline hover:no-underline **:data-[slot=accordion-trigger-icon]:text-primary"
+            >
+              {f.question}
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
+              {f.answer}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </ArticleShell>
   );
 }

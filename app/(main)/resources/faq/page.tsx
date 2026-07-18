@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -115,7 +121,7 @@ export default function FaqPage() {
           </ol>
         </nav>
 
-        <section className="grid border-b border-border lg:grid-cols-[0.36fr_0.64fr]">
+        <section className="grid border-b border-border lg:grid-cols-[360px_minmax(0,1fr)]">
           <aside className="border-b border-border p-6 md:p-10 lg:border-b-0 lg:border-r">
             <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <span className="h-4 w-px bg-accent" />
@@ -129,31 +135,31 @@ export default function FaqPage() {
             </p>
           </aside>
 
-          <div>
+          <div className="w-full min-w-0 justify-self-stretch p-5 md:p-8">
             {categories.map((cat, idx) => (
-              <section key={cat.label} className="border-b border-border last:border-b-0">
-                <div className="flex items-center gap-4 border-b border-border px-5 py-5 md:px-8">
+              <section key={cat.label} className="w-full min-w-0">
+                <div className="flex items-center gap-4 py-4">
                   <span className="bg-accent px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-accent-foreground">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
                   <h2 className="text-lg font-semibold tracking-tight text-foreground">{cat.label}</h2>
                   <div aria-hidden className="h-px flex-1 bg-border" />
                 </div>
-                <div>
+                <Accordion type="single" collapsible className="w-full min-w-0">
                   {cat.faqs.map((f) => (
-                    <details key={f.q} className="group border-b border-border last:border-b-0 [&_summary::-webkit-details-marker]:hidden">
-                      <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-5 text-sm font-bold text-foreground md:px-8">
+                    <AccordionItem key={f.q} value={f.q} className="w-full min-w-0 border-b border-border last:border-b-0">
+                      <AccordionTrigger
+                        iconVariant="plus"
+                        className="w-full rounded-none !border-0 px-0 py-5 text-sm font-bold text-foreground no-underline hover:no-underline **:data-[slot=accordion-trigger-icon]:text-primary"
+                      >
                         {f.q}
-                        <span className="relative grid size-5 shrink-0 place-items-center text-accent">
-                          <Plus className="size-4 transition-transform duration-300 group-open:rotate-45" />
-                        </span>
-                      </summary>
-                      <p className="px-5 pb-5 text-sm leading-6 text-muted-foreground md:px-8">
+                      </AccordionTrigger>
+                      <AccordionContent className="px-0 pb-5 text-sm leading-6 text-muted-foreground">
                         {f.a}
-                      </p>
-                    </details>
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </div>
+                </Accordion>
               </section>
             ))}
           </div>

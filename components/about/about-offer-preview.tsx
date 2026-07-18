@@ -37,7 +37,7 @@ export function AboutOfferPreview() {
 
   return (
     <aside
-      className="relative overflow-hidden border-t border-primary bg-primary text-primary-foreground lg:border-l lg:border-t-0"
+      className="relative overflow-hidden border-x border-t border-primary bg-primary text-primary-foreground lg:border-t-0"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}

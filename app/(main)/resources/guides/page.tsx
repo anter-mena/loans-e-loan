@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
+import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { ResourceHubCard, type ResourceHubIcon } from "@/components/resources/resource-hub-card";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { guides, guideSectionLabels, type GuideCategory, type GuideMeta } from "@/lib/guides";
-import { guideIcons } from "@/lib/guide-icons";
 import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Loan Guides & Resources | E-Loan Canada",
   description:
-    "Clear, practical guides on personal loans, credit, and borrowing in Canada — from choosing a term to rebuilding credit and understanding provincial regulations.",
+    "Clear, practical guides on personal loans, credit, and borrowing in Canada - from choosing a term to rebuilding credit and understanding provincial regulations.",
   alternates: { canonical: `${siteUrl}/resources/guides` },
   openGraph: {
     title: "Loan Guides & Resources | E-Loan Canada",
@@ -41,25 +43,31 @@ const jsonLd = {
   ],
 };
 
+function guideCardIcon(guide: GuideMeta): ResourceHubIcon {
+  if (guide.category === "Comparisons") return "scale";
+  if (guide.category === "Tools/Guides") return "calculator";
+  if (guide.category === "Purposes") return "target";
+  if (guide.category === "Loan Types") return "file";
+  if (guide.category === "Special Circumstances") return "credit";
+  return "book";
+}
+
 function GuideCard({ guide }: { guide: GuideMeta }) {
-  const Icon = guideIcons[guide.icon];
   return (
-    <Link
+    <ResourceHubCard
       href={`/resources/guides/${guide.slug}`}
-      className="group flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
-    >
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
-        <Icon className="h-5 w-5" />
-      </span>
-      <span className="font-display text-base font-semibold tracking-tight text-foreground">{guide.title}</span>
-      <span className="text-sm leading-relaxed text-muted-foreground">{guide.description}</span>
-    </Link>
+      icon={guideCardIcon(guide)}
+      title={guide.title}
+      label={guide.category}
+      desc={guide.description}
+      className="min-h-[240px] border-r border-b border-border"
+    />
   );
 }
 
 function Grid({ items }: { items: GuideMeta[] }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid border-l border-t border-border md:grid-cols-2 lg:grid-cols-3">
       {items.map((g) => (
         <GuideCard key={g.slug} guide={g} />
       ))}
@@ -80,62 +88,96 @@ export default function GuidesHubPage() {
   ];
 
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="relative overflow-hidden pt-14 pb-20 md:pt-16">
-        <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+      <section className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label="Guides" className="border-x border-b border-border" />
 
-        <div className="container relative mx-auto px-4">
-          {/* breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mx-auto max-w-6xl">
-            <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-              <li><Link href="/" className="hover:text-foreground">Home</Link></li>
-              <li aria-hidden><ChevronRight className="h-3 w-3" /></li>
-              <li><Link href="/resources" className="hover:text-foreground">Resources</Link></li>
-              <li aria-hidden><ChevronRight className="h-3 w-3" /></li>
-              <li className="font-medium text-foreground">Guides</li>
-            </ol>
-          </nav>
+        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-5 py-3 md:px-8">
+          <ol className="flex flex-wrap items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <li>
+              <Link href="/" className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden>
+              <ChevronRight className="h-3 w-3" />
+            </li>
+            <li>
+              <Link href="/resources" className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground">
+                Resources
+              </Link>
+            </li>
+            <li aria-hidden>
+              <ChevronRight className="h-3 w-3" />
+            </li>
+            <li className="font-medium text-foreground">Guides</li>
+          </ol>
+        </nav>
 
-          {/* header */}
-          <div className="mx-auto mt-6 max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Guides</p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
-              Loan guides &amp; resources
+        <section className="grid border-x border-b border-border lg:grid-cols-[0.52fr_0.48fr]">
+          <div className="border-r border-border px-6 py-14 md:px-10 lg:py-16">
+            <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="h-4 w-px bg-accent" />
+              Borrower guides
+            </p>
+            <h1 className="mt-5 max-w-xl font-display text-5xl font-semibold leading-[0.96] tracking-tight text-foreground md:text-7xl">
+              Loan guides &amp; resources.
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground text-balance">
-              Straightforward, no-jargon guidance to help you borrow smarter — and understand every
-              number before you sign.
+            <p className="mt-6 max-w-lg text-sm leading-6 text-muted-foreground md:text-base md:leading-7">
+              Straightforward, no-jargon guidance to help you borrow smarter and understand every number before you sign.
             </p>
           </div>
 
-          {/* main, grouped by category */}
-          <div className="mx-auto mt-12 max-w-6xl space-y-12">
-            {byCategory.map(({ cat, items }) => (
-              <section key={cat}>
+          <aside className="relative overflow-hidden border-primary bg-primary p-6 text-primary-foreground md:p-8">
+            <FlickeringGrid
+              aria-hidden
+              className="absolute inset-0"
+              squareSize={3}
+              gridGap={2}
+              flickerChance={0.08}
+              maxOpacity={0.2}
+              color="hsl(var(--primary-foreground))"
+            />
+            <div className="relative">
+              <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
+                Start here
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold leading-tight text-primary-foreground">
+                Read the plain version first.
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-primary-foreground/65">
+                Practical explainers for rates, credit, loan types, approval, repayment, and provincial rules.
+              </p>
+            </div>
+          </aside>
+        </section>
+
+        <div className="border-x border-b border-border">
+          {byCategory.map(({ cat, items }) => (
+            <section key={cat} className="border-b border-border p-6 last:border-b-0 md:p-8">
+              <div className="mb-5 flex items-center gap-3">
+                <h2 className="font-display text-xl font-bold tracking-tight text-foreground">{cat}</h2>
+                <div aria-hidden className="h-px flex-1 bg-border" />
+              </div>
+              <Grid items={items} />
+            </section>
+          ))}
+
+          {specialSections.map(({ key, label }) => {
+            const items = guides.filter((g) => g.section === key);
+            if (items.length === 0) return null;
+            return (
+              <section key={key} className="border-b border-border p-6 last:border-b-0 md:p-8">
                 <div className="mb-5 flex items-center gap-3">
-                  <h2 className="font-display text-xl font-bold tracking-tight text-foreground">{cat}</h2>
+                  <h2 className="font-display text-xl font-bold tracking-tight text-foreground">{label}</h2>
                   <div aria-hidden className="h-px flex-1 bg-border" />
                 </div>
                 <Grid items={items} />
               </section>
-            ))}
-
-            {specialSections.map(({ key, label }) => {
-              const items = guides.filter((g) => g.section === key);
-              if (items.length === 0) return null;
-              return (
-                <section key={key}>
-                  <div className="mb-5 flex items-center gap-3">
-                    <h2 className="font-display text-xl font-bold tracking-tight text-foreground">{label}</h2>
-                    <div aria-hidden className="h-px flex-1 bg-border" />
-                  </div>
-                  <Grid items={items} />
-                </section>
-              );
-            })}
-          </div>
+            );
+          })}
         </div>
       </section>
     </main>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 
-import ContentBlocks, { findFaqBlock } from "@/components/resources/content-blocks";
+import ContentBlocks, { findFaqBlock, getContentTocItems } from "@/components/resources/content-blocks";
 import { ArticleShell } from "@/components/loans/article-shell";
 import { canadaLocations, getProvinceBySlug, getOtherProvinces } from "@/lib/canada-locations";
 import type { GuideContent } from "@/lib/guides";
@@ -58,6 +58,7 @@ export default async function ProvinceArticlePage({ params }: { params: Promise<
         { label: "By Location", href: "/loans/by-location" },
         { label: entry.name },
       ]}
+      tocItems={getContentTocItems(content.blocks)}
       faqItems={findFaqBlock(content.blocks)?.items}
       related={related.map((p) => ({ label: p.name, href: `/loans/by-location/${p.slug}` }))}
       relatedHeading="Other provinces & territories"
@@ -72,9 +73,9 @@ export default async function ProvinceArticlePage({ params }: { params: Promise<
           <p className="mt-2 text-sm text-muted-foreground">
             E-Loan works with borrowers in {entry.cities.length}+ cities and towns throughout {entry.name}, including:
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
             {entry.cities.map((city) => (
-              <span key={city} className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+              <span key={city} className="border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
                 {city}
               </span>
             ))}
