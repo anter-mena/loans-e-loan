@@ -14,7 +14,7 @@ type PixelTransitionProps = {
   exitPixelColor?: string;
   animationStepDuration?: number;
   exitAnimationStepDuration?: number;
-  squarePixels?: boolean;
+  squarePixels?: true;
   pixelSize?: number;
   className?: string;
 };
@@ -41,7 +41,6 @@ export function PixelTransition({
   exitPixelColor,
   animationStepDuration = 0.32,
   exitAnimationStepDuration,
-  squarePixels = false,
   pixelSize = 12,
   className,
 }: PixelTransitionProps) {
@@ -159,34 +158,21 @@ export function PixelTransition({
       visiblePixelsRef.current = [];
 
       const bounds = pixelsEl.getBoundingClientRect();
-      const columnCount = squarePixels
-        ? Math.max(1, Math.ceil(bounds.width / pixelSize))
-        : columns ?? gridSize;
-      const rowCount = squarePixels
-        ? Math.max(1, Math.ceil(bounds.height / pixelSize))
-        : rows ?? gridSize;
+      const columnCount = Math.max(1, Math.ceil(bounds.width / pixelSize));
+      const rowCount = Math.max(1, Math.ceil(bounds.height / pixelSize));
 
       for (let row = 0; row < rowCount; row += 1) {
         for (let col = 0; col < columnCount; col += 1) {
           const pixel = document.createElement("span");
-          const width = 100 / columnCount;
-          const height = 100 / rowCount;
 
           pixel.style.position = "absolute";
           pixel.style.display = "none";
           pixel.style.backgroundColor = pixelColor;
 
-          if (squarePixels) {
-            pixel.style.width = `${pixelSize}px`;
-            pixel.style.height = `${pixelSize}px`;
-            pixel.style.left = `${col * pixelSize}px`;
-            pixel.style.top = `${row * pixelSize}px`;
-          } else {
-            pixel.style.width = `${width}%`;
-            pixel.style.height = `${height}%`;
-            pixel.style.left = `${col * width}%`;
-            pixel.style.top = `${row * height}%`;
-          }
+          pixel.style.width = `${pixelSize}px`;
+          pixel.style.height = `${pixelSize}px`;
+          pixel.style.left = `${col * pixelSize}px`;
+          pixel.style.top = `${row * pixelSize}px`;
 
           visiblePixelsRef.current.push(false);
           pixelsEl.appendChild(pixel);
@@ -199,9 +185,7 @@ export function PixelTransition({
     buildGrid();
 
     const resizeObserver =
-      squarePixels && typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(buildGrid)
-        : null;
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(buildGrid) : null;
 
     resizeObserver?.observe(pixelsEl);
 
@@ -219,7 +203,6 @@ export function PixelTransition({
     pixelSize,
     rows,
     setActiveDisplayed,
-    squarePixels,
   ]);
 
   useEffect(() => {

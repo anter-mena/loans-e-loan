@@ -88,8 +88,8 @@ export default function NewsIndex() {
           </ol>
         </nav>
 
-        <section className="grid border-x border-b border-border lg:grid-cols-[0.54fr_0.46fr]">
-          <div className="px-6 py-14 md:px-10 lg:py-16">
+        <section className="grid border-b border-border lg:grid-cols-[0.54fr_0.46fr]">
+          <div className="border-x border-border px-6 py-14 md:px-10 lg:border-r-0 lg:py-16">
             <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <span className="h-4 w-px bg-accent" />
               Market updates
@@ -103,8 +103,8 @@ export default function NewsIndex() {
             </p>
           </div>
 
-          <aside className="grid border-t border-border lg:border-l lg:border-t-0">
-            <div className="relative min-h-[310px] overflow-hidden border-b border-primary bg-primary p-6 text-primary-foreground md:p-8">
+          <aside className="grid border-t border-border lg:border-t-0">
+            <div className="relative min-h-[310px] overflow-hidden border-x border-b border-primary bg-primary p-6 text-primary-foreground [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))] md:p-8">
               <FlickeringGrid
                 aria-hidden
                 className="absolute inset-0"
@@ -127,7 +127,7 @@ export default function NewsIndex() {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 border-x border-border">
               <div className="border-r border-border p-5">
                 <p className="font-display text-4xl font-semibold text-foreground">{items.length}</p>
                 <p className="mt-1 text-xs text-muted-foreground">Updates</p>

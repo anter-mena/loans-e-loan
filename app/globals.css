@@ -479,6 +479,11 @@
   scroll-margin-top: 6rem;
 }
 
+.blog-prose :is(p, li) {
+  text-align: justify !important;
+  text-justify: inter-word;
+}
+
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -539,6 +544,56 @@
 }
 
 .article-numbered-list > li > :last-child {
+  margin-bottom: 0;
+}
+
+/* Blog/news bullets use a dark marker on the accent tile for stronger contrast. */
+.blog-prose .article-bullet-list {
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+.blog-prose .article-bullet-list > li {
+  position: relative;
+  min-height: 1.5rem;
+  margin-top: 0.75rem;
+  padding-left: 2.25rem;
+  color: hsl(var(--foreground));
+  font-size: 0.95rem;
+  line-height: 1.625;
+}
+
+.blog-prose .article-bullet-list > li::marker {
+  content: "";
+}
+
+.blog-prose .article-bullet-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: hsl(var(--accent));
+}
+
+.blog-prose .article-bullet-list > li::after {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  top: 0.7rem;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: hsl(var(--primary));
+}
+
+.blog-prose .article-bullet-list > li > :first-child {
+  margin-top: 0;
+}
+
+.blog-prose .article-bullet-list > li > :last-child {
   margin-bottom: 0;
 }
 

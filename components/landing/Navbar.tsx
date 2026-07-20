@@ -14,7 +14,9 @@ import {
   FileTextIcon,
   Grid3x3Icon,
   HelpCircleIcon,
+  InfoIcon,
   ListIcon,
+  MailIcon,
   MapPinIcon,
   MenuIcon,
   NewspaperIcon,
@@ -38,6 +40,7 @@ type NavItem = {
 type NavMenu = {
   label: string;
   href: string;
+  icon: LucideIcon;
   items: NavItem[];
 };
 
@@ -61,13 +64,13 @@ const resourceItems: NavItem[] = [
 ];
 
 const navMenus: NavMenu[] = [
-  { label: "Loans", href: "/loans", items: loanItems },
-  { label: "Resources", href: "/resources", items: resourceItems },
+  { label: "Loans", href: "/loans", icon: CircleDollarSignIcon, items: loanItems },
+  { label: "Resources", href: "/resources", icon: BookOpenIcon, items: resourceItems },
 ];
 
 const primaryLinks: NavItem[] = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about", icon: InfoIcon },
+  { label: "Contact", href: "/contact", icon: MailIcon },
 ];
 
 function NavPixelApply({
@@ -191,6 +194,7 @@ export default function Navbar() {
   }, []);
 
   function closeMobileMenu() {
+    setActiveMenu(null);
     setIsMenuOpen(false);
   }
 
@@ -200,7 +204,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 isolate border-b border-border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/55">
+    <header className="sticky top-0 z-50 isolate border-b border-border bg-background xl:bg-background/70 xl:backdrop-blur-xl supports-[backdrop-filter]:xl:bg-background/55">
       {isMenuOpen ? (
         <button
           type="button"
@@ -356,35 +360,80 @@ export default function Navbar() {
         {isMenuOpen ? (
           <div
             id={mobileMenuId}
-            className="absolute -left-px -right-px top-full max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain border border-border bg-background/90 px-3.5 pb-4 backdrop-blur-xl xl:hidden"
+            className="absolute -left-px -right-px top-full max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain border border-border bg-white px-6 pb-4 xl:hidden"
           >
             <nav className="flex flex-col" aria-label="Mobile navigation">
-              {[...navMenus, { label: "Explore", href: "/", items: primaryLinks }].map((group) => (
-                <div key={group.label} className="border-b border-border py-3">
+              {navMenus.map((group) => {
+                const isOpen = activeMenu === group.label;
+                const panelId = `${mobileMenuId}-${group.label.toLowerCase()}`;
+                const GroupIcon = group.icon;
+
+                return (
+                  <div key={group.label} className="border-b border-border py-3">
+                    <button
+                      type="button"
+                      className="flex h-10 w-full items-center justify-between text-base font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-controls={panelId}
+                      aria-expanded={isOpen}
+                      onClick={() => setActiveMenu(isOpen ? null : group.label)}
+                    >
+                      <span className="flex items-center gap-3">
+                        <GroupIcon className="size-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
+                        {group.label}
+                      </span>
+                      <ChevronDownIcon
+                        className={cn("size-4 transition-transform", isOpen && "rotate-180")}
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    {isOpen ? (
+                      <div id={panelId} className="mt-1 grid gap-1">
+                        {group.items.map((item) => {
+                          const ItemIcon = item.icon;
+
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              className="flex min-h-10 items-center justify-between px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                              onClick={closeMobileMenu}
+                            >
+                              <span className="flex items-center gap-3">
+                                {ItemIcon ? (
+                                  <ItemIcon className="size-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                                ) : null}
+                                {item.label}
+                              </span>
+                              <ChevronRightIcon className="size-3.5" aria-hidden="true" />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+
+              {primaryLinks.map((item) => {
+                const ItemIcon = item.icon;
+
+                return (
                   <Link
-                    href={group.href}
-                    className="flex h-10 items-center justify-between text-base font-medium text-foreground"
+                    key={item.href}
+                    href={item.href}
+                    className="flex h-16 items-center border-b border-border text-base font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     onClick={closeMobileMenu}
                   >
-                    {group.label}
-                    <ChevronRightIcon className="size-4" aria-hidden="true" />
+                    <span className="flex items-center gap-3">
+                      {ItemIcon ? (
+                        <ItemIcon className="size-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
+                      ) : null}
+                      {item.label}
+                    </span>
                   </Link>
-
-                  <div className="mt-1 grid gap-1">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex min-h-9 items-center justify-between px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        onClick={closeMobileMenu}
-                      >
-                        {item.label}
-                        <ChevronRightIcon className="size-3.5" aria-hidden="true" />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </nav>
 
             <div className="mt-5 grid gap-3">

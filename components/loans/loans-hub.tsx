@@ -148,7 +148,8 @@ export function LoansHub(props: {
           </div>
         </section>
 
-          <div className={`grid border-x border-b border-border ${compact ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
+        <div className="border-x border-b border-border p-6 md:p-8">
+          <div className={`grid border-l border-t border-border ${compact ? "sm:grid-cols-3 lg:grid-cols-4" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
             {items.map((item) => (
               <ResourceHubCard
                 key={item.href}
@@ -158,14 +159,11 @@ export function LoansHub(props: {
                 label="Option"
                 desc={item.desc}
                 compact={compact}
-                className={
-                  compact
-                    ? "border-b border-r border-border [&:nth-child(2n)]:border-r-0 sm:[&:nth-child(2n)]:border-r sm:[&:nth-child(3n)]:border-r-0 lg:[&:nth-child(3n)]:border-r lg:[&:nth-child(4n)]:border-r-0"
-                    : "border-b border-border sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0"
-                }
+                className="border-b border-r border-border"
               />
             ))}
           </div>
+        </div>
       </section>
     </main>
   );

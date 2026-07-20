@@ -62,8 +62,8 @@ export default function ComparisonsHubPage() {
           </ol>
         </nav>
 
-        <section className="grid border-x border-b border-border lg:grid-cols-[0.52fr_0.48fr]">
-          <div className="border-r border-border px-6 py-14 md:px-10 lg:py-16">
+        <section className="grid border-b border-border lg:grid-cols-[0.52fr_0.48fr]">
+          <div className="border-x border-border px-6 py-14 md:px-10 lg:border-r-0 lg:py-16">
             <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <span className="h-4 w-px bg-accent" />
               Compare options
@@ -76,7 +76,7 @@ export default function ComparisonsHubPage() {
             </p>
           </div>
 
-          <aside className="relative overflow-hidden border-primary bg-primary p-6 text-primary-foreground md:p-8">
+          <aside className="relative overflow-hidden border-x border-primary bg-primary p-6 text-primary-foreground [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))] md:p-8">
             <FlickeringGrid
               aria-hidden
               className="absolute inset-0"
@@ -100,20 +100,20 @@ export default function ComparisonsHubPage() {
           </aside>
         </section>
 
-        <section className="grid border-x border-b border-border md:grid-cols-2 lg:grid-cols-3">
-          {comparisons.map((c, index) => (
-            <ResourceHubCard
-              key={c.slug}
-              href={`/resources/comparisons/${c.slug}`}
-              icon="scale"
-              title={c.title}
-              label="Comparison"
-              desc={c.description}
-              className={`min-h-[250px] border-b border-border ${
-                index % 2 === 0 ? "md:border-r" : ""
-              } ${index % 3 !== 2 ? "lg:border-r" : "lg:border-r-0"}`}
-            />
-          ))}
+        <section className="border-x border-b border-border p-6 md:p-8">
+          <div className="grid border-l border-t border-border md:grid-cols-2 lg:grid-cols-3">
+            {comparisons.map((c) => (
+              <ResourceHubCard
+                key={c.slug}
+                href={`/resources/comparisons/${c.slug}`}
+                icon="scale"
+                title={c.title}
+                label="Comparison"
+                desc={c.description}
+                className="min-h-[250px] border-b border-r border-border"
+              />
+            ))}
+          </div>
         </section>
       </section>
     </main>

@@ -1,20 +1,14 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { FacebookLogo, InstagramLogo, LinkedinLogo, TiktokLogo } from "@phosphor-icons/react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { siFacebook, siInstagram, siTiktok } from "simple-icons";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { HyperText } from "@/components/ui/hyper-text";
 import { PixelTransition } from "@/components/ui/pixel-transition";
-
-type SocialIcon = ComponentType<{
-  size?: number;
-  weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
-  className?: string;
-  "aria-hidden"?: boolean;
-}>;
 
 const footerColumns = [
   {
@@ -52,11 +46,18 @@ const footerColumns = [
   },
 ];
 
+function filledBrandIcon(path: string): IconSvgElement {
+  return [["path", { d: path, fill: "currentColor", key: "brand" }]];
+}
+
+const linkedinPath =
+  "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 4.127 0c0 1.14-.923 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z";
+
 const socials = [
-  { label: "Instagram", href: "https://www.instagram.com", icon: InstagramLogo },
-  { label: "Facebook", href: "https://www.facebook.com", icon: FacebookLogo },
-  { label: "LinkedIn", href: "https://www.linkedin.com", icon: LinkedinLogo },
-  { label: "TikTok", href: "https://www.tiktok.com", icon: TiktokLogo },
+  { label: "Instagram", href: "https://www.instagram.com", icon: filledBrandIcon(siInstagram.path) },
+  { label: "Facebook", href: "https://www.facebook.com", icon: filledBrandIcon(siFacebook.path) },
+  { label: "LinkedIn", href: "https://www.linkedin.com", icon: filledBrandIcon(linkedinPath) },
+  { label: "TikTok", href: "https://www.tiktok.com", icon: filledBrandIcon(siTiktok.path) },
 ];
 
 function FooterLink({ href, label }: { href: string; label: string }) {
@@ -167,11 +168,11 @@ function NewsletterPixelButton() {
 function SocialPixelLink({
   label,
   href,
-  icon: Icon,
+  icon,
 }: {
   label: string;
   href: string;
-  icon: SocialIcon;
+  icon: IconSvgElement;
 }) {
   const [active, setActive] = useState(false);
 
@@ -179,11 +180,14 @@ function SocialPixelLink({
     <Link
       href={href}
       aria-label={`E-Loan on ${label}`}
+      title={label}
+      target="_blank"
+      rel="noreferrer"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
-      className="relative grid size-7 place-items-center overflow-hidden border border-primary text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group relative grid size-7 place-items-center overflow-hidden border border-primary bg-primary text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <PixelTransition
         active={active}
@@ -196,11 +200,12 @@ function SocialPixelLink({
         firstContent={<span className="block size-full bg-primary" />}
         secondContent={<span className="block size-full bg-accent" />}
       />
-      <Icon
+      <HugeiconsIcon
+        icon={icon}
         size={16}
-        weight="fill"
+        color="currentColor"
         aria-hidden
-        className={`relative z-20 transition-colors duration-200 ${
+        className={`relative z-20 transition-[color,transform] duration-200 group-hover:scale-110 ${
           active ? "text-accent-foreground" : "text-primary-foreground"
         }`}
       />
@@ -231,10 +236,9 @@ export default function Footer() {
 
         <div className="relative mx-auto grid min-h-[340px] max-w-[1000px] place-items-center px-6 py-20 text-center">
           <div>
-            <h2 className="mx-auto max-w-2xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-primary-foreground sm:text-5xl">
-              Starting with E-Loan is
-              <br />
-              simple, fast, and free.
+            <h2 className="mx-auto max-w-2xl font-display text-[clamp(1.55rem,8vw,2.25rem)] font-semibold leading-[1.08] tracking-tight text-primary-foreground sm:text-5xl">
+              <span className="block whitespace-nowrap">Starting with E-Loan is</span>
+              <span className="block whitespace-nowrap">simple, fast, and free.</span>
             </h2>
             <div className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <CtaPixelButton />

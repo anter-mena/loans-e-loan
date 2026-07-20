@@ -15,13 +15,13 @@ type BlogPreviewCardProps = {
     readingTime: number;
   };
   formattedDate: string;
-  showDivider: boolean;
+  index: number;
 };
 
 export default function BlogPreviewCard({
   post,
   formattedDate,
-  showDivider,
+  index,
 }: BlogPreviewCardProps) {
   const [active, setActive] = useState(false);
 
@@ -32,9 +32,9 @@ export default function BlogPreviewCard({
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
-      className={`group relative flex min-h-[315px] overflow-hidden border-b border-border-dark p-4 ${
-        showDivider ? "lg:border-r" : ""
-      }`}
+      className={`group relative flex min-h-[280px] overflow-hidden border-b border-border-dark p-2.5 sm:min-h-[315px] sm:p-4 ${
+        index % 2 === 0 ? "border-r" : ""
+      } ${index < 2 ? "lg:border-r" : "lg:border-r-0"} ${index === 3 ? "lg:hidden" : ""}`}
     >
       <PixelTransition
         active={active}
@@ -65,17 +65,17 @@ export default function BlogPreviewCard({
         </div>
 
         <div
-          className={`mt-4 text-[10px] leading-none transition-colors duration-300 ease-out ${
+          className={`mt-3 flex flex-col gap-1 text-[8px] leading-none transition-colors duration-300 ease-out sm:mt-4 sm:block sm:text-[10px] ${
             active ? "text-primary/70" : "text-primary-foreground/66"
           }`}
         >
           <time dateTime={post.date}>{formattedDate}</time>
-          <span className="mx-1.5">/</span>
+          <span className="mx-1.5 hidden sm:inline">/</span>
           <span>{post.readingTime} min read</span>
         </div>
 
         <h3
-          className={`mt-4 font-display text-xl font-medium leading-tight tracking-tight transition-colors duration-300 ease-out ${
+          className={`mt-3 font-display text-base font-medium leading-tight tracking-tight transition-colors duration-300 ease-out sm:mt-4 sm:text-xl ${
             active ? "text-primary" : "text-primary-foreground"
           }`}
         >
@@ -83,7 +83,7 @@ export default function BlogPreviewCard({
         </h3>
 
         <p
-          className={`mt-3 line-clamp-2 text-sm leading-5 transition-colors duration-300 ease-out ${
+          className={`mt-2 line-clamp-3 text-[10px] leading-4 transition-colors duration-300 ease-out sm:mt-3 sm:line-clamp-2 sm:text-sm sm:leading-5 ${
             active ? "text-primary/72" : "text-primary-foreground/70"
           }`}
         >
