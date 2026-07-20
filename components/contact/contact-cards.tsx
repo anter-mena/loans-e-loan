@@ -78,7 +78,7 @@ export function ContactCards() {
             </span>
           </div>
         );
-        const className = `group/contact grid min-h-[112px] place-items-center border-b border-border-dark px-6 py-4 transition-colors sm:border-b-0 ${
+        const className = `group/contact grid min-h-[112px] items-center justify-items-start border-b border-border-dark px-6 py-4 transition-colors sm:place-items-center sm:border-b-0 ${
           index < channels.length - 1 ? "sm:border-r" : ""
         } ${disabled ? "cursor-not-allowed opacity-50" : "hover:bg-primary-foreground/[0.045]"}`;
 

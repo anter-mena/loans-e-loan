@@ -51,11 +51,9 @@ function formatDate(iso: string) {
 function HubCard({
   item,
   basePath,
-  showDivider,
 }: {
   item: BlogNewsHubItem;
   basePath: "/blog" | "/news";
-  showDivider: boolean;
 }) {
   const [active, setActive] = useState(false);
 
@@ -67,8 +65,7 @@ function HubCard({
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
       className={cn(
-        "group relative min-h-[360px] overflow-hidden border-b border-border-dark p-4",
-        showDivider && "lg:border-r"
+        "group relative min-h-[360px] overflow-hidden border-b border-r border-border-dark p-6 md:p-8"
       )}
     >
       <PixelTransition
@@ -157,7 +154,7 @@ export function BlogNewsHub({
   emptyHref,
   emptyLinkLabel,
 }: BlogNewsHubProps) {
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(24);
   const [page, setPage] = useState(1);
   const pageSize = itemsPerPage;
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
@@ -202,82 +199,84 @@ export function BlogNewsHub({
   }
 
   return (
-    <section className="border-x border-b border-primary bg-primary text-primary-foreground">
-      <div className="flex flex-col gap-5 border-b border-border-dark p-5 md:flex-row md:items-center md:justify-between md:p-6">
-        <div>
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
-            Library
-          </p>
-          <p className="mt-2 text-sm text-primary-foreground/66">
+    <section className="border-x border-b border-primary bg-primary text-primary-foreground [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))]">
+      <div className="border-b border-border-dark p-5 md:p-6">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/55">
+          Library
+        </p>
+
+        <div className="mt-2 flex items-center justify-between gap-3 md:gap-5">
+          <p className="text-sm text-primary-foreground/66">
             Showing {firstVisible}-{lastVisible} of {items.length}
           </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <label
-            htmlFor={`${basePath.slice(1)}-items`}
-            className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/55"
-          >
-            Items
-          </label>
-          <Select value={String(itemsPerPage)} onValueChange={(value) => changeItems(Number(value))}>
-            <SelectTrigger
-            id={`${basePath.slice(1)}-items`}
-            className="h-9 w-[72px] border-border-dark bg-primary px-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground hover:border-accent focus:border-accent focus-visible:ring-accent/35 [&_svg]:text-primary-foreground"
+          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+            <label
+              htmlFor={`${basePath.slice(1)}-items`}
+              className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/55"
             >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent
-              align="end"
-              className="min-w-[72px] border-border-dark bg-primary text-primary-foreground"
-            >
-              {[2, 4, 6, 8, 10].map((count) => (
-                <SelectItem
-                  key={count}
-                  value={String(count)}
-                  className="font-mono text-xs font-semibold text-primary-foreground focus:bg-accent focus:text-accent-foreground"
-                >
-                  {count}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              Items
+            </label>
+            <Select value={String(itemsPerPage)} onValueChange={(value) => changeItems(Number(value))}>
+              <SelectTrigger
+                id={`${basePath.slice(1)}-items`}
+                className="h-9 w-[72px] border-border-dark bg-primary px-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground hover:border-accent focus:border-accent focus-visible:ring-accent/35 [&_svg]:text-primary-foreground"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent
+                align="end"
+                className="min-w-[72px] border-border-dark bg-primary text-primary-foreground"
+              >
+                {[24, 48, 72, 96].map((count) => (
+                  <SelectItem
+                    key={count}
+                    value={String(count)}
+                    className="font-mono text-xs font-semibold text-primary-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    {count}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3">
-        {visibleItems.map((item, index) => (
-          <HubCard
-            key={item.slug}
-            item={item}
-            basePath={basePath}
-            showDivider={index % 3 !== 2}
-          />
-        ))}
+      <div className="p-6 md:p-8">
+        <div className="grid border-l border-t border-border-dark md:grid-cols-2 lg:grid-cols-3">
+          {visibleItems.map((item) => (
+            <HubCard
+              key={item.slug}
+              item={item}
+              basePath={basePath}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-border-dark p-5 md:flex-row md:items-center md:justify-between md:p-6">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/55">
+      <div className="flex items-center justify-between gap-3 border-t border-border-dark p-5 md:gap-4 md:p-6">
+        <p className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/55">
           Page {currentPage} of {totalPages}
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center justify-end gap-2">
           <button
             type="button"
             onClick={() => setPage((value) => Math.max(1, value - 1))}
             disabled={currentPage === 1}
-            className="inline-flex h-10 items-center gap-2 border border-border-dark px-4 text-sm font-semibold transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-35"
+            className="inline-flex h-8 items-center gap-1.5 border border-border-dark px-3 text-xs font-semibold transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-35 md:h-10 md:gap-2 md:px-4 md:text-sm"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-3.5 md:size-4" />
             Previous
           </button>
           <button
             type="button"
             onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex h-10 items-center gap-2 border border-border-dark px-4 text-sm font-semibold transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-35"
+            className="inline-flex h-8 items-center gap-1.5 border border-border-dark px-3 text-xs font-semibold transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-35 md:h-10 md:gap-2 md:px-4 md:text-sm"
           >
             Next
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-3.5 md:size-4" />
           </button>
         </div>
       </div>

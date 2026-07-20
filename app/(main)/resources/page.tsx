@@ -156,22 +156,20 @@ export default function ResourcesHubPage() {
           </div>
         </section>
 
-        <section className="grid border-x border-b border-border md:grid-cols-2 lg:grid-cols-3">
-          {cards.map(({ href, icon, title, label, desc }, index) => (
-            <ResourceHubCard
-              key={href}
-              href={href}
-              icon={icon}
-              title={title}
-              label={label}
-              desc={desc}
-              className={`group relative min-h-[260px] border-b border-border p-6 transition-colors hover:bg-accent-soft/60 md:p-8 ${
-                index % 2 === 0 ? "md:border-r" : ""
-              } ${index % 3 !== 2 ? "lg:border-r" : "lg:border-r-0"} ${index >= cards.length - 2 ? "md:border-b-0" : ""} ${
-                index >= cards.length - 3 ? "lg:border-b-0" : ""
-              }`}
-            />
-          ))}
+        <section className="border-x border-b border-border p-6 md:p-8">
+          <div className="grid border-l border-t border-border md:grid-cols-2 lg:grid-cols-3">
+            {cards.map(({ href, icon, title, label, desc }) => (
+              <ResourceHubCard
+                key={href}
+                href={href}
+                icon={icon}
+                title={title}
+                label={label}
+                desc={desc}
+                className="group relative min-h-[260px] border-b border-r border-border p-6 transition-colors hover:bg-accent-soft/60 md:p-8"
+              />
+            ))}
+          </div>
         </section>
       </section>
     </main>

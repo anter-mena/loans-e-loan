@@ -18,7 +18,7 @@ function formatDate(iso: string) {
 }
 
 export default function BlogCards() {
-  const posts = getAllPosts().slice(0, 3);
+  const posts = getAllPosts().slice(0, 4);
 
   if (posts.length === 0) {
     return null;
@@ -29,13 +29,13 @@ export default function BlogCards() {
       <div className="mx-auto w-full max-w-[1000px] overflow-hidden border-x bg-primary text-primary-foreground [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))]">
         <SectionTitleBand label="Blog" tone="dark" className="border-b border-border-dark" />
 
-        <div className="grid border-b border-border-dark lg:grid-cols-3">
+        <div className="grid grid-cols-2 border-b border-border-dark lg:grid-cols-3">
           {posts.map((post, index) => (
             <BlogPreviewCard
               key={post.slug}
               post={post}
               formattedDate={formatDate(post.date)}
-              showDivider={index < posts.length - 1}
+              index={index}
             />
           ))}
         </div>

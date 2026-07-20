@@ -160,33 +160,33 @@ export default function LoansHubPage() {
           </div>
         </section>
 
-        <section className="grid border-x border-b border-border sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map(({ href, icon, title, label, desc }, index) => (
-            <ResourceHubCard
-              key={href}
-              href={href}
-              icon={icon}
-              title={title}
-              label={label}
-              desc={desc}
-              className={`group relative min-h-[260px] border-b border-border p-6 transition-colors hover:bg-accent-soft/60 lg:p-8 ${
-                index % 2 === 0 ? "sm:border-r" : ""
-              } ${index % 3 !== 2 ? "lg:border-r" : "lg:border-r-0"}`}
-            />
-          ))}
-          <div className="relative min-h-[260px] border-b border-border p-6 opacity-60 lg:border-r-0 lg:p-8">
-            <span className="grid size-11 place-items-center rounded-md border border-border bg-muted text-muted-foreground">
-              <span className="text-lg leading-none">+</span>
-            </span>
-            <p className="mt-12 inline-flex bg-muted px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              Not active yet
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-muted-foreground">
-              More paths coming soon
-            </h2>
-            <p className="mt-3 max-w-xs text-sm leading-6 text-muted-foreground">
-              Additional loan categories are planned, but this section is not available yet.
-            </p>
+        <section className="border-x border-b border-border p-6 md:p-8">
+          <div className="grid border-l border-t border-border sm:grid-cols-2 lg:grid-cols-3">
+            {cards.map(({ href, icon, title, label, desc }) => (
+              <ResourceHubCard
+                key={href}
+                href={href}
+                icon={icon}
+                title={title}
+                label={label}
+                desc={desc}
+                className="group relative min-h-[260px] border-b border-r border-border p-6 transition-colors hover:bg-accent-soft/60 lg:p-8"
+              />
+            ))}
+            <div className="relative min-h-[260px] border-b border-r border-border p-6 opacity-60 lg:p-8">
+              <span className="grid size-11 place-items-center rounded-md border border-border bg-muted text-muted-foreground">
+                <span className="text-lg leading-none">+</span>
+              </span>
+              <p className="mt-12 inline-flex bg-muted px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                Not active yet
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-muted-foreground">
+                More paths coming soon
+              </h2>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-muted-foreground">
+                Additional loan categories are planned, but this section is not available yet.
+              </p>
+            </div>
           </div>
         </section>
       </section>

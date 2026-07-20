@@ -1,9 +1,19 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { ArrowRight, TrendingDown, Wallet, Coins, CalendarClock } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeDollarSign,
+  CalendarClock,
+  Clock3,
+  Coins,
+  ShieldCheck,
+  TrendingDown,
+  Wallet,
+} from "lucide-react";
 
 import { AboutPixelApply } from "@/components/about/about-pixel-apply";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 const cad = new Intl.NumberFormat("en-CA", {
   style: "currency",
@@ -108,12 +118,12 @@ function Field({
   const id = useId();
   const pct = ((value - min) / (max - min)) * 100;
   return (
-    <div>
-      <div className="flex items-baseline justify-between">
-        <label htmlFor={id} className="text-sm font-medium text-foreground">
+    <div className="border-b border-border pb-6 last:border-b-0 last:pb-0">
+      <div className="flex items-center justify-between gap-4">
+        <label htmlFor={id} className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
           {label}
         </label>
-        <span className="font-display text-base font-bold tabular-nums text-foreground">
+        <span className="border border-primary bg-primary px-2.5 py-1 font-display text-base font-bold tabular-nums text-primary-foreground">
           {prefix}
           {display}
           {suffix}
@@ -127,12 +137,12 @@ function Field({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="loan-calculator-range mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-none bg-secondary accent-accent"
+        className="loan-calculator-range mt-5 h-1.5 w-full cursor-pointer appearance-none rounded-none bg-secondary accent-accent"
         style={{
-          background: `linear-gradient(to right, hsl(var(--accent)) ${pct}%, hsl(var(--border)) ${pct}%)`,
+          background: `linear-gradient(to right, hsl(var(--primary)) ${pct}%, hsl(var(--border)) ${pct}%)`,
         }}
       />
-      <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
+      <div className="mt-2 flex justify-between font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         <span>{prefix}{min.toLocaleString()}{suffix}</span>
         <span>{prefix}{max.toLocaleString()}{suffix}</span>
       </div>
@@ -144,18 +154,32 @@ function Donut({ principal, interest }: { principal: number; interest: number })
   const total = principal + interest || 1;
   const r = 42;
   const c = 2 * Math.PI * r;
+  const principalLen = (principal / total) * c;
   const interestLen = (interest / total) * c;
+  const segmentGap = 5;
+  const visiblePrincipal = Math.max(0, principalLen - segmentGap);
+  const visibleInterest = Math.max(0, interestLen - segmentGap);
   return (
-    <svg viewBox="0 0 100 100" className="h-32 w-32 -rotate-90" role="img" aria-label="Principal versus interest share">
-      <circle cx="50" cy="50" r={r} fill="none" stroke="hsl(var(--accent))" strokeWidth="12" />
+    <svg viewBox="0 0 100 100" className="size-28 -rotate-90 sm:size-32" role="img" aria-label="Principal versus interest share">
       <circle
         cx="50"
         cy="50"
         r={r}
         fill="none"
-        stroke="hsl(var(--primary-foreground) / 0.58)"
-        strokeWidth="12"
-        strokeDasharray={`${interestLen} ${c - interestLen}`}
+        stroke="hsl(var(--accent))"
+        strokeWidth="10"
+        strokeDasharray={`${visiblePrincipal} ${c - visiblePrincipal}`}
+        strokeLinecap="butt"
+      />
+      <circle
+        cx="50"
+        cy="50"
+        r={r}
+        fill="none"
+        stroke="hsl(var(--primary-foreground) / 0.32)"
+        strokeWidth="10"
+        strokeDasharray={`${visibleInterest} ${c - visibleInterest}`}
+        strokeDashoffset={-principalLen}
         strokeLinecap="butt"
       />
     </svg>
@@ -178,7 +202,18 @@ function BalanceChart({ base, accelerated }: { base: ScheduleRow[]; accelerated:
   };
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="h-full w-full" preserveAspectRatio="none" role="img" aria-label="Loan balance over time">
-      <polyline points={toPoints(base)} fill="none" stroke="hsl(var(--border))" strokeWidth="2.5" />
+      {[0, 30, 60, 90, 120].map((y) => (
+        <line
+          key={y}
+          x1="0"
+          y1={y}
+          x2={W}
+          y2={y}
+          stroke="hsl(var(--primary-foreground) / 0.1)"
+          strokeWidth="1"
+        />
+      ))}
+      <polyline points={toPoints(base)} fill="none" stroke="hsl(var(--primary-foreground) / 0.55)" strokeWidth="2.5" />
       {accelerated.length !== base.length && (
         <polyline points={toPoints(accelerated)} fill="none" stroke="hsl(var(--accent))" strokeWidth="2.5" />
       )}
@@ -228,157 +263,216 @@ export function LoanCalculator({
   }, [base.schedule]);
 
   return (
-    <div className="grid lg:grid-cols-[0.42fr_0.58fr]">
-      {/* Inputs */}
-      <div className="border-b border-border bg-background p-6 sm:p-8 lg:border-b-0 lg:border-r">
-        <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
-          Inputs
-        </p>
-        <h2 className="mt-4 font-display text-2xl font-semibold tracking-tight text-foreground">Your loan</h2>
-        <div className="mt-6 space-y-7">
-          <Field label="Loan amount" value={amount} display={amount.toLocaleString("en-CA")} min={1000} max={50000} step={500} onChange={setAmount} prefix="$" />
-          <Field label="Interest rate (APR)" value={rate} display={rate.toFixed(1)} min={3} max={35} step={0.1} onChange={setRate} suffix="%" />
-          <Field label="Loan term" value={months} display={termLabel(months)} min={6} max={84} step={6} onChange={setMonths} />
-          <Field label="Extra monthly payment" value={extra} display={extra.toLocaleString("en-CA")} min={0} max={1000} step={25} onChange={setExtra} prefix="$" />
-        </div>
-
-        <p className="mt-7 text-xs leading-relaxed text-muted-foreground">
-          Estimates only, for planning purposes. Your actual rate, payment, and fees depend on your
-          application and credit profile.
-        </p>
-      </div>
-
-      {/* Results */}
-      <div className="grid min-w-0 border-l border-border">
-        {/* headline payment */}
-        <div className="relative overflow-hidden bg-primary p-6 text-primary-foreground sm:p-8">
-          <div className="relative flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground/72">
-                Estimated monthly payment
-              </div>
-              <div className="mt-1 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-                {cad2.format(base.monthlyPayment)}
-              </div>
-              <div className="mt-1 text-xs text-primary-foreground/76">
-                over {termLabel(months)} at {rate.toFixed(1)}% APR
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Donut principal={amount} interest={base.totalInterest} />
-              <dl className="grid min-w-[130px] gap-3 text-xs">
-                <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
-                  <span className="inline-block size-2.5 bg-accent" />
-                  <dt className="text-primary-foreground/76">Principal</dt>
-                  <dd className="col-start-2 font-semibold tabular-nums text-primary-foreground">{cad.format(amount)}</dd>
-                </div>
-                <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
-                  <span className="inline-block size-2.5 bg-primary-foreground/60" />
-                  <dt className="text-primary-foreground/76">Interest</dt>
-                  <dd className="col-start-2 font-semibold tabular-nums text-primary-foreground">{cad.format(base.totalInterest)}</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </div>
-
-        {/* stat tiles */}
-        <div className="grid grid-cols-2 bg-primary">
-          <div className="border-r border-border-dark bg-primary p-5 text-primary-foreground">
-            <span className="grid size-8 place-items-center bg-accent text-accent-foreground">
-              <Coins className="h-4 w-4" />
+    <div className="overflow-hidden border border-border bg-background shadow-[0_24px_80px_hsl(var(--primary)/0.08)]">
+      <div className="grid lg:grid-cols-[minmax(340px,0.4fr)_minmax(0,0.6fr)]">
+        <aside className="border-b border-border bg-background p-6 md:p-8 lg:border-b-0 lg:border-r">
+          <div className="flex items-center justify-between gap-4">
+            <p className="inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-accent-foreground">
+              Build your estimate
+            </p>
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              CAD
             </span>
-            <div className="mt-3 font-display text-2xl font-bold tabular-nums text-primary-foreground">{cad.format(base.totalInterest)}</div>
-            <div className="text-xs text-primary-foreground/76">Total interest</div>
           </div>
-          <div className="bg-primary p-5 text-primary-foreground">
-            <span className="grid size-8 place-items-center bg-accent text-accent-foreground">
-              <Wallet className="h-4 w-4" />
-            </span>
-            <div className="mt-3 font-display text-2xl font-bold tabular-nums text-primary-foreground">{cad.format(base.totalCost)}</div>
-            <div className="text-xs text-primary-foreground/76">Total cost of loan</div>
-          </div>
-        </div>
+          <h2 className="mt-5 font-display text-3xl font-semibold tracking-tight text-foreground">
+            Shape the loan around your budget.
+          </h2>
+          <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+            Move any slider and the payment plan updates instantly.
+          </p>
 
-        {/* extra payment savings */}
-        {extra > 0 && monthsSaved > 0 && (
-          <div className="border-b border-accent bg-accent p-5 text-accent-foreground">
-            <div className="flex items-center gap-2 text-sm font-semibold text-accent-foreground">
-              <TrendingDown className="h-4 w-4 text-accent-foreground" />
-              Paying {cad.format(extra)} extra per month
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-4">
-              <div>
-                <div className="font-display text-xl font-bold tabular-nums text-accent-foreground">{cad.format(interestSaved)}</div>
-                <div className="text-xs text-accent-foreground/70">Interest saved</div>
+          <div className="mt-8 space-y-6">
+            <Field label="Loan amount" value={amount} display={amount.toLocaleString("en-CA")} min={1000} max={50000} step={500} onChange={setAmount} prefix="$" />
+            <Field label="Interest rate (APR)" value={rate} display={rate.toFixed(1)} min={3} max={35} step={0.1} onChange={setRate} suffix="%" />
+            <Field label="Loan term" value={months} display={termLabel(months)} min={6} max={84} step={6} onChange={setMonths} />
+            <Field label="Extra monthly payment" value={extra} display={extra.toLocaleString("en-CA")} min={0} max={1000} step={25} onChange={setExtra} prefix="$" />
+          </div>
+
+          <div className="mt-8 flex items-start gap-3 border border-border bg-secondary/45 p-4">
+            <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
+            <p className="text-xs leading-5 text-muted-foreground">
+              Planning estimate only. Your approved rate, payment, and fees may differ.
+            </p>
+          </div>
+        </aside>
+
+        <section className="min-w-0 bg-primary text-primary-foreground">
+          <div className="relative overflow-hidden border-b border-border-dark p-6 md:p-8">
+            <FlickeringGrid
+              aria-hidden
+              className="absolute inset-0"
+              squareSize={2}
+              gridGap={3}
+              flickerChance={0.06}
+              maxOpacity={0.12}
+              color="hsl(var(--primary-foreground))"
+            />
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/60" />
+
+            <div className="relative">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-primary-foreground/55">
+                  Live payment estimate
+                </p>
+                <span className="inline-flex items-center gap-2 border border-border-dark px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-primary-foreground/65">
+                  <span className="size-2 bg-accent" />
+                  Updates instantly
+                </span>
               </div>
-              <div>
-                <div className="font-display text-xl font-bold tabular-nums text-accent-foreground">{termLabel(monthsSaved)}</div>
-                <div className="text-xs text-accent-foreground/70">Paid off sooner</div>
+
+              <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_164px] lg:items-center lg:gap-6">
+                <div>
+                  <p className="text-sm text-primary-foreground/60">Estimated monthly payment</p>
+                  <p className="mt-2 whitespace-nowrap font-display text-[clamp(3.25rem,6vw,4.5rem)] font-black leading-none tracking-[-0.055em] text-accent">
+                    {cad2.format(base.monthlyPayment)}
+                  </p>
+                  <p className="mt-4 text-sm text-primary-foreground/65">
+                    {termLabel(months)} term <span className="mx-2 text-accent">/</span> {rate.toFixed(1)}% APR
+                  </p>
+                </div>
+
+                <div className="border-border-dark lg:border-l lg:pl-6">
+                  <div className="relative mx-auto grid w-fit place-items-center">
+                    <Donut principal={amount} interest={base.totalInterest} />
+                    <span className="absolute font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-primary-foreground/60">
+                      Cost mix
+                    </span>
+                  </div>
+                  <dl className="mt-4 grid grid-cols-2 gap-3 text-[10px]">
+                    <div className="text-center">
+                      <dt className="flex items-center justify-center gap-1.5 text-primary-foreground/55">
+                        <span className="size-2 bg-accent" /> Principal
+                      </dt>
+                      <dd className="mt-1 font-semibold tabular-nums">{cad.format(amount)}</dd>
+                    </div>
+                    <div className="text-center">
+                      <dt className="flex items-center justify-center gap-1.5 text-primary-foreground/55">
+                        <span className="size-2 bg-primary-foreground/30" /> Interest
+                      </dt>
+                      <dd className="mt-1 font-semibold tabular-nums">{cad.format(base.totalInterest)}</dd>
+                    </div>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
-        )}
 
-        {/* balance chart */}
-        <div className="border-b border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <CalendarClock className="h-4 w-4 text-accent" />
-              Balance over time
-            </div>
-            <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 bg-border" />Standard</span>
-              {extra > 0 && monthsSaved > 0 && (
-                <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 bg-accent" />With extra</span>
-              )}
-            </div>
+          <div className="grid grid-cols-3 border-b border-border-dark">
+            {[
+              { icon: BadgeDollarSign, value: cad.format(amount), label: "Borrowed" },
+              { icon: Coins, value: cad.format(base.totalInterest), label: "Interest" },
+              { icon: Wallet, value: cad.format(base.totalCost), label: "Total repaid" },
+            ].map(({ icon: Icon, value, label }, index) => (
+              <div key={label} className={`p-3 text-center md:p-6 ${index < 2 ? "border-r border-border-dark" : ""}`}>
+                <Icon className="mx-auto size-4 text-accent md:size-5" />
+                <p className="mt-2 font-display text-sm font-bold tabular-nums md:text-xl">{value}</p>
+                <p className="mt-1 text-[9px] text-primary-foreground/55 md:text-xs">{label}</p>
+              </div>
+            ))}
           </div>
-          <div className="mt-3 h-28 w-full">
-            <BalanceChart base={base.schedule} accelerated={accelerated.schedule} />
-          </div>
-        </div>
 
-        {/* amortization schedule */}
-        <div className="border-b border-border bg-card">
-          <button
-            type="button"
-            onClick={() => setShowSchedule((s) => !s)}
-            aria-expanded={showSchedule}
-            className="flex w-full items-center justify-between p-5 text-sm font-semibold text-foreground transition-colors hover:bg-accent-soft"
-          >
-            Yearly amortization schedule
-            <ArrowRight className={`h-4 w-4 text-accent transition-transform ${showSchedule ? "rotate-90" : ""}`} />
-          </button>
-          {showSchedule && (
-            <div className="overflow-x-auto px-5 pb-5">
-              <table className="w-full min-w-[420px] text-sm">
-                <thead>
-                  <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                    <th className="pb-2 font-medium">Year</th>
-                    <th className="pb-2 text-right font-medium">Principal</th>
-                    <th className="pb-2 text-right font-medium">Interest</th>
-                    <th className="pb-2 text-right font-medium">Balance</th>
-                  </tr>
-                </thead>
-                <tbody className="tabular-nums">
-                  {yearly.map((row) => (
-                    <tr key={row.year} className="border-b border-border/60 last:border-0">
-                      <td className="py-2 font-medium text-foreground">Year {row.year}</td>
-                      <td className="py-2 text-right text-foreground">{cad.format(row.principal)}</td>
-                      <td className="py-2 text-right text-muted-foreground">{cad.format(row.interest)}</td>
-                      <td className="py-2 text-right text-foreground">{cad.format(row.balance)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {extra > 0 && monthsSaved > 0 && (
+            <div className="grid grid-cols-2 border-b border-accent bg-accent text-accent-foreground">
+              <div className="col-span-2 flex items-center gap-3 border-b border-accent-foreground/15 p-5">
+                <TrendingDown className="size-5 shrink-0" />
+                <p className="text-sm font-semibold">Your extra {cad.format(extra)}/month changes the finish line.</p>
+              </div>
+              <div className="border-r border-accent-foreground/15 p-5">
+                <p className="font-display text-xl font-black tabular-nums">{cad.format(interestSaved)}</p>
+                <p className="text-[10px] text-accent-foreground/65">Interest saved</p>
+              </div>
+              <div className="p-5">
+                <p className="font-display text-xl font-black">{termLabel(monthsSaved)}</p>
+                <p className="text-[10px] text-accent-foreground/65">Paid off sooner</p>
+              </div>
             </div>
           )}
-        </div>
 
-        <div className="bg-primary p-5">
-          <AboutPixelApply label="Get your real rate" className="h-12 w-full justify-center" />
-        </div>
+          <div className="border-b border-border-dark">
+            <div className="p-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-sm font-semibold">
+                  <CalendarClock className="size-4 text-accent" />
+                  Balance over time
+                </div>
+                <div className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.12em] text-primary-foreground/50">
+                  <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 bg-primary-foreground/55" /> Standard</span>
+                  {extra > 0 && monthsSaved > 0 && (
+                    <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 bg-accent" /> With extra</span>
+                  )}
+                </div>
+              </div>
+              <div className="mt-6 h-40 w-full">
+                <BalanceChart base={base.schedule} accelerated={accelerated.schedule} />
+              </div>
+              <div className="mt-3 flex justify-between font-mono text-[9px] uppercase tracking-[0.14em] text-primary-foreground/40">
+                <span>Today</span>
+                <span>{termLabel(extra > 0 ? accelerated.months : base.months)}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 border-t border-border-dark">
+              <div className="border-r border-border-dark p-5">
+                <Clock3 className="size-4 text-accent" />
+                <p className="mt-4 font-display text-2xl font-bold">{termLabel(extra > 0 ? accelerated.months : base.months)}</p>
+                <p className="mt-1 text-xs text-primary-foreground/55">Projected payoff</p>
+              </div>
+              <div className="p-5">
+                <Coins className="size-4 text-accent" />
+                <p className="mt-4 font-display text-2xl font-bold">{cad.format(extra > 0 ? accelerated.totalInterest : base.totalInterest)}</p>
+                <p className="mt-1 text-xs text-primary-foreground/55">Projected interest</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-b border-border-dark">
+            <button
+              type="button"
+              onClick={() => setShowSchedule((s) => !s)}
+              aria-expanded={showSchedule}
+              className="flex w-full items-center justify-between p-5 text-left text-sm font-semibold transition-colors hover:bg-primary-foreground/[0.045] md:px-6"
+            >
+              <span>
+                Yearly amortization schedule
+                <span className="ml-3 font-mono text-[9px] font-normal uppercase tracking-[0.14em] text-primary-foreground/45">
+                  {yearly.length} years
+                </span>
+              </span>
+              <ArrowRight className={`size-4 text-accent transition-transform ${showSchedule ? "rotate-90" : ""}`} />
+            </button>
+            {showSchedule && (
+              <div className="overflow-x-auto border-t border-border-dark px-5 pb-6 pt-4 md:px-6">
+                <table className="w-full min-w-[460px] text-sm">
+                  <thead>
+                    <tr className="border-b border-border-dark text-left font-mono text-[9px] uppercase tracking-[0.14em] text-primary-foreground/45">
+                      <th className="pb-3 font-medium">Year</th>
+                      <th className="pb-3 text-right font-medium">Principal</th>
+                      <th className="pb-3 text-right font-medium">Interest</th>
+                      <th className="pb-3 text-right font-medium">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody className="tabular-nums">
+                    {yearly.map((row) => (
+                      <tr key={row.year} className="border-b border-border-dark last:border-0">
+                        <td className="py-3 font-medium">Year {row.year}</td>
+                        <td className="py-3 text-right">{cad.format(row.principal)}</td>
+                        <td className="py-3 text-right text-primary-foreground/55">{cad.format(row.interest)}</td>
+                        <td className="py-3 text-right">{cad.format(row.balance)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <div className="grid gap-4 p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <p className="max-w-md text-xs leading-5 text-primary-foreground/55">
+              Ready for a personalized offer? Checking your options uses a soft credit check.
+            </p>
+            <AboutPixelApply variant="light" label="Check my real rate" className="h-12 w-full shrink-0 justify-center sm:w-auto" />
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -5,8 +5,17 @@ import Link from "next/link";
 import { ArrowUpRight, DollarSign } from "lucide-react";
 
 import { PixelTransition } from "@/components/ui/pixel-transition";
+import { cn } from "@/lib/utils";
 
-export function ArticleRelatedLink({ href, label }: { href: string; label: string }) {
+export function ArticleRelatedLink({
+  href,
+  label,
+  className,
+}: {
+  href: string;
+  label: string;
+  className?: string;
+}) {
   const [active, setActive] = useState(false);
 
   return (
@@ -16,7 +25,10 @@ export function ArticleRelatedLink({ href, label }: { href: string; label: strin
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
-      className="group relative grid min-h-20 w-full place-items-center overflow-hidden border border-border px-4 py-4 text-center text-sm font-semibold text-foreground transition-colors sm:w-1/2"
+      className={cn(
+        "group relative grid min-h-20 w-full place-items-center overflow-hidden border border-border px-4 py-4 text-center text-sm font-semibold text-foreground transition-colors sm:w-1/2",
+        className
+      )}
     >
       <PixelTransition
         active={active}

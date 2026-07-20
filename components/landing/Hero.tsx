@@ -279,7 +279,7 @@ export default function Hero() {
     <section id="hero" className="relative overflow-hidden bg-background">
       <div className="relative mx-auto w-full max-w-[1000px] border-x border-border">
         <div
-          className="relative flex min-h-[540px] items-center justify-center overflow-hidden px-6 py-16 text-center md:px-12 lg:px-16 lg:py-20"
+          className="relative flex min-h-[540px] items-center justify-center overflow-hidden px-6 pb-28 pt-16 text-center sm:py-16 md:px-12 lg:px-16 lg:py-20"
           onPointerMove={handlePatternPointerMove}
           onPointerLeave={handlePatternPointerLeave}
         >

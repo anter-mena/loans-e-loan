@@ -1,48 +1,21 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import { Check, ShieldCheck } from "lucide-react";
 
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import { PixelTransition } from "@/components/ui/pixel-transition";
 
 const checklist = ["No surprise fees", "Clear monthly estimate", "Human help available"];
 
-function PixelCheckBox({ active }: { active: boolean }) {
+function CheckBox() {
   return (
-    <span className="relative grid size-5 place-items-center overflow-hidden border border-accent text-accent">
-      <PixelTransition
-        active={active}
-        gridSize={4}
-        animationStepDuration={0.32}
-        exitAnimationStepDuration={0.32}
-        pixelColor="hsl(var(--accent))"
-        exitPixelColor="hsl(var(--primary))"
-        className="absolute inset-0"
-        firstContent={<span className="block size-full bg-primary" />}
-        secondContent={<span className="block size-full bg-accent" />}
-      />
-      <Check
-        className={`relative z-20 size-3 transition-colors duration-200 ${
-          active ? "text-accent-foreground" : "text-accent"
-        }`}
-      />
+    <span className="grid size-5 place-items-center bg-accent text-accent-foreground">
+      <Check className="size-3" />
     </span>
   );
 }
 
 export function AboutOfferPreview() {
-  const [active, setActive] = useState(false);
-
   return (
-    <aside
-      className="relative overflow-hidden border-x border-t border-primary bg-primary text-primary-foreground lg:border-t-0"
-      onMouseEnter={() => setActive(true)}
-      onMouseLeave={() => setActive(false)}
-      onFocus={() => setActive(true)}
-      onBlur={() => setActive(false)}
-    >
+    <aside className="relative overflow-hidden border-x border-t border-primary bg-primary text-primary-foreground lg:border-t-0">
       <FlickeringGrid
         aria-hidden
         className="absolute inset-0"
@@ -95,7 +68,7 @@ export function AboutOfferPreview() {
         <div className="space-y-3">
           {checklist.map((item) => (
             <div key={item} className="flex items-center gap-3 text-sm text-primary-foreground/80">
-              <PixelCheckBox active={active} />
+              <CheckBox />
               {item}
             </div>
           ))}

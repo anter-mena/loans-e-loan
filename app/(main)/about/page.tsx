@@ -161,19 +161,19 @@ export default function AboutPage() {
 
         <section className="border-x border-b border-primary bg-primary text-primary-foreground">
           <SectionTitleBand label="Operating Principles" tone="dark" className="border-b border-primary" />
-          <div className="grid md:grid-cols-4">
+          <div className="grid grid-cols-2 md:grid-cols-4">
             {principles.map(({ icon: Icon, title, desc }, index) => (
               <article
                 key={title}
-                className="group relative min-h-[280px] overflow-hidden border-b border-border-dark p-6 transition-colors hover:bg-primary-foreground/[0.045] md:border-r md:border-border-dark md:last:border-r-0"
+                className="group relative min-h-[230px] overflow-hidden border-b border-border-dark p-4 odd:border-r transition-colors max-md:[&:nth-last-child(-n+2)]:border-b-0 hover:bg-primary-foreground/[0.045] md:min-h-[280px] md:border-r md:border-border-dark md:p-6 md:last:border-r-0"
               >
-                <p className="absolute right-5 top-4 bg-gradient-to-b from-primary-foreground/24 via-primary-foreground/10 to-primary-foreground/3 bg-clip-text font-display text-6xl font-black leading-none tracking-tight text-transparent [-webkit-text-stroke:0.5px_hsl(var(--primary-foreground)/0.035)] [text-shadow:0_-1px_0_hsl(var(--primary-foreground)/0.1)]">
+                <p className="absolute right-4 top-4 bg-gradient-to-b from-primary-foreground/24 via-primary-foreground/10 to-primary-foreground/3 bg-clip-text font-display text-5xl font-black leading-none tracking-tight text-transparent [-webkit-text-stroke:0.5px_hsl(var(--primary-foreground)/0.035)] [text-shadow:0_-1px_0_hsl(var(--primary-foreground)/0.1)] md:right-5 md:text-6xl">
                   0{index + 1}
                 </p>
                 <span className="relative grid size-10 place-items-center rounded-md bg-accent text-accent-foreground">
                   <Icon className="size-5" />
                 </span>
-                <h3 className="relative mt-16 text-xl font-medium leading-tight">{title}</h3>
+                <h3 className="relative mt-12 text-lg font-medium leading-tight md:mt-16 md:text-xl">{title}</h3>
                 <p className="relative mt-3 text-xs leading-5 text-primary-foreground/65">
                   {desc}
                 </p>
@@ -232,7 +232,7 @@ export default function AboutPage() {
               people understand than a bigger one that hides risk. A better loan page should
               make the borrower feel more in control before they click apply, not after.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap justify-end gap-3 sm:justify-start">
               <AboutPixelApply />
               <AboutHyperContact />
             </div>

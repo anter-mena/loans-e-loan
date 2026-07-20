@@ -4,6 +4,8 @@ import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import { ArrowUpRight, ChevronRight, Newspaper, PenLine } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
 
 import { AboutPixelApply } from "@/components/about/about-pixel-apply";
 import { PostImage } from "@/components/blog/post-image";
@@ -96,8 +98,8 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
           </ol>
         </nav>
 
-        <header className="grid border-x border-b border-border lg:grid-cols-[0.6fr_0.4fr]">
-          <div className="px-6 py-12 md:px-10 md:py-14">
+        <header className="grid lg:grid-cols-[0.6fr_0.4fr]">
+          <div className="border border-border px-6 py-12 md:px-10 md:py-14">
             <p className="flex items-center gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <span className="h-4 w-px bg-accent" />
               {meta.category}
@@ -114,7 +116,7 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
             </p>
           </div>
 
-          <aside className="relative overflow-hidden border-t border-primary bg-primary p-6 text-primary-foreground md:p-8 lg:border-l lg:border-t-0">
+          <aside className="relative z-10 -mt-px overflow-hidden border border-primary bg-primary p-6 text-primary-foreground [border-bottom-color:hsl(var(--primary))] [border-left-color:hsl(var(--primary))] [border-right-color:hsl(var(--primary))] [border-top-color:hsl(var(--primary))] md:p-8 lg:-ml-px lg:mt-0">
             <FlickeringGrid
               aria-hidden
               className="absolute inset-0"
@@ -170,10 +172,34 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
                 rehypePlugins={[rehypeRaw, rehypeSlug]}
                 components={{
                   img: PostImage,
-                  ol: ({ children }) => <ol className="article-numbered-list">{children}</ol>,
+                  ol: ({ children }) => (
+                    <ol className="article-numbered-list not-prose">{children}</ol>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="article-bullet-list not-prose">{children}</ul>
+                  ),
                   table: ({ children }) => (
-                    <div className="not-prose my-7 overflow-x-auto border border-border">
-                      <table className="w-full min-w-[520px] border-collapse text-sm">{children}</table>
+                    <div className="not-prose my-7">
+                      <div className="mb-2 flex items-center justify-end gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:hidden">
+                        <span className="grid size-7 place-items-center bg-primary text-primary-foreground">
+                          <HugeiconsIcon
+                            icon={DragDropHorizontalIcon}
+                            size={16}
+                            color="currentColor"
+                            strokeWidth={2}
+                            aria-hidden
+                          />
+                        </span>
+                        Drag to view table
+                      </div>
+                      <div
+                        className="cursor-grab touch-pan-x overflow-x-auto border border-border active:cursor-grabbing"
+                        role="region"
+                        aria-label="Horizontally scrollable table"
+                        tabIndex={0}
+                      >
+                        <table className="w-full min-w-[520px] border-collapse text-sm">{children}</table>
+                      </div>
                     </div>
                   ),
                   thead: ({ children }) => (
@@ -208,9 +234,14 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
                   <h2 className="text-center font-display text-lg font-bold tracking-tight text-foreground">
                     Related reading
                   </h2>
-                  <div className="mx-auto mt-5 flex max-w-3xl flex-wrap justify-center">
+                  <div className="mx-auto mt-5 grid max-w-3xl grid-cols-2 border-l border-t border-border">
                     {internal.map((link) => (
-                      <ArticleRelatedLink key={link.href + link.label} href={link.href} label={link.label} />
+                      <ArticleRelatedLink
+                        key={link.href + link.label}
+                        href={link.href}
+                        label={link.label}
+                        className="min-h-24 w-full border-0 border-b border-r px-3 text-xs sm:min-h-20 sm:w-full sm:px-4 sm:text-sm"
+                      />
                     ))}
                   </div>
                 </div>
