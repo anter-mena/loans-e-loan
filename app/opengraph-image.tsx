@@ -1,14 +1,13 @@
 import { ImageResponse } from "next/og";
 
-// Site-wide default OpenGraph/Twitter image. File-based OG images are applied to
-// every route automatically and are NOT clobbered by a page setting `openGraph`
-// without an `images` field — so this gives the whole site a branded share card.
-// Article pages (blog/news) override this with their own post image.
-export const alt = "E-Loan Canada — Fast Personal Loans with Transparent Rates";
+// Site-wide default OpenGraph/Twitter card. File-based OG images apply to every
+// route automatically and are used unless a page sets its own openGraph.images.
+// Blog/news articles override this with their own generated per-article card.
+export const alt = "E-Loan — Fast Personal Loans in Canada";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpengraphImage() {
+export default function Image() {
   return new ImageResponse(
     (
       <div
@@ -18,55 +17,31 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          background: "#0b0f1a",
           padding: "72px 80px",
-          backgroundColor: "#171717",
-          color: "#fafafa",
+          color: "#faf7f0",
+          fontFamily: "sans-serif",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            fontSize: 34,
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              width: 44,
-              height: 8,
-              backgroundColor: "#ebe64a",
-              marginRight: 20,
-            }}
-          />
-          E-Loan
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 10, background: "#22a06b" }} />
+
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div style={{ width: 46, height: 46, borderRadius: 12, background: "#22a06b" }} />
+          <span style={{ fontSize: 36, fontWeight: 800, letterSpacing: -1 }}>E-Loan</span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              display: "flex",
-              fontSize: 66,
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-0.03em",
-              maxWidth: 960,
-            }}
-          >
-            Fast personal loans in Canada with transparent rates
-          </div>
-          <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "#a3a3a3" }}>
-            Up to $50,000 · Funds in as little as 24 hours
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: 5, color: "#5fd0a3" }}>
+            PERSONAL LOANS · CANADA
+          </span>
+          <span style={{ fontSize: 60, fontWeight: 800, lineHeight: 1.08, maxWidth: 1000, letterSpacing: -1.5 }}>
+            Fast personal loans with transparent rates.
+          </span>
         </div>
 
-        <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: "#ebe64a" }}>
-          e-loan.ca
-        </div>
+        <span style={{ fontSize: 24, color: "rgba(250,247,240,0.55)" }}>e-loan.ca</span>
       </div>
     ),
-    size,
+    { ...size },
   );
 }

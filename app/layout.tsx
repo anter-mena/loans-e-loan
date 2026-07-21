@@ -21,6 +21,13 @@ export const metadata: Metadata = {
   title: "E-Loan Canada — Fast Personal Loans with Transparent Rates",
   description:
     "Get instant decisions on personal loans up to $50,000. Transparent rates, zero paperwork, and funds delivered in 24 hours.",
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
 };
 
 export default function RootLayout({

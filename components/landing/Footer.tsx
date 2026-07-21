@@ -39,7 +39,7 @@ const footerColumns = [
   {
     title: "Contact",
     links: [
-      ["support@eloan.ca", "mailto:support@eloan.ca"],
+      ["support@e-loan.ca", "mailto:support@e-loan.ca"],
       ["1-888-ELOANCA", "tel:18883562622"],
       ["Support", "/contact"],
     ],

@@ -28,7 +28,7 @@ const organizationJsonLd = {
     "E-Loan connects Canadians with personal loans up to $50,000 — transparent rates, zero paperwork, and funds in as little as 24 hours.",
   areaServed: { "@type": "Country", name: "Canada" },
   telephone: "+1-888-356-2622",
-  email: "support@eloan.ca",
+  email: "support@e-loan.ca",
 }
 
 const loanProductJsonLd = {
