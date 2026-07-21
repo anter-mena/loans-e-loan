@@ -116,7 +116,7 @@ function HeroPixelButton() {
 
   return (
     <Link
-      href="/apply"
+      href="/application-form"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}

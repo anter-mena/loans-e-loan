@@ -38,11 +38,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       publishedTime: item.meta.date,
       modifiedTime: item.meta.updated,
       authors: [item.meta.author],
+      ...(item.meta.image ? { images: [item.meta.image] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: item.meta.title,
       description: item.meta.description,
+      ...(item.meta.image ? { images: [item.meta.image] } : {}),
     },
   };
 }

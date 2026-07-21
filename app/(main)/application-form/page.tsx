@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   title: "Apply for a Personal Loan - E-Loan",
   description:
     "Start your E-Loan application, compare personal loan offers, and check your rate with no credit score impact.",
-  alternates: { canonical: `${siteUrl}/apply` },
+  alternates: { canonical: `${siteUrl}/application-form` },
   openGraph: {
     title: "Apply for a Personal Loan - E-Loan",
     description:
       "Check your rate and compare Canadian personal loan offers in minutes.",
-    url: `${siteUrl}/apply`,
+    url: `${siteUrl}/application-form`,
     siteName: "E-Loan",
     type: "website",
   },

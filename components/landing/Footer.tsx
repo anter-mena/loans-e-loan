@@ -14,7 +14,7 @@ const footerColumns = [
   {
     title: "Quick Links",
     links: [
-      ["Apply Now", "/apply"],
+      ["Apply Now", "/application-form"],
       ["About", "/about"],
       ["FAQ", "/resources/faq"],
     ],
@@ -80,7 +80,7 @@ function CtaPixelButton() {
 
   return (
     <Link
-      href="/apply"
+      href="/application-form"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
@@ -215,10 +215,11 @@ function SocialPixelLink({
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [subscribed, setSubscribed] = useState(false);
 
   return (
     <footer className="bg-background text-foreground">
-      <section id="apply" className="relative overflow-hidden border-y border-primary bg-primary text-primary-foreground">
+      <section id="application-form" className="relative overflow-hidden border-y border-primary bg-primary text-primary-foreground">
         <div
           aria-hidden
           className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary"
@@ -261,18 +262,33 @@ export default function Footer() {
               <p className="mt-3 text-xs leading-5 text-muted-foreground">
                 Get loan tips, rate updates, and borrower guides in your inbox.
               </p>
-              <form className="mx-auto mt-5 flex max-w-[250px] bg-background lg:mx-0">
-                <label htmlFor="footer-newsletter" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="footer-newsletter"
-                  type="email"
-                  placeholder="Email address"
-                  className="min-w-0 flex-1 border border-r-0 border-border bg-transparent px-3 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground"
-                />
-                <NewsletterPixelButton />
-              </form>
+              {subscribed ? (
+                <p className="mt-5 text-xs leading-5 text-primary" role="status">
+                  Thanks — you&apos;re on the list.
+                </p>
+              ) : (
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setSubscribed(true);
+                    // TODO: POST the email to your provider (e.g. /api/newsletter or an ESP) to persist it.
+                  }}
+                  className="mx-auto mt-5 flex max-w-[250px] bg-background lg:mx-0"
+                >
+                  <label htmlFor="footer-newsletter" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    id="footer-newsletter"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="Email address"
+                    className="min-w-0 flex-1 border border-r-0 border-border bg-transparent px-3 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground"
+                  />
+                  <NewsletterPixelButton />
+                </form>
+              )}
             </div>
           </div>
 

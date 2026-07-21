@@ -12,10 +12,15 @@ import { getAllNews } from "@/lib/news";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const safeDate = (value: string): Date => {
+    const d = new Date(`${value}T00:00:00Z`);
+    return Number.isNaN(d.getTime()) ? now : d;
+  };
 
   const staticRoutes = [
     "",
     "/about",
+    "/application-form",
     "/contact",
     "/privacy-policy",
     "/terms-of-use",
@@ -51,12 +56,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
-    lastModified: new Date(`${post.updated}T00:00:00Z`),
+    lastModified: safeDate(post.updated),
   }));
 
   const newsRoutes: MetadataRoute.Sitemap = getAllNews().map((item) => ({
     url: `${siteUrl}/news/${item.slug}`,
-    lastModified: new Date(`${item.updated}T00:00:00Z`),
+    lastModified: safeDate(item.updated),
   }));
 
   return [...staticAndDynamic, ...blogRoutes, ...newsRoutes];

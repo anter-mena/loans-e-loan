@@ -19,7 +19,7 @@ export function AboutPixelApply({ className, variant = "dark", label = "Apply no
 
   return (
     <Link
-      href="/apply"
+      href="/application-form"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
