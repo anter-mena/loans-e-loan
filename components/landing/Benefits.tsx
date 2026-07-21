@@ -84,7 +84,7 @@ export default function Benefits() {
             {desc}
           </p>
           <a
-            href="/apply"
+            href="/application-form"
             className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent underline-offset-4 transition-colors hover:text-primary-foreground hover:underline"
           >
             Learn more

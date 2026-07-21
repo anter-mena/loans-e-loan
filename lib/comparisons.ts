@@ -53,7 +53,7 @@ export const exploreMoreLinks = [
   { label: "Loan Guides", href: "/resources/guides" },
   { label: "Compare Options", href: "/resources/comparisons" },
   { label: "Loan Calculator", href: "/resources/tools" },
-  { label: "Check Your Rate", href: "/#apply" },
+  { label: "Check Your Rate", href: "/application-form" },
 ];
 
 export const comparisons: ComparisonEntry[] = [

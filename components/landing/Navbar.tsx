@@ -84,7 +84,7 @@ function NavPixelApply({
 
   return (
     <Link
-      href="/apply"
+      href="/application-form"
       onClick={onClick}
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}

@@ -51,9 +51,26 @@ const categories = [
   },
 ];
 
+const faqPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: categories.flatMap((cat) =>
+    cat.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  ),
+};
+
 export default function FAQ() {
   return (
-    <section id="faq" className="border-b border-border bg-background text-foreground">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
+      />
+      <section id="faq" className="border-b border-border bg-background text-foreground">
       <SectionTitleBand label="Questions, Answered" className="border-b border-border" />
 
       <div className="grid lg:grid-cols-[0.36fr_0.64fr]">
@@ -100,5 +117,6 @@ export default function FAQ() {
         </div>
       </div>
     </section>
+    </>
   );
 }
