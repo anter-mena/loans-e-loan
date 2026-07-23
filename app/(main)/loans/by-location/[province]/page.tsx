@@ -8,6 +8,7 @@ import { canadaLocations, getProvinceBySlug, getOtherProvinces } from "@/lib/can
 import type { GuideContent } from "@/lib/guides";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export function generateStaticParams() {
   return canadaLocations.map((p) => ({ province: p.slug }));
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ province:
     description,
     keywords: buildArticleKeywords(`personal loans ${entry.name}`, ["loans by location"]),
     alternates: { canonical: url },
-    openGraph: { type: "article", url, title, description, siteName: "E-Loan" },
+    openGraph: { images: [OG_IMAGE], type: "article", url, title, description, siteName: "E-Loan" },
     twitter: { card: "summary_large_image", title, description },
   };
 }

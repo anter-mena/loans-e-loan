@@ -7,6 +7,7 @@ import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { getAllNews } from "@/lib/news";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 const title = "News - Loan & Rate Updates for Canadian Borrowers | E-Loan";
 const description =
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     canonical: `${siteUrl}/news`,
     types: { "application/rss+xml": `${siteUrl}/news/feed.xml` },
   },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title,
     description,
     url: `${siteUrl}/news`,

@@ -5,13 +5,14 @@ import { Lock, Timer, WalletCards } from "lucide-react";
 import { ApplicationForm } from "@/components/application/application-form";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Apply for a Personal Loan - E-Loan",
   description:
     "Start your E-Loan application, compare personal loan offers, and check your rate with no credit score impact.",
   alternates: { canonical: `${siteUrl}/application-form` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Apply for a Personal Loan - E-Loan",
     description:
       "Check your rate and compare Canadian personal loan offers in minutes.",

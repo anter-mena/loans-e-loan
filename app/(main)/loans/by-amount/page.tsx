@@ -4,13 +4,14 @@ import { DollarSign } from "lucide-react";
 import { LoansHub } from "@/components/loans/loans-hub";
 import { loanAmounts } from "@/lib/loan-amounts";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loans by Amount | E-Loan Canada",
   description:
     "Borrow from $300 to $5,000 in Canada. See typical rates, monthly payments, and how fast you can get funded for the exact amount you need.",
   alternates: { canonical: `${siteUrl}/loans/by-amount` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loans by Amount | E-Loan Canada",
     description: "Borrow from $300 to $5,000 in Canada — rates, payments, and funding speed.",
     url: `${siteUrl}/loans/by-amount`,

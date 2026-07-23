@@ -10,13 +10,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | E-Loan Canada",
   description:
     "Answers to common questions about E-Loan personal loans - rates, credit checks, eligibility, funding times, fees, and repayment in Canada.",
   alternates: { canonical: `${siteUrl}/resources/faq` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Frequently Asked Questions | E-Loan Canada",
     description: "Answers about rates, credit checks, eligibility, funding, fees, and repayment.",
     url: `${siteUrl}/resources/faq`,

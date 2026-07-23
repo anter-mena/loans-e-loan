@@ -9,13 +9,14 @@ import { loanAmounts } from "@/lib/loan-amounts";
 import { loanPurposes } from "@/lib/loan-purposes";
 import { loanTypes } from "@/lib/loan-types";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Personal Loans in Canada - Browse All Options | E-Loan",
   description:
     "Explore personal loans in Canada by amount, purpose, credit score, type, and location. Transparent rates, soft credit checks, and fast funding.",
   alternates: { canonical: `${siteUrl}/loans` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Personal Loans in Canada - Browse All Options | E-Loan",
     description: "Explore personal loans in Canada by amount, purpose, credit score, type, and location.",
     url: `${siteUrl}/loans`,

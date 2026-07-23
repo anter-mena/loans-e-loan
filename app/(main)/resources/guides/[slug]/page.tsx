@@ -8,6 +8,7 @@ import { guides, getGuideBySlug, getRelatedGuides, type GuideContent } from "@/l
 import { guideIcons } from "@/lib/guide-icons";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export function generateStaticParams() {
   return guides.map((entry) => ({ slug: entry.slug }));
@@ -30,7 +31,7 @@ export async function generateMetadata({
     description: entry.description,
     keywords: buildArticleKeywords(entry.title, [entry.category]),
     alternates: { canonical: url },
-    openGraph: { type: "article", url, title, description: entry.description, siteName: "E-Loan" },
+    openGraph: { images: [OG_IMAGE], type: "article", url, title, description: entry.description, siteName: "E-Loan" },
     twitter: { card: "summary_large_image", title, description: entry.description },
   };
 }

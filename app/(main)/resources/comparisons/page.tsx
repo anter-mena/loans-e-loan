@@ -7,13 +7,14 @@ import { ResourceHubCard } from "@/components/resources/resource-hub-card";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { comparisons } from "@/lib/comparisons";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loan Comparisons | E-Loan Canada",
   description:
     "Side-by-side comparisons of borrowing options in Canada - personal loans vs credit cards, secured vs unsecured, fixed vs variable, and more.",
   alternates: { canonical: `${siteUrl}/resources/comparisons` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loan Comparisons | E-Loan Canada",
     description: "Side-by-side comparisons of borrowing options in Canada.",
     url: `${siteUrl}/resources/comparisons`,

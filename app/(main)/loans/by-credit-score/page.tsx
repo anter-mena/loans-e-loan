@@ -4,13 +4,14 @@ import { CreditCard } from "lucide-react";
 import { LoansHub } from "@/components/loans/loans-hub";
 import { creditScoreRanges } from "@/lib/credit-scores";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loans by Credit Score | E-Loan Canada",
   description:
     "Find loan options for your credit range in Canada — from poor to excellent. See expected rates, approval tips, and ways to improve your score.",
   alternates: { canonical: `${siteUrl}/loans/by-credit-score` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loans by Credit Score | E-Loan Canada",
     description: "Find loan options for your credit range in Canada.",
     url: `${siteUrl}/loans/by-credit-score`,

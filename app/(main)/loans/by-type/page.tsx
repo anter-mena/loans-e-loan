@@ -4,13 +4,14 @@ import { FileText } from "lucide-react";
 import { LoansHub } from "@/components/loans/loans-hub";
 import { loanTypes } from "@/lib/loan-types";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loans by Type | E-Loan Canada",
   description:
     "Explore personal loan types in Canada — bad credit loans, debt consolidation, emergency, same-day, and loans for newcomers, gig workers, seniors, and more.",
   alternates: { canonical: `${siteUrl}/loans/by-type` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loans by Type | E-Loan Canada",
     description: "Explore personal loan types in Canada.",
     url: `${siteUrl}/loans/by-type`,

@@ -19,13 +19,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loan Calculator - Estimate Payments, Interest & Payoff | E-Loan",
   description:
     "Free advanced loan calculator for Canadians. Estimate your monthly payment, total interest, and payoff time - and see how extra payments save you money.",
   alternates: { canonical: `${siteUrl}/resources/tools` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loan Calculator - Estimate Payments, Interest & Payoff | E-Loan",
     description:
       "Estimate your monthly payment, total interest, and payoff time, and see how extra payments save you money.",

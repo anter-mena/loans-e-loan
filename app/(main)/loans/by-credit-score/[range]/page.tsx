@@ -12,6 +12,7 @@ import {
 import { creditScoreRanges, getCreditScoreBySlug, getOtherCreditScores } from "@/lib/credit-scores";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export function generateStaticParams() {
   return creditScoreRanges.map((r) => ({ range: r.slug }));
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ range: st
     description,
     keywords: buildArticleKeywords(`${entry.tier} credit loans`, ["loans by credit score"]),
     alternates: { canonical: url },
-    openGraph: { type: "article", url, title, description, siteName: "E-Loan" },
+    openGraph: { images: [OG_IMAGE], type: "article", url, title, description, siteName: "E-Loan" },
     twitter: { card: "summary_large_image", title, description },
   };
 }

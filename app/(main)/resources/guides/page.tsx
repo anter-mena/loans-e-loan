@@ -7,13 +7,14 @@ import { ResourceHubCard, type ResourceHubIcon } from "@/components/resources/re
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { guides, guideSectionLabels, type GuideCategory, type GuideMeta } from "@/lib/guides";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loan Guides & Resources | E-Loan Canada",
   description:
     "Clear, practical guides on personal loans, credit, and borrowing in Canada - from choosing a term to rebuilding credit and understanding provincial regulations.",
   alternates: { canonical: `${siteUrl}/resources/guides` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loan Guides & Resources | E-Loan Canada",
     description: "Clear, practical guides on personal loans, credit, and borrowing in Canada.",
     url: `${siteUrl}/resources/guides`,
