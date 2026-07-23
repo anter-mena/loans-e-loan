@@ -5,13 +5,14 @@ import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { LegalSection, type LegalBlock } from "@/components/legal/legal";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms of Use - E-Loan",
   description:
     "The terms and conditions governing your use of E-Loan's website and services. Please read these terms carefully before using our services.",
   alternates: { canonical: `${siteUrl}/terms-of-use` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Terms of Use - E-Loan",
     description:
       "The terms and conditions governing your use of E-Loan's website and services.",

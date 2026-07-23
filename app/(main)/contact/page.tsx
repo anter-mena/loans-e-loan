@@ -5,13 +5,14 @@ import { ContactCards } from "@/components/contact/contact-cards";
 import { ContactForm } from "@/components/contact/contact-form";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact E-Loan - We're here to help",
   description:
     "Questions about your application, rates, or repayment? Reach the E-Loan team by phone, email, or message. We reply within one business day.",
   alternates: { canonical: `${siteUrl}/contact` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Contact E-Loan - We're here to help",
     description:
       "Reach the E-Loan team by phone, email, or message. We reply within one business day.",

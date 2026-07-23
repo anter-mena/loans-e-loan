@@ -12,13 +12,14 @@ import { AboutPixelApply } from "@/components/about/about-pixel-apply";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About E-Loan - Lending rebuilt around the borrower",
   description:
     "E-Loan is a Canadian lender on a mission to make borrowing fast, transparent, and fair. Learn who we are, what we stand for, and how we got here.",
   alternates: { canonical: `${siteUrl}/about` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "About E-Loan - Lending rebuilt around the borrower",
     description:
       "A Canadian lender on a mission to make borrowing fast, transparent, and fair.",

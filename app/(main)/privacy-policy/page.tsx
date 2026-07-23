@@ -5,13 +5,14 @@ import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { LegalSection, type LegalBlock } from "@/components/legal/legal";
 import { PrivacySignalsPanel } from "@/components/privacy/privacy-signals-panel";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - E-Loan",
   description:
     "How E-Loan collects, uses, and protects your personal information. Read our approach to data protection, disclosure, and your privacy rights.",
   alternates: { canonical: `${siteUrl}/privacy-policy` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Privacy Policy - E-Loan",
     description:
       "How E-Loan collects, uses, and protects your personal information.",

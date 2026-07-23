@@ -8,6 +8,7 @@ import { loanPurposes, getLoanPurposeBySlug, getOtherLoanPurposes } from "@/lib/
 import type { GuideContent } from "@/lib/guides";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export function generateStaticParams() {
   return loanPurposes.map((p) => ({ purpose: p.slug }));
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ purpose: 
     description: entry.description,
     keywords: buildArticleKeywords(`${entry.name} loans`, ["loans by purpose"]),
     alternates: { canonical: url },
-    openGraph: { type: "article", url, title, description: entry.description, siteName: "E-Loan" },
+    openGraph: { images: [OG_IMAGE], type: "article", url, title, description: entry.description, siteName: "E-Loan" },
     twitter: { card: "summary_large_image", title, description: entry.description },
   };
 }

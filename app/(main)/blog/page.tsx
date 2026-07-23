@@ -7,6 +7,7 @@ import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { getAllPosts } from "@/lib/blog";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 const title = "Blog - Loan Tips & Borrowing Insights for Canadians | E-Loan";
 const description =
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     canonical: `${siteUrl}/blog`,
     types: { "application/rss+xml": `${siteUrl}/blog/feed.xml` },
   },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title,
     description,
     url: `${siteUrl}/blog`,

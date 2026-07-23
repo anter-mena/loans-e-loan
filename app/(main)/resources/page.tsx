@@ -6,13 +6,14 @@ import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { comparisons } from "@/lib/comparisons";
 import { guides } from "@/lib/guides";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Resources - Guides, Comparisons & Tools | E-Loan Canada",
   description:
     "Everything you need to borrow smarter in Canada: in-depth loan guides, side-by-side comparisons, a free loan calculator, and answers to common questions.",
   alternates: { canonical: `${siteUrl}/resources` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Resources - Guides, Comparisons & Tools | E-Loan Canada",
     description: "In-depth loan guides, comparisons, a free calculator, and FAQs for Canadian borrowers.",
     url: `${siteUrl}/resources`,

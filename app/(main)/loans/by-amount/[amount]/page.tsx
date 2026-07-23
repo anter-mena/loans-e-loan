@@ -19,6 +19,7 @@ import {
 } from "@/lib/loan-amounts";
 import { buildArticleKeywords } from "@/lib/seo-keywords";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export function generateStaticParams() {
   return loanAmounts.map((a) => ({ amount: a.slug }));
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ amount: s
     description,
     keywords: buildArticleKeywords(`$${entry.amount} loan`, ["loans by amount"]),
     alternates: { canonical: url },
-    openGraph: { type: "article", url, title, description, siteName: "E-Loan" },
+    openGraph: { images: [OG_IMAGE], type: "article", url, title, description, siteName: "E-Loan" },
     twitter: { card: "summary_large_image", title, description },
   };
 }

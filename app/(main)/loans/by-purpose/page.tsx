@@ -4,13 +4,14 @@ import { Target } from "lucide-react";
 import { LoansHub } from "@/components/loans/loans-hub";
 import { loanPurposes } from "@/lib/loan-purposes";
 import { siteUrl } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Loans by Purpose | E-Loan Canada",
   description:
     "Find the right personal loan for your goal — debt consolidation, home improvement, medical bills, moving, weddings, and more, across Canada.",
   alternates: { canonical: `${siteUrl}/loans/by-purpose` },
-  openGraph: {
+  openGraph: { images: [OG_IMAGE],
     title: "Loans by Purpose | E-Loan Canada",
     description: "Find the right personal loan for your goal across Canada.",
     url: `${siteUrl}/loans/by-purpose`,
