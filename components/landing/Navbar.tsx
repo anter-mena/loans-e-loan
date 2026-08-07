@@ -216,10 +216,10 @@ export default function Navbar() {
       ) : null}
 
       <div ref={navShellRef} className="relative mx-auto w-full max-w-[1520px] bg-transparent">
-        <div className="relative hidden h-14 items-center xl:flex">
+        <div className="relative hidden h-14 items-center justify-between px-6 xl:flex">
           <Link
             href="/"
-            className="absolute left-0 top-1/2 flex w-fit -translate-y-1/2 items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex w-fit items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="E-Loan home"
             onClick={() => setActiveMenu(null)}
           >
@@ -326,7 +326,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="absolute right-0 top-1/2 flex -translate-y-1/2 items-center">
+          <div className="flex items-center">
             <NavPixelApply />
           </div>
         </div>
