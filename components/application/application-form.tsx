@@ -7,7 +7,7 @@ import { Loader2, ShieldCheck } from "lucide-react";
 
 type LeadScoutConversion = { type: "FACEBOOK" | "TIKTOK" } | Record<string, never>;
 
-const DEFAULT_REQUESTED_AMOUNT = 700;
+const DEFAULT_REQUESTED_AMOUNT = 1200;
 const DEFAULT_AFFILIATE_SUB = "e-loan";
 
 type LeadScoutConfig = {
