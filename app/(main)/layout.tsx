@@ -1,5 +1,5 @@
 import { Chatbot } from "@/components/layout/chatbot";
-import { CookieBanner } from "@/components/layout/cookie-banner";
+import { CookieBanner } from "@/components/layout/CookieBanner";
 import { CountdownBanner } from "@/components/layout/countdown-banner";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
