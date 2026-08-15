@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
@@ -184,13 +184,13 @@ export function ContactForm() {
           <Textarea
             id="message"
             name="message"
-            placeholder="Tell us a little about what you needâ€¦"
+            placeholder="Tell us a little about what you need…"
             className="min-h-32 rounded-none"
             required
           />
         </div>
 
-        {/* Honeypot â€” hidden from people, frequently auto-filled by bots. */}
+        {/* Honeypot — hidden from people, frequently auto-filled by bots. */}
         <input
           type="text"
           name="company"
@@ -202,7 +202,7 @@ export function ContactForm() {
 
         <p className="text-xs leading-relaxed text-muted-foreground">
           By submitting, you agree to be contacted about your enquiry. We never share
-          your details â€” read our{" "}
+          your details — read our{" "}
           <a href="/privacy-policy" className="font-medium text-primary underline-offset-4 hover:underline">
             Privacy Policy
           </a>

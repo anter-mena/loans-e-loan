@@ -1,17 +1,17 @@
-﻿/* â”€â”€ Per-site config â€” THE ONLY LINES THAT CHANGE BETWEEN SITES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/* ── Per-site config — THE ONLY LINES THAT CHANGE BETWEEN SITES ───────────
    Deliberately self-contained: this file imports nothing from lib/, so it
    drops into any site in the network unchanged apart from these two values.
 
-   SITE_NAME    labels the subject line, e.g. "[365loan] New message â€” Jane".
+   SITE_NAME    labels the subject line, e.g. "[365loan] New message — Jane".
    TO_ADDRESS   where it lands. Forwarded by Cloudflare Email Routing, so it
                 needs no verification anywhere.
    SENDER_DOMAIN must be a domain verified in Resend. 365loan.ca is the one
-                verified sender for the whole network â€” leave it alone until
+                verified sender for the whole network — leave it alone until
                 a site gets its own verified domain.                       */
 const SITE_NAME = "E-Loan";
 const TO_ADDRESS = "support@e-loan.ca";
 const SENDER_DOMAIN = "365loan.ca";
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─────────────────────────────────────────────────────────────────────── */
 
 const FROM_ADDRESS = `${SITE_NAME} Contact <noreply@${SENDER_DOMAIN}>`;
 
@@ -69,7 +69,7 @@ type Submission = {
 };
 
 function buildEmail({ name, email, message, topic, subject }: Submission) {
-  const emailSubject = `[${SITE_NAME}] ${topic} â€” ${name}`;
+  const emailSubject = `[${SITE_NAME}] ${topic} — ${name}`;
 
   const subjectRowHtml = subject
     ? `<p style="margin:0 0 4px"><strong>Subject:</strong> ${escapeHtml(subject)}</p>`
@@ -96,7 +96,7 @@ Email: ${email}${subject ? `\nSubject: ${subject}` : ""}
 Message:
 ${message}
 
-â€” Sent from the ${SITE_NAME} contact form.`;
+— Sent from the ${SITE_NAME} contact form.`;
 
   return { subject: emailSubject, html, text };
 }
