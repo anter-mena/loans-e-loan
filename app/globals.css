@@ -1,11 +1,11 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
 
-/* LoanHero â€” trustworthy fintech design system */
+/* LoanHero — trustworthy fintech design system */
 :root {
   /* Palette: #F9FA58, #FBFBFB, #FFFFFF, #161616, #EBEBEB */
   --palette-lime: 60 94% 66%;
@@ -39,12 +39,12 @@
   --muted-foreground: 0 0% 34%;
 
   --accent: var(--palette-lime);
-  /* emerald â€” trust/approval */
+  /* emerald — trust/approval */
   --accent-foreground: var(--palette-ink);
   --accent-soft: var(--palette-lime);
 
   --gold: var(--palette-lime);
-  /* warm gold â€” ratings */
+  /* warm gold — ratings */
   --gold-soft: var(--palette-lime);
 
   --destructive: 0 70% 50%;
@@ -383,7 +383,7 @@
   }
 }
 
-/* Blog / news article body â€” maps @tailwindcss/typography onto the E-Loan design
+/* Blog / news article body — maps @tailwindcss/typography onto the E-Loan design
    tokens so it adapts to light/dark automatically (tokens already flip under .dark). */
 .blog-prose {
   --tw-prose-body: hsl(var(--foreground));
