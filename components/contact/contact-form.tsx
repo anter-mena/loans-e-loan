@@ -101,7 +101,7 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4 border border-border bg-background p-8 text-center sm:p-10">
-        <div className="grid h-14 w-14 place-items-center rounded-md bg-accent-soft text-accent">
+        <div className="grid h-14 w-14 place-items-center rounded-md bg-accent-soft text-accent-foreground">
           <CheckCircle2 className="h-7 w-7" />
         </div>
         <h2 className="font-display text-xl font-bold tracking-tight text-foreground">

@@ -18,7 +18,7 @@ const FROM_ADDRESS = `${SITE_NAME} Contact <noreply@${SENDER_DOMAIN}>`;
 export const dynamic = "force-dynamic";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
-const LIMITS = { name: 100, email: 200, message: 5000, subject: 200 };
+const LIMITS = { name: 100, email: 200, message: 5000, subject: 200, phone: 40 };
 
 // Best-effort throttle. Each serverless instance keeps its own map, so this
 // slows obvious floods rather than guaranteeing a global limit.
@@ -64,15 +64,20 @@ type Submission = {
   email: string;
   message: string;
   topic: string;
-  // Only some sites have a Subject field on the form; blank elsewhere.
   subject: string;
+  // Optional on every form, so it may be blank.
+  phone: string;
 };
 
-function buildEmail({ name, email, message, topic, subject }: Submission) {
+function buildEmail({ name, email, message, topic, subject, phone }: Submission) {
   const emailSubject = `[${SITE_NAME}] ${topic} — ${name}`;
 
   const subjectRowHtml = subject
     ? `<p style="margin:0 0 4px"><strong>Subject:</strong> ${escapeHtml(subject)}</p>`
+    : "";
+
+  const phoneRowHtml = phone
+    ? `<p style="margin:0 0 4px"><strong>Phone:</strong> ${escapeHtml(phone)}</p>`
     : "";
 
   const html = `
@@ -80,6 +85,7 @@ function buildEmail({ name, email, message, topic, subject }: Submission) {
       <h2 style="margin:0 0 16px;font-size:17px">${escapeHtml(topic)}</h2>
       <p style="margin:0 0 4px"><strong>Name:</strong> ${escapeHtml(name)}</p>
       <p style="margin:0 0 4px"><strong>Email:</strong> ${escapeHtml(email)}</p>
+      ${phoneRowHtml}
       ${subjectRowHtml}
       <p style="margin:16px 0 4px"><strong>Message:</strong></p>
       <div style="white-space:pre-wrap;padding:12px 14px;background:#f6f6f6;border-radius:8px">${escapeHtml(message)}</div>
@@ -91,7 +97,7 @@ function buildEmail({ name, email, message, topic, subject }: Submission) {
   const text = `${topic}
 
 Name: ${name}
-Email: ${email}${subject ? `\nSubject: ${subject}` : ""}
+Email: ${email}${phone ? `\nPhone: ${phone}` : ""}${subject ? `\nSubject: ${subject}` : ""}
 
 Message:
 ${message}
@@ -125,7 +131,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { name, email, message, company, topic, subject } = (body ?? {}) as Record<
+  const { name, email, message, company, topic, subject, phone } = (body ?? {}) as Record<
     string,
     unknown
   >;
@@ -158,6 +164,7 @@ export async function POST(request: Request) {
     typeof topic === "string" && topic.trim() ? topic.trim().slice(0, 40) : "New message";
   const cleanSubject =
     typeof subject === "string" ? subject.trim().slice(0, LIMITS.subject) : "";
+  const cleanPhone = typeof phone === "string" ? phone.trim().slice(0, LIMITS.phone) : "";
 
   const {
     subject: emailSubject,
@@ -169,6 +176,7 @@ export async function POST(request: Request) {
     message: cleanMessage,
     topic: cleanTopic,
     subject: cleanSubject,
+    phone: cleanPhone,
   });
 
   let response: globalThis.Response;

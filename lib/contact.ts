@@ -19,6 +19,7 @@ const KNOWN_FIELDS = new Set([
   "firstName",
   "lastName",
   "email",
+  "phone",
   "message",
   "subject",
   "company",
@@ -58,6 +59,7 @@ export async function submitContactForm(
         topic,
         name,
         email: value("email"),
+        phone: value("phone"),
         subject: value("subject"),
         message,
         company: value("company"), // honeypot

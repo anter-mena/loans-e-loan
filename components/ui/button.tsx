@@ -20,7 +20,10 @@ const buttonVariants = cva(
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
         hero: "bg-accent text-accent-foreground shadow-cta hover:bg-accent/90 transition-transform hover:-translate-y-0.5 active:translate-y-0",
-        soft: "bg-accent-soft text-accent hover:bg-accent/10 border-accent/10",
+        // --accent-soft resolves to the same lime as --accent, so text-accent
+        // here rendered lime-on-lime (invisible). Pair with the foreground
+        // token, matching the `hero` variant above.
+        soft: "bg-accent-soft text-accent-foreground hover:bg-accent/80 border-accent/10",
       },
       size: {
         default:
