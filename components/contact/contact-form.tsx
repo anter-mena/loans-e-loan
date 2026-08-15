@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
@@ -8,13 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { NativeSelect } from "@/components/ui/native-select";
+
+import { submitContactForm, type ContactStatus } from "@/lib/contact";
 
 const topics = [
   "General enquiry",
@@ -25,7 +21,7 @@ const topics = [
   "Something else",
 ];
 
-type Status = "idle" | "submitting" | "success";
+type Status = ContactStatus;
 
 function PixelSubmitButton({ submitting }: { submitting: boolean }) {
   const [active, setActive] = useState(false);
@@ -82,14 +78,24 @@ function PixelSubmitButton({ submitting }: { submitting: boolean }) {
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [topic, setTopic] = useState("");
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (status === "submitting") return;
+
     setStatus("submitting");
-    // NOTE: no backend is wired yet. This simulates a successful submit so the
-    // UX is complete — replace with a Route Handler / email service (e.g. POST
-    // to /api/contact) when the backend is ready.
-    setTimeout(() => setStatus("success"), 900);
+    setError("");
+
+    const result = await submitContactForm(e.currentTarget);
+
+    if (!result.ok) {
+      setError(result.error);
+      setStatus("error");
+      return;
+    }
+
+    setStatus("success");
   }
 
   if (status === "success") {
@@ -153,18 +159,24 @@ export function ContactForm() {
 
         <div className="space-y-1.5">
           <Label htmlFor="topic">How can we help?</Label>
-          <Select value={topic} onValueChange={setTopic}>
-            <SelectTrigger id="topic" className="h-10 w-full rounded-none">
-              <SelectValue placeholder="Choose a topic" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              {topics.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <NativeSelect
+            id="topic"
+            name="subject"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            required
+            disabled={submitting}
+            className="h-10 rounded-none"
+          >
+            <option value="" disabled>
+              Choose a topic
+            </option>
+            {topics.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </NativeSelect>
         </div>
 
         <div className="space-y-1.5">
@@ -172,20 +184,37 @@ export function ContactForm() {
           <Textarea
             id="message"
             name="message"
-            placeholder="Tell us a little about what you need…"
+            placeholder="Tell us a little about what you needâ€¦"
             className="min-h-32 rounded-none"
             required
           />
         </div>
 
+        {/* Honeypot â€” hidden from people, frequently auto-filled by bots. */}
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-[9999px] h-px w-px opacity-0"
+        />
+
         <p className="text-xs leading-relaxed text-muted-foreground">
           By submitting, you agree to be contacted about your enquiry. We never share
-          your details — read our{" "}
+          your details â€” read our{" "}
           <a href="/privacy-policy" className="font-medium text-primary underline-offset-4 hover:underline">
             Privacy Policy
           </a>
           .
         </p>
+
+        {status === "error" && (
+          <p role="alert" className="text-xs leading-relaxed text-red-600 dark:text-red-400">
+            {error}
+          </p>
+        )}
+
         <PixelSubmitButton submitting={submitting} />
       </div>
     </form>
