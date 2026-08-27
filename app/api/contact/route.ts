@@ -8,16 +8,14 @@
    SENDER_DOMAIN must be a domain verified in Resend. 365loan.ca is the one
                 verified sender for the whole network — leave it alone until
                 a site gets its own verified domain.                       */
-const SITE_NAME = "E-Loan";
-const TO_ADDRESS = "support@e-loan.ca";
-const SENDER_DOMAIN = "365loan.ca";
-/* ─────────────────────────────────────────────────────────────────────── */
+import nodemailer from "nodemailer";
+import { buildBrandedContactEmail } from "@/lib/contact-email";
 
-const FROM_ADDRESS = `${SITE_NAME} Contact <noreply@${SENDER_DOMAIN}>`;
+const SITE_NAME = "E-Loan";
+/* ─────────────────────────────────────────────────────────────────────── */
 
 export const dynamic = "force-dynamic";
 
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const LIMITS = { name: 100, email: 200, message: 5000, subject: 200, phone: 40 };
 
 // Best-effort throttle. Each serverless instance keeps its own map, so this
@@ -104,13 +102,19 @@ ${message}
 
 — Sent from the ${SITE_NAME} contact form.`;
 
-  return { subject: emailSubject, html, text };
+  return buildBrandedContactEmail({ name, email, message, topic, subject, phone, emailSubject, text, fallbackHtml: html });
 }
 
 export async function POST(request: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("[contact] RESEND_API_KEY is not set");
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = Number(process.env.SMTP_PORT ?? "465");
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPassword = process.env.SMTP_PASSWORD;
+  const fromAddress = process.env.CONTACT_FROM ?? smtpUser;
+  const toAddress = process.env.CONTACT_TO;
+
+  if (!smtpHost || !Number.isInteger(smtpPort) || !smtpUser || !smtpPassword || !fromAddress || !toAddress) {
+    console.error("[contact] Gmail SMTP environment variables are incomplete");
     return Response.json(
       { error: "The contact form is not configured. Please email us directly." },
       { status: 500 },
@@ -179,39 +183,19 @@ export async function POST(request: Request) {
     phone: cleanPhone,
   });
 
-  let response: globalThis.Response;
   try {
-    response = await fetch(RESEND_ENDPOINT, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: FROM_ADDRESS,
-        to: [TO_ADDRESS],
-        reply_to: cleanEmail,
-        subject: emailSubject,
-        html,
-        text,
-      }),
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: process.env.SMTP_SECURE !== "false",
+      auth: { user: smtpUser, pass: smtpPassword },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
     });
+    await transporter.sendMail({ from: `${SITE_NAME} Contact <${fromAddress}>`, to: toAddress, replyTo: cleanEmail, subject: emailSubject, html, text });
   } catch (err) {
-    console.error("[contact] network error calling Resend", err);
-    return Response.json(
-      { error: "We couldn't send your message. Please email us directly." },
-      { status: 502 },
-    );
-  }
-
-  if (!response.ok) {
-    // Logged in full so a delivery failure is never silently swallowed.
-    console.error("[contact] Resend rejected the send", {
-      status: response.status,
-      detail: await response.text().catch(() => "<unreadable>"),
-      from: FROM_ADDRESS,
-      to: TO_ADDRESS,
-    });
+    console.error("[contact] Gmail SMTP send failed", err);
     return Response.json(
       { error: "We couldn't send your message. Please email us directly." },
       { status: 502 },
