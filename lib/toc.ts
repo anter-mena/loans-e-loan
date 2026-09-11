@@ -3,8 +3,8 @@ import GithubSlugger from "github-slugger";
 export type TocItem = { depth: number; text: string; id: string };
 
 /**
- * Extract h2/h3 headings from markdown into a table-of-contents list.
- * Uses github-slugger so the ids match the anchors that rehype-slug generates.
+ * Extracts h2/h3 headings from markdown into a table-of-contents list.
+ * github-slugger produces the same ids rehype-slug gives the rendered headings.
  */
 export function extractToc(markdown: string): TocItem[] {
   const slugger = new GithubSlugger();
@@ -19,17 +19,16 @@ export function extractToc(markdown: string): TocItem[] {
     }
     if (inFence) continue;
 
-    const m = /^(#{2,3})\s+(.+?)\s*#*$/.exec(line);
-    if (!m) continue;
+    const match = /^(#{2,3})\s+(.+?)\s*#*$/.exec(line);
+    if (!match) continue;
 
-    const depth = m[1].length;
-    const text = m[2]
+    const text = match[2]
       .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // links → text
       .replace(/[*_`~]/g, "") // emphasis / code marks
       .trim();
     if (!text) continue;
 
-    items.push({ depth, text, id: slugger.slug(text) });
+    items.push({ depth: match[1].length, text, id: slugger.slug(text) });
   }
 
   return items;

@@ -3,15 +3,17 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-import { ArrowUpRight, ChevronRight, Newspaper, PenLine } from "lucide-react";
+import { ArrowUpRight, Newspaper, PenLine } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
 
 import { AboutPixelApply } from "@/components/about/about-pixel-apply";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
 import { PostImage } from "@/components/blog/post-image";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
 import { ArticleRelatedLink } from "@/components/loans/article-related-link";
 import { ArticleToc } from "@/components/loans/article-toc";
+import { JsonLd } from "@/components/seo/json-ld";
 import {
   Accordion,
   AccordionContent,
@@ -19,84 +21,54 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import type { TocItem } from "@/lib/toc";
+import { formatDate, type ArticleSection, type Post } from "@/lib/content";
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
+import { extractToc } from "@/lib/toc";
 
-type RelatedLink = { label: string; href: string };
-type FaqItem = { question: string; answer: string };
-
-type ArticleMeta = {
-  title: string;
-  description: string;
-  date: string;
-  updated: string;
-  author: string;
-  category: string;
-  image: string | null;
-  faqs: FaqItem[];
-  related: RelatedLink[];
-  readingTime: number;
-};
-
-type BlogNewsArticleProps = {
-  meta: ArticleMeta;
-  content: string;
-  toc: TocItem[];
-  kind: "blog" | "news";
-};
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return isNaN(d.getTime())
-    ? iso
-    : d.toLocaleDateString("en-CA", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      });
-}
-
-export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticleProps) {
-  const hubHref = kind === "blog" ? "/blog" : "/news";
-  const hubLabel = kind === "blog" ? "Blog" : "News";
-  const Icon = kind === "blog" ? PenLine : Newspaper;
+/** Full article page, shared by blog posts and news items. */
+export function Article({ post, section }: { post: Post; section: ArticleSection }) {
+  const { meta, content } = post;
+  const path = `${section.path}/${meta.slug}`;
+  const Icon = section.schemaType === "NewsArticle" ? Newspaper : PenLine;
   const internal = meta.related.filter((link) => !link.href.startsWith("http"));
   const external = meta.related.filter((link) => link.href.startsWith("http"));
-  const tocItems = toc.map((item) => ({
+  const faq = faqJsonLd(meta.faqs);
+  const tocItems = extractToc(content).map((item) => ({
     label: item.text,
     href: `#${item.id}` as `#${string}`,
   }));
 
+  const byline =
+    section.dateLine === "published"
+      ? `Published by ${meta.author} / ${formatDate(meta.date)}${
+          meta.updated !== meta.date ? ` / Updated ${formatDate(meta.updated)}` : ""
+        } / ${meta.readingTime} min read`
+      : `Reviewed by ${meta.author} / ${formatDate(meta.updated)} / ${meta.readingTime} min read`;
+
   return (
     <main className="bg-background">
-      <article className="mx-auto w-full max-w-[1000px]">
-        <SectionTitleBand label={hubLabel} className="border-x border-b border-border" />
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: section.label, path: section.path },
+            { name: meta.title, path },
+          ]),
+          articleJsonLd(meta, section),
+          ...(faq ? [faq] : []),
+        ]}
+      />
 
-        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-5 py-3 md:px-8">
-          <ol className="flex flex-wrap items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            <li className="flex items-center gap-1">
-              <Link
-                href="/"
-                className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="flex items-center gap-1">
-              <ChevronRight aria-hidden className="size-3" />
-              <Link
-                href={hubHref}
-                className="px-1 py-0.5 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                {hubLabel}
-              </Link>
-            </li>
-            <li className="flex min-w-0 items-center gap-1">
-              <ChevronRight aria-hidden className="size-3 shrink-0" />
-              <span className="line-clamp-1 font-medium text-foreground">{meta.title}</span>
-            </li>
-          </ol>
-        </nav>
+      <article className="mx-auto w-full max-w-[1000px]">
+        <SectionTitleBand label={section.label} className="border-x border-b border-border" />
+
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: section.label, href: section.path },
+            { label: meta.title },
+          ]}
+        />
 
         <header className="grid lg:grid-cols-[0.6fr_0.4fr]">
           <div className="border border-border px-6 py-12 md:px-10 md:py-14">
@@ -111,8 +83,7 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
               {meta.description}
             </p>
             <p className="mt-6 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              {kind === "blog" ? "Reviewed" : "Published"} by {meta.author} / {formatDate(meta.updated)} /{" "}
-              {meta.readingTime} min read
+              {byline}
             </p>
           </div>
 
@@ -132,7 +103,7 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
                   <Icon className="size-6" />
                 </span>
                 <p className="mt-6 inline-flex bg-accent px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground">
-                  {hubLabel} article
+                  {section.label} article
                 </p>
                 {meta.image ? (
                   <div className="relative mt-6 aspect-[16/10] overflow-hidden border border-border-dark bg-primary-foreground/5">
@@ -167,6 +138,8 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
         <section className="border-x border-b border-border">
           <div className="mx-auto max-w-3xl px-6 py-10 md:px-8 md:py-12">
             <div className="blog-prose prose prose-lg max-w-none">
+              {/* rehype-raw lets posts embed HTML (figures, video, iframes);
+                  rehype-slug gives headings the ids the table of contents uses. */}
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, rehypeSlug]}
@@ -226,6 +199,7 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
           </div>
         </section>
 
+        {/* Related reading + sources */}
         {internal.length > 0 || external.length > 0 ? (
           <section className="border-x border-b border-border px-6 py-8 md:px-8">
             <div className="grid gap-8 lg:grid-cols-2">
@@ -284,6 +258,7 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
           </div>
         </section>
 
+        {/* FAQ */}
         {meta.faqs.length > 0 ? (
           <section className="grid border-x border-b border-border lg:grid-cols-[0.36fr_0.64fr]">
             <div className="border-b border-border p-6 md:p-8 lg:border-b-0 lg:border-r">
@@ -313,12 +288,13 @@ export function BlogNewsArticle({ meta, content, toc, kind }: BlogNewsArticlePro
           </section>
         ) : null}
 
+        {/* Back to the listing */}
         <section className="border-x border-b border-border px-6 py-8 text-center md:px-8">
           <Link
-            href={hubHref}
+            href={section.path}
             className="inline-flex items-center gap-2 border border-border px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-foreground underline-offset-4 transition-colors hover:bg-accent hover:underline"
           >
-            All {hubLabel.toLowerCase()}
+            {section.backLabel}
             <ArrowUpRight className="size-4" />
           </Link>
         </section>

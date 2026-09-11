@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/lib/site";
+
+import { BASE_URL } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/coming-soon"],
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${BASE_URL}/sitemap.xml`,
   };
 }

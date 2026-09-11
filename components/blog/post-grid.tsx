@@ -1,13 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Newspaper,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Newspaper } from "lucide-react";
 
 import { PixelTransition } from "@/components/ui/pixel-transition";
 import {
@@ -17,25 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { ArticleSection, PostMeta } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
-export type BlogNewsHubItem = {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  image: string | null;
-  category: string;
-  readingTime: number;
-};
-
-type BlogNewsHubProps = {
-  items: BlogNewsHubItem[];
-  basePath: "/blog" | "/news";
-  emptyHref: string;
-  emptyLinkLabel: string;
-};
-
+// A client component, so it can't import formatDate from lib/content (which reads
+// the file system); same output for "YYYY-MM-DD" dates.
 function formatDate(iso: string) {
   const d = new Date(iso);
   return isNaN(d.getTime())
@@ -48,18 +29,12 @@ function formatDate(iso: string) {
       });
 }
 
-function HubCard({
-  item,
-  basePath,
-}: {
-  item: BlogNewsHubItem;
-  basePath: "/blog" | "/news";
-}) {
+function PostCard({ post, section }: { post: PostMeta; section: ArticleSection }) {
   const [active, setActive] = useState(false);
 
   return (
     <Link
-      href={`${basePath}/${item.slug}`}
+      href={`${section.path}/${post.slug}`}
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
@@ -90,11 +65,11 @@ function HubCard({
         />
 
         <div className="relative aspect-[1.9] overflow-hidden border border-border-dark bg-primary-foreground">
-          {item.image ? (
+          {post.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={item.image}
-              alt={item.title}
+              src={post.image}
+              alt={post.title}
               className="absolute inset-0 h-full w-full object-cover grayscale transition-[filter,transform] duration-700 ease-out group-hover:scale-[1.035] group-hover:grayscale-0"
             />
           ) : (
@@ -110,9 +85,9 @@ function HubCard({
             active ? "text-accent-foreground/70" : "text-primary-foreground/66"
           )}
         >
-          <time dateTime={item.date}>{formatDate(item.date)}</time>
+          <time dateTime={post.date}>{formatDate(post.date)}</time>
           <span>/</span>
-          <span>{item.readingTime} min read</span>
+          <span>{post.readingTime} min read</span>
         </div>
 
         <p
@@ -123,7 +98,7 @@ function HubCard({
               : "bg-accent text-accent-foreground"
           )}
         >
-          {item.category}
+          {post.category}
         </p>
 
         <h2
@@ -132,7 +107,7 @@ function HubCard({
             active ? "text-accent-foreground" : "text-primary-foreground"
           )}
         >
-          {item.title}
+          {post.title}
         </h2>
 
         <p
@@ -141,39 +116,44 @@ function HubCard({
             active ? "text-accent-foreground/72" : "text-primary-foreground/68"
           )}
         >
-          {item.description}
+          {post.description}
         </p>
       </div>
     </Link>
   );
 }
 
-export function BlogNewsHub({
-  items,
-  basePath,
-  emptyHref,
-  emptyLinkLabel,
-}: BlogNewsHubProps) {
+/** Paginated card grid for the blog and news listing pages, with an empty state. */
+export function PostGrid({
+  posts,
+  section,
+  empty,
+}: {
+  posts: PostMeta[];
+  section: ArticleSection;
+  empty: { title: ReactNode; text: string; link: { label: string; href: string } };
+}) {
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [page, setPage] = useState(1);
   const pageSize = itemsPerPage;
-  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(posts.length / pageSize));
   const currentPage = Math.min(page, totalPages);
 
-  const visibleItems = useMemo(() => {
+  const visiblePosts = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
-    return items.slice(start, start + pageSize);
-  }, [currentPage, items, pageSize]);
+    return posts.slice(start, start + pageSize);
+  }, [currentPage, posts, pageSize]);
 
-  const firstVisible = items.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-  const lastVisible = Math.min(currentPage * pageSize, items.length);
+  const firstVisible = posts.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const lastVisible = Math.min(currentPage * pageSize, posts.length);
+  const selectId = `${section.path.slice(1)}-items`;
 
   function changeItems(nextItems: number) {
     setItemsPerPage(nextItems);
     setPage(1);
   }
 
-  if (items.length === 0) {
+  if (posts.length === 0) {
     return (
       <section className="grid border-x border-b border-border px-6 py-16 text-center md:px-10">
         <div className="mx-auto max-w-lg">
@@ -181,16 +161,14 @@ export function BlogNewsHub({
             <Newspaper className="size-5" />
           </span>
           <h2 className="mt-6 font-display text-3xl font-semibold tracking-tight text-foreground">
-            New posts coming soon
+            {empty.title}
           </h2>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            We&apos;re preparing fresh updates. Until then, the rest of the resource library is ready.
-          </p>
+          <p className="mt-4 text-sm leading-6 text-muted-foreground">{empty.text}</p>
           <Link
-            href={emptyHref}
+            href={empty.link.href}
             className="mt-8 inline-flex items-center gap-2 border border-border px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-foreground underline-offset-4 transition-colors hover:bg-accent hover:underline"
           >
-            {emptyLinkLabel}
+            {empty.link.label}
             <ArrowUpRight className="size-4" />
           </Link>
         </div>
@@ -207,19 +185,19 @@ export function BlogNewsHub({
 
         <div className="mt-2 flex items-center justify-between gap-3 md:gap-5">
           <p className="text-sm text-primary-foreground/66">
-            Showing {firstVisible}-{lastVisible} of {items.length}
+            Showing {firstVisible}-{lastVisible} of {posts.length}
           </p>
 
           <div className="flex shrink-0 items-center gap-2 md:gap-3">
             <label
-              htmlFor={`${basePath.slice(1)}-items`}
+              htmlFor={selectId}
               className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/55"
             >
               Items
             </label>
             <Select value={String(itemsPerPage)} onValueChange={(value) => changeItems(Number(value))}>
               <SelectTrigger
-                id={`${basePath.slice(1)}-items`}
+                id={selectId}
                 className="h-9 w-[72px] border-border-dark bg-primary px-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground hover:border-accent focus:border-accent focus-visible:ring-accent/35 [&_svg]:text-primary-foreground"
               >
                 <SelectValue />
@@ -245,12 +223,8 @@ export function BlogNewsHub({
 
       <div className="p-6 md:p-8">
         <div className="grid border-l border-t border-border-dark md:grid-cols-2 lg:grid-cols-3">
-          {visibleItems.map((item) => (
-            <HubCard
-              key={item.slug}
-              item={item}
-              basePath={basePath}
-            />
+          {visiblePosts.map((post) => (
+            <PostCard key={post.slug} post={post} section={section} />
           ))}
         </div>
       </div>

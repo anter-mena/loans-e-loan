@@ -1,0 +1,35 @@
+name: IndexNow
+
+# After Vercel reports a successful production deployment, tell IndexNow (Bing and
+# the other participating search engines) which blog and news posts were added,
+# changed or deleted. Run it manually from the Actions tab ("Run workflow") to
+# submit every URL in the live sitemap once. Logic: scripts/indexnow.mjs
+on:
+  deployment_status:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: read
+
+jobs:
+  submit:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Submit to IndexNow
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/indexnow.mjs ${{ github.event_name == 'workflow_dispatch' && '--all' || '' }}

@@ -1,31 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 
-import { BlogNewsHub } from "@/components/blog/blog-news-hub";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
+import { PostGrid } from "@/components/blog/post-grid";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { JsonLd } from "@/components/seo/json-ld";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import { getAllNews } from "@/lib/news";
-import { siteUrl } from "@/lib/site";
-import { OG_IMAGE } from "@/lib/seo";
+import { getAllNews, NEWS_DESCRIPTION, NEWS_SECTION } from "@/lib/news";
+import { BASE_URL, breadcrumbJsonLd, buildMetadata, itemListJsonLd } from "@/lib/seo";
 
-const title = "News - Loan & Rate Updates for Canadian Borrowers | E-Loan";
-const description =
-  "Bank of Canada decisions, lending data, and rule changes that affect what you pay to borrow in Canada - reported in plain English.";
+const base = buildMetadata({
+  title: "News - Loan & Rate Updates for Canadian Borrowers",
+  description: NEWS_DESCRIPTION,
+  path: NEWS_SECTION.path,
+});
 
 export const metadata: Metadata = {
-  title,
-  description,
+  ...base,
   alternates: {
-    canonical: `${siteUrl}/news`,
-    types: { "application/rss+xml": `${siteUrl}/news/feed.xml` },
-  },
-  openGraph: { images: [OG_IMAGE],
-    title,
-    description,
-    url: `${siteUrl}/news`,
-    siteName: "E-Loan",
-    type: "website",
+    ...base.alternates,
+    types: { "application/rss+xml": `${BASE_URL}${NEWS_SECTION.path}/feed.xml` },
   },
 };
 
@@ -42,52 +35,30 @@ function formatDate(iso?: string) {
       });
 }
 
-export default function NewsIndex() {
+export default function NewsPage() {
   const items = getAllNews();
   const categories = new Set(items.map((item) => item.category)).size;
   const latest = items[0]?.date;
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "News", item: `${siteUrl}/news` },
-    ],
-  };
-
-  const itemListJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.title,
-      url: `${siteUrl}/news/${item.slug}`,
-    })),
-  };
-
   return (
     <main className="bg-background">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: NEWS_SECTION.label, path: NEWS_SECTION.path },
+          ]),
+          ...(items.length > 0 ? [itemListJsonLd(NEWS_SECTION, items)] : []),
+        ]}
+      />
 
       <section className="mx-auto w-full max-w-[1000px]">
-        <SectionTitleBand label="News" className="border-x border-b border-border" />
+        <SectionTitleBand label={NEWS_SECTION.label} className="border-x border-b border-border" />
 
-        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-6 py-4 md:px-8">
-          <ol className="flex flex-wrap items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            <li>
-              <Link href="/" className="px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
-                Home
-              </Link>
-            </li>
-            <li className="flex items-center gap-2">
-              <ChevronRight aria-hidden className="size-3" />
-              <span className="text-foreground">News</span>
-            </li>
-          </ol>
-        </nav>
+        <Breadcrumbs
+          variant="listing"
+          items={[{ label: "Home", href: "/" }, { label: NEWS_SECTION.label }]}
+        />
 
         <section className="grid border-b border-border lg:grid-cols-[0.54fr_0.46fr]">
           <div className="border-x border-border px-6 py-14 md:px-10 lg:border-r-0 lg:py-16">
@@ -145,11 +116,14 @@ export default function NewsIndex() {
           </aside>
         </section>
 
-        <BlogNewsHub
-          items={items}
-          basePath="/news"
-          emptyHref="/blog"
-          emptyLinkLabel="Read the blog"
+        <PostGrid
+          posts={items}
+          section={NEWS_SECTION}
+          empty={{
+            title: "New posts coming soon",
+            text: "We're preparing fresh updates. Until then, the rest of the resource library is ready.",
+            link: { label: "Read the blog", href: "/blog" },
+          }}
         />
       </section>
     </main>

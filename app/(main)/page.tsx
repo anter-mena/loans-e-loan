@@ -10,12 +10,22 @@ import FAQ from "@/components/landing/FAQ"
 import { buildMetadata } from "@/lib/seo"
 import { siteUrl } from "@/lib/site"
 
-export const metadata: Metadata = buildMetadata({
-  title: "E-Loan Canada — Fast Personal Loans with Transparent Rates",
+const title = "E-Loan Canada — Fast Personal Loans with Transparent Rates"
+
+const base = buildMetadata({
+  title,
   description:
     "Get instant decisions on personal loans up to $50,000. Transparent rates, zero paperwork, and funds delivered in 24 hours.",
   path: "/",
 })
+
+// buildMetadata appends " | E-Loan"; the home title already names the brand, so it is used as-is.
+export const metadata: Metadata = {
+  ...base,
+  title,
+  openGraph: { ...base.openGraph, title },
+  twitter: { ...base.twitter, title },
+}
 
 const organizationJsonLd = {
   "@context": "https://schema.org",

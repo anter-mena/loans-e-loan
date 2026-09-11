@@ -1,31 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 
-import { BlogNewsHub } from "@/components/blog/blog-news-hub";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
+import { PostGrid } from "@/components/blog/post-grid";
 import SectionTitleBand from "@/components/landing/SectionTitleBand";
+import { JsonLd } from "@/components/seo/json-ld";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import { getAllPosts } from "@/lib/blog";
-import { siteUrl } from "@/lib/site";
-import { OG_IMAGE } from "@/lib/seo";
+import { BLOG_DESCRIPTION, BLOG_SECTION, getAllPosts } from "@/lib/blog";
+import { BASE_URL, breadcrumbJsonLd, buildMetadata, itemListJsonLd } from "@/lib/seo";
 
-const title = "Blog - Loan Tips & Borrowing Insights for Canadians | E-Loan";
-const description =
-  "Plain-English guidance on personal loans in Canada - rates, repayment, credit, and the borrowing decisions that shape what you actually pay.";
+const base = buildMetadata({
+  title: "Blog - Loan Tips & Borrowing Insights for Canadians",
+  description: BLOG_DESCRIPTION,
+  path: BLOG_SECTION.path,
+});
 
 export const metadata: Metadata = {
-  title,
-  description,
+  ...base,
   alternates: {
-    canonical: `${siteUrl}/blog`,
-    types: { "application/rss+xml": `${siteUrl}/blog/feed.xml` },
-  },
-  openGraph: { images: [OG_IMAGE],
-    title,
-    description,
-    url: `${siteUrl}/blog`,
-    siteName: "E-Loan",
-    type: "website",
+    ...base.alternates,
+    types: { "application/rss+xml": `${BASE_URL}${BLOG_SECTION.path}/feed.xml` },
   },
 };
 
@@ -42,52 +35,30 @@ function formatDate(iso?: string) {
       });
 }
 
-export default function BlogIndex() {
+export default function BlogPage() {
   const posts = getAllPosts();
   const categories = new Set(posts.map((post) => post.category)).size;
   const latest = posts[0]?.date;
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog` },
-    ],
-  };
-
-  const itemListJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: posts.map((post, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: post.title,
-      url: `${siteUrl}/blog/${post.slug}`,
-    })),
-  };
-
   return (
     <main className="bg-background">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: BLOG_SECTION.label, path: BLOG_SECTION.path },
+          ]),
+          ...(posts.length > 0 ? [itemListJsonLd(BLOG_SECTION, posts)] : []),
+        ]}
+      />
 
       <section className="mx-auto w-full max-w-[1000px]">
-        <SectionTitleBand label="Blog" className="border-x border-b border-border" />
+        <SectionTitleBand label={BLOG_SECTION.label} className="border-x border-b border-border" />
 
-        <nav aria-label="Breadcrumb" className="border-x border-b border-border px-6 py-4 md:px-8">
-          <ol className="flex flex-wrap items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            <li>
-              <Link href="/" className="px-1 transition-colors hover:bg-accent hover:text-accent-foreground">
-                Home
-              </Link>
-            </li>
-            <li className="flex items-center gap-2">
-              <ChevronRight aria-hidden className="size-3" />
-              <span className="text-foreground">Blog</span>
-            </li>
-          </ol>
-        </nav>
+        <Breadcrumbs
+          variant="listing"
+          items={[{ label: "Home", href: "/" }, { label: BLOG_SECTION.label }]}
+        />
 
         <section className="grid border-b border-border lg:grid-cols-[0.54fr_0.46fr]">
           <div className="border-x border-border px-6 py-14 md:px-10 lg:border-r-0 lg:py-16">
@@ -145,11 +116,14 @@ export default function BlogIndex() {
           </aside>
         </section>
 
-        <BlogNewsHub
-          items={posts}
-          basePath="/blog"
-          emptyHref="/resources/guides"
-          emptyLinkLabel="Explore guides"
+        <PostGrid
+          posts={posts}
+          section={BLOG_SECTION}
+          empty={{
+            title: "New posts coming soon",
+            text: "We're preparing fresh updates. Until then, the rest of the resource library is ready.",
+            link: { label: "Explore guides", href: "/resources/guides" },
+          }}
         />
       </section>
     </main>
